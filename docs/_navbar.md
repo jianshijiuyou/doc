@@ -4,4 +4,5 @@
 * Nginx
   * [安装](nginx/安装.md)
   * [命令行控制](nginx/命令行控制.md)
-  * [配置](nginx/配置.md)
+  * [基本配置](nginx/基本配置.md)
+  * [用HTTP核心模块配置一个静态Web服务器](nginx/用HTTP核心模块配置一个静态Web服务器.md)
