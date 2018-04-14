@@ -4,6 +4,7 @@
   * [Django+uWSGI+Nginx](linux/Django_uWSGI_Nginx.md)  
   * [virtualenv + virtualenvwrapper](linux/virtualenv_virtualenvwrapper.md)  
   * [常用命令](linux/base_command.md)  
+  * [管道符、重定向与环境变量](linux/管道符、重定向与环境变量.md)  
 * Nginx
   * [安装](nginx/安装.md)
   * [命令行控制](nginx/命令行控制.md)
