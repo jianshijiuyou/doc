@@ -17,3 +17,13 @@
   * [用HTTP proxy module配置一个反向代理服务器](nginx/用HTTP_proxy_module配置一个反向代理服务器.md)
 * Python
   * [内建函数](python/内建函数.md)
+* 算法
+  * [初级排序算法总结](算法/algorithm_2.md)
+  * [归并排序](算法/algorithm_3.md)
+  * [快速排序](算法/algorithm_4.md)
+  * [优先队列和堆排序](算法/algorithm_5.md)
+  * [排序算法总结](算法/algorithm_6.md)
+  * [符号表](算法/algorithm_7.md)
+  * [二叉查找树](算法/algorithm_8.md)
+  * [平衡查找树](算法/algorithm_9.md)
+  * [散列表](算法/algorithm_10.md)
