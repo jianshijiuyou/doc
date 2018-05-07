@@ -31,7 +31,7 @@ Nginx 则不然，它在接收到完整的客户端请求（如1GB的文件）�
 
 upstream 块定义了一个上游服务器的集群，便于反向代理中的 proxy_pass 使用。例如：
 
-```
+``` perl
 upstream backend {
 	server backend1.example.com;
 	server backend2.example.com;

@@ -79,7 +79,7 @@ the web client <-> uWSGI <-> Django
 
 修改 nginx.conf 文件
 
-```
+``` perl
 # mysite_nginx.conf
 
 # the upstream component nginx needs to connect to
@@ -228,7 +228,7 @@ uwsgi --socket mysite.sock --module mysite.wsgi --chmod-socket=664
 
 创建一个名为 `mysite_uwsgi.ini` 的文件:
 
-```
+``` ini
 # mysite_uwsgi.ini file
 [uwsgi]
 
