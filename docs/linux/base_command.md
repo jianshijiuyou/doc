@@ -157,6 +157,56 @@ wget 命令用于在终端中下载网络文件，格式为“wget [参数] 下�
 [root@linuxprobe ~]# wget http://www.linuxprobe.com/docs/LinuxProbe.pdf
 ```
 
+### curl
+curl 命令是一个利用 URL 规则在命令行下工作的文件传输工具。它支持文件的上传和下载，所以是综合传输工具，但按传统，习惯称 curl 为下载工具。作为一款强力工具，curl 支持包括 HTTP、HTTPS、ftp 等众多协议，还支持 POST、cookies、认证、从指定偏移处下载部分文件、用户代理字符串、限速、文件大小、进度条等特征。做网页处理流程和数据检索自动化，curl 都可以祝你一臂之力。
+
+语法： `curl (选项) (参数)`
+
+例：用 curl 请求百度的首页
+```
+curl www.baidu.com
+```
+百度的首页 html 会被输出到 stdout
+
+
+选项 `-o` 将下载数据写入到指定名称的文件中，并使用 `--progress` 显示进度条：
+```
+curl www.baidu.com -o baidu.html --progress
+```
+
+使用 `-H "头部信息"` 传递多个头部信息，例如：
+```
+curl -H "Host:man.linuxde.net" -H "accept-language:zh-cn" URL
+```
+
+使用 curl 选项 -u 可以完成HTTP或者FTP的认证，可以指定密码，也可以不指定密码在后续操作中输入密码：
+
+```
+curl -u user:pwd http://man.linuxde.net
+
+# or
+
+curl -u user http://man.linuxde.net
+```
+
+通过 `-I` 或者 `-head` 可以只打印出HTTP头部信息：
+
+```
+[root@6eaaa85720e0 ~]# curl -I www.baidu.com                         
+HTTP/1.1 200 OK
+Server: bfe/1.0.8.18
+Date: Mon, 07 May 2018 14:46:01 GMT
+Content-Type: text/html
+Content-Length: 277
+Last-Modified: Mon, 13 Jun 2016 02:50:35 GMT
+Connection: Keep-Alive
+ETag: "575e1f7b-115"
+Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform
+Pragma: no-cache
+Accept-Ranges: bytes
+
+```
+
 ### ps
 
 ps 命令用于查看系统中的进程状态，格式为“ps [参数]”。
@@ -238,10 +288,32 @@ uname 命令用于查看系统内核与系统版本等信息，格式为“uname
 Linux localhost.localdomain 3.10.0-693.el7.x86_64 #1 SMP Tue Aug 22 21:09:27 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-顺带一提，如果要查看当前系统版本的详细信息，则需要查看 redhat-release 文件
+顺带一提，如果要查看当前系统版本的详细信息，则需要查看 redhat-release 文件（或 os-release 文件）
 ```
 [jiuyou@localhost ~]$ cat /etc/redhat-release 
 CentOS Linux release 7.4.1708 (Core) 
+```
+
+或
+
+```
+[root@6eaaa85720e0 /]# cat /etc/os-release 
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:7"
+HOME_URL="https://www.centos.org/"
+BUG_REPORT_URL="https://bugs.centos.org/"
+
+CENTOS_MANTISBT_PROJECT="CentOS-7"
+CENTOS_MANTISBT_PROJECT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT="centos"
+REDHAT_SUPPORT_PRODUCT_VERSION="7"
+
 ```
 
 ### uptime
