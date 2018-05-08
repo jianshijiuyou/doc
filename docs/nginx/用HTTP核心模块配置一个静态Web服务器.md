@@ -2,7 +2,7 @@
 
 除了基本配置项外，一个典型的静态 Web 服务器还会包含多个 server 块和 location 块，例如：
 
-```
+``` perl
 http {
 	gzip on;
 	upstream {
@@ -44,7 +44,7 @@ Nginx 为配置一个完整的静态 Web 服务器提供了非常多的功能，
 
 `listen` 参数决定 Nginx 服务如何监听端口。在 listen 后可以只加 IP 地址、端口或主机名，非常灵活，例如：
 
-```
+``` perl
 listen 127.0.0.1:8000;
 listen 127.0.0.1; # 注意：不加端口时，默认监听 80 端口
 listen 8000;
@@ -54,7 +54,7 @@ listen localhost:8000;
 
 如果服务器使用 IPv6 地址，那么可以这样使用：
 
-```
+``` perl
 listen [::]:8000;
 listen [fe80::1];
 listen [:::a8c9:1234]:80;
@@ -62,7 +62,7 @@ listen [:::a8c9:1234]:80;
 
 在地址和端口后，还可以加上其他参数，例如：
 
-```
+``` perl
 listen 443 default_server ssl;
 listen 127.0.0.1 default_server accept_filter=dataready backlog=1024;
 ```
@@ -99,7 +99,7 @@ server_name 后可以跟多个主机名称，如  server_name www.testweb.com �
 location 会尝试根据用户请求中的 URI 来匹配上面的 `/uri` 表达式，如果可以匹配，就选择 `location{}` 块中的配置来处理用户请求。当然，匹配方式是多样的，下面介绍 location 的匹配规则。
 
  1. `=` 表示把 URI 作为字符串，以便与参数中的 uri 做完全匹配。例如：
-```
+``` perl
  location = / { # 只有当用户请求是 / 时，才会使用该 location 下的配置
 	 ...
  }
@@ -107,7 +107,7 @@ location 会尝试根据用户请求中的 URI 来匹配上面的 `/uri` 表达�
  2. `~` 表示匹配 URI 时是字母大小写敏感的。
  3. `~*` 表示匹配 URI 时忽略字母大小写问题。
  4. `^~` 表示匹配 URI 时只需要其前半部分与 uri 参数匹配即可。例如：
-```
+``` perl
 location ^~ images { # 以 images 开始的请求都会匹配上
 	...
 }
@@ -117,7 +117,7 @@ location ^~ images { # 以 images 开始的请求都会匹配上
 
 当然，在 uri 参数里是可以用正则表达式的，例如：
 
-```
+``` perl
 location ~* \.(gif|jpg|jpeg)$ {  # 匹配以 .gif、.jpg、.jpeg 结尾的请求
 	...
 }
@@ -129,7 +129,7 @@ location ~* \.(gif|jpg|jpeg)$ {  # 匹配以 .gif、.jpg、.jpeg 结尾的请求
 
 在以上各种匹配方式中，都只能表达为“如果匹配...则...”。如果需要表达“如果不匹配...则...”，就很难直接做到。有一种解决方法是在最后一个 location 中使用 / 作为参数，它会匹配所有的 HTTP 请求，这样就可以表示如果不能匹配前面的所有 location，则由 “/” 这个 location 处理。例如：
 
-```
+``` perl
 location / {  # / 可以匹配所有请求
 	...
 }
@@ -145,7 +145,7 @@ location / {  # / 可以匹配所有请求
 
 例如，定义资源文件相对于HTTP请求的根目录。
 
-```
+``` perl
 location /download/ {
 	root /optwebhtml;
 }
@@ -161,7 +161,7 @@ location /download/ {
 
 `alias` 也是用来设置文件资源路径的，它与 `root` 的不同点主要在于如何解读紧跟 `location` 后面的 uri 参数，这将会致使 `alias` 与 `root` 以不同的方式将用户请求映射到真正的磁盘文件上。例如，如果有一个请求的 URI 是 `/conf/nginx.conf`，而用户实际想访问的文件在 `/usr/local/nginx/conf/nginx.conf`，那么想要使用 `alias` 来进行设置的话，可以采用如下方式：
 
-```
+``` perl
 location conf {
 	alias /usr/local/nginx/conf/;
 }
@@ -169,7 +169,7 @@ location conf {
 
 如果用 root 设置，那么语句如下所示：
 
-```
+``` perl
 location conf {
 	root /usr/local/nginx/;
 }
@@ -179,7 +179,7 @@ location conf {
 
 `alias` 后面还可以添加正则表达式，例如：
 
-```
+``` perl
 location ~ ^/test/(\w+)\.(\w+)$ {
 	alias /usr/local/nginx/$2/$1.$2;
 }
@@ -195,7 +195,7 @@ location ~ ^/test/(\w+)\.(\w+)$ {
 
 有时，访问站点时的 URI 是 `/`，这时一般是返回网站的首页，而这与 root 和 alias 都不同。这里用 ngx_http_index_module 模块提供的 index 配置实现。index 后可以跟多个文件参数，Nginx 将会按照顺序来访问这些文件，例如：
 
-```
+``` perl
 location / {
 	root path;
 	index index.html htmlindex.php /index.php;
@@ -210,7 +210,7 @@ location / {
 当对于某个请求返回错误码时，如果匹配上了 `error_page` 中设置的 code，则重定向到新
 的 URI 中。例如：
 
-```
+``` perl
 error_page 404 404.html;
 error_page 502 503 504 50x.html;
 error_page 403 http://example.com/forbidden.html;
@@ -219,20 +219,20 @@ error_page 404 = @fetch;
 
 注意，虽然重定向了 URI，但返回的 HTTP 错误码还是与原来的相同。用户可以通过 “=” 来更改返回的错误码，例如：
 
-```
+``` perl
 error_page 404 =200 empty.gif;
 error_page 404 =403 forbidden.gif;
 ```
 
 也可以不指定确切的返回错误码，而是由重定向后实际处理的真实结果来决定，这时，只要把“=”后面的错误码去掉即可，例如：
 
-```
+``` perl
 error_page 404 = /empty.gif;
 ```
 
 如果不想修改 URI，只是想让这样的请求重定向到另一个 location 中进行处理，那么可以这样设置：
 
-```
+``` perl
 location / (
 	error_page 404 @fallback;
 )
@@ -382,7 +382,7 @@ HTTP 请求中的 keepalive 功能是为了让多个请求复用一个 HTTP 长�
 
 定义 MIME type 到文件扩展名的映射。多个扩展名可以映射到同一个 MIME type。例如：
 
-```
+``` perl
 types {
 	text/html html;
 	text/html conf;
@@ -423,7 +423,7 @@ types {
 
 Nginx 通过 limit_except 后面指定的方法名来限制用户请求。方法名可取值包括：GET、HEAD、POST、PUT、DELETE、MKCOL、COPY、MOVE、OPTIONS、PROPFIND、PROPPATCH、LOCK、UNLOCK 或者 PATCH。例如：
 
-```
+``` perl
 limit_except GET {
 	allow 192.168.1.0/32;
 	deny all;
@@ -446,8 +446,8 @@ limit_except GET {
 
 针对不同的客户端，可以用 $limit_rate 参数执行不同的限速策略。例如：
 
-```
-server {
+``` perl
+server { 
 	if ($slow) {
 		set $limit_rate 4k;
 	}
@@ -462,7 +462,7 @@ server {
 
 此配置表示 Nginx 向客户端发送的响应长度超过 limit_rate_after 后才开始限速。例如：
 
-```
+``` perl
 limit_rate_after 1m;
 limit_rate 100k;
 ```

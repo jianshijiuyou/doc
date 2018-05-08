@@ -8,6 +8,7 @@
 |查询软件描述信息的命令格式	|rpm -qpi filename.rpm
 |列出软件文件信息的命令格式	|rpm -qpl filename.rpm
 |查询文件属于哪个RPM的命令格式|	rpm -qf filename
+|查询软件的安装目录信息|	例：`rpm -ql nginx`
 
 
 ## 常见的 Yum 命令
@@ -16,6 +17,7 @@
 | :-------- | :--------|
 |yum repolist all	|列出所有仓库
 |yum list all	|列出仓库中所有软件包
+|yum list &#124; grep xxx 	|查找指定软件包 xxx
 |yum info 软件包名称	|查看软件包信息
 |yum install 软件包名称	|安装软件包
 |yum reinstall 软件包名称	|重新安装软件包
@@ -207,6 +209,29 @@ Accept-Ranges: bytes
 
 ```
 
+显示请求头和响应头信息，但不要响应内容
+
+```
+curl -v www.baidu.com > /dev/null
+```
+
+### netstat
+> https://linux.cn/article-2434-1.html
+
+用于列出系统上所有的网络套接字连接情况，包括 tcp, udp 以及 unix 套接字。另外它还能列出处于监听状态（即等待接入请求）的套接字。如果你想确认系统上的 Web 服务有没有起来，你可以查看 80 端口有没有打开。
+
+| 选项 | 作用 |
+|:----- | :--- |
+| `-a` | 列出所有当前的连接 |
+| `-t` | 只列出 TCP 协议的连接。 <br/>例：`netstat -at` |
+| `-u` | 只列出 UDP 协议的连接。 <br/>例：`netstat -au` |
+| `-n` | 禁用域名解析功能。 <br/>例：`netstat -aun` |
+| `-l` | 列出正在监听的套接字。 <br/>例：`netstat -tnl` |
+| `-p` | 查看进程信息。（查看 root 用户的进程要 root 权限） <br/>例：`sudo netstat -ltpn` |
+| `-ep` | 同时查看进程名和用户名。 <br/>例：`sudo netstat -ltep` |
+
+
+
 ### ps
 
 ps 命令用于查看系统中的进程状态，格式为“ps [参数]”。
@@ -253,6 +278,20 @@ pidof 命令用于查询某个指定服务进程的 PID 值，格式为“pidof 
 [root@linuxprobe ~]# pidof sshd
 2156
 ```
+
+### which
+
+显示出某个命令的实际位置
+
+```
+[root@localhost ~]# which vim
+/bin/vim
+[root@localhost ~]# which rm
+alias rm='rm -i'
+	/bin/rm
+[root@localhost ~]# 
+```
+
 
 ### kill
 
