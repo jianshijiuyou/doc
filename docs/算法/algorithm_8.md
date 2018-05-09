@@ -1,13 +1,4 @@
-﻿---
-title: 『算法』之 二叉查找树
-date: 2017-10-09 13:14:20
-categories: 数据结构与算法
-thumbnail: http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithms-logo.png?1
-tags:
-- 数据结构
-- 算法
-- 查找
----
+﻿
 ### 二叉查找树
 
 二叉查找树可以将链表插入的灵活性和有序数组查找的高效性结合起来。
