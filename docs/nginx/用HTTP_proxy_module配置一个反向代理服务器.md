@@ -51,13 +51,53 @@ server {
 
 server 配置项指定了一台上游服务器的名字，这个名字可以是域名、IP 地址端口、UNIX 句柄等
 
-```
+``` perl
 upstream backend {
 	server backend1.example.com weight=5;
 	server 127.0.0.1:8080 max_fails=3 fail_timeout=30s;
 	server unix:/tmp/backend3;
+	server a.example.com down;
+	server b.example.com backup;
+	server c.example.com max_conns=10000;
 }
 ```
+
+| 参数 | 含义  |
+|:----|:------|
+| down | 当前的 server 暂时不参与负载均衡
+| backup | 预留的备份服务器，当其他所有服务器都不可用时，此服务器将被启用
+| max_fails | 允许请求失败的次数
+| fail_timeout | 经过 max_fails 失败后，服务暂停的时间
+| max_conns |  限制最大接收的连接数
+
+
+
+调度算法
+
+
+| 参数 | 含义  |
+|:----|:------|
+| 默认 | 轮询，按时间顺序逐一分配到不同的服务器
+| weight | 加权轮询， weight 值越大，分配到访问几率越高
+| ip_hash | 每个请求按访问 IP 的 hash 结果分配， 这样来自同一个 IP 的固定访问一个服务器
+| least_conn | 最少链接数， 哪个服务器连接数最少就连接哪个
+| url_hash | 按照访问的 URL 的 hash 结果来分配请求，使每个 URL 定向到同一个服务器
+| hash `key` | 自定义 hash 的 key
+
+除了 weight 和其他参数配置方式一样（放到每一项的后面），其他调度参数都是单独一行的
+
+``` perl
+upstream backend {
+	ip_hash;
+	# least_conn;
+	# url_hash;
+	# hash $request_uri
+	server a.example.com down;
+	server b.example.com backup;
+	server c.example.com max_conns=10000;
+}
+```
+
 
 ## 反向代理的基本配置
 
@@ -95,4 +135,188 @@ proxy_pass https://192.168.0.1;
 
 ```
 proxy_set_header Host $host;
+```
+
+### 更多配置
+
+``` perl
+location / {
+	proxy_pass http://backend;
+	# proxy_redirect default;
+	proxy_set_header Host $http_host;
+	proxy_set_haader X-Real-IP $remote_addr;
+
+	# proxy_connect_timeout 30;
+	# proxy_send_timeout 60;
+	# proxy_read_timeout 60;
+
+	# proxy_buffer_size 32k;
+	# proxy_buffering on;
+	# proxy_buffers 4 128k;
+	# proxy_busy_buffers_size 256k;
+	# proxy_max_temp_file_size 256k;
+}
+
+```
+!> 也可以把共用的配置放到单独的文件 `proxy_params` 中，然后通过 `include proxy_params` 引用。
+
+## rewrite
+
+### 应用场景
+* URL 访问跳转，支持开发设计
+ * 页面跳转、兼容支持、展示效果等
+* SEO 优化
+* 维护
+ * 后台维护，流量转发等
+* 安全
+
+### 语法
+
+Syntax: `rewrite regex replacement [flag];`  
+Default: -  
+Context: server, location, if  
+
+
+### 应用
+
+举个栗子
+
+当网站需要维护的时候，需要将所有的请求转到一个静态 html，可以像下面这样做:
+
+```
+rewrite ^(.*)$ /pages/maintain.html break;
+```
+
+### flag
+
+| flag | 含义  |
+|:----|:------|
+| last | 停止 rewrite 检测，能够跳转到其他 URI
+| break | 停止 rewrite 检测，不能跳转到其他 URI
+| redirect | 返回 302 临时重定向，地址栏会显示跳转后的地址
+| permanent | 返回 301 永久重定向，地址栏会显示跳转后的地址。浏览器会记住重定向地址，以后直接访问重定向地址而不会再走服务器，除非清除缓存
+
+
+last 和 break 的区别
+
+``` perl
+server {
+	location ~ ^/break { 
+		rewrite ^/break /test/ break; # 访问 /break 会 404 
+		# rewrite ^/break test.html break; # 如果 test.html 存在可以访问
+	}
+
+	location ~ ^/last { # 访问 /last 可以跳转到 /test
+		rewrite ^/last /test/ last;
+	}
+
+	location ~ ^/test/ {
+		...
+	}
+}
+```
+
+## HTTPS
+
+### 生成证书
+
+需要安装 openssl 
+
+```
+openssl genrsa -idea -out jiuyou.key 1024
+```
+`-idea` 指明算法， `-out` 后面跟文件名，`1024` 代表位数
+
+然后输入秘密，就会在目录下生成一个 `jiuyou.key` 文件
+
+
+生成 csr 文件
+
+```
+openssl req -new -key jiuyou.key -out jiuyou.csr
+```
+
+生成证书（自签证书）
+
+```
+openssl x509 -req -days 3650 -in jiuyou.csr -signkey jiuyou.key -out jiuyou.crt
+```
+`-days` 代表签名过期时间
+
+### 语法
+
+Syntax: `ssl on | off;`  
+Default: `ssl off;`  
+Context: http, server  
+
+Syntax: `ssl_certificate file;`  
+Default: -  
+Context: http, server  
+
+Syntax: `ssl_certificate_key file;`  
+Default: -  
+Context: http, server  
+
+### 应用
+
+https 的默认端口是 443
+
+``` perl
+server {
+	listen 443;
+	server_name xxx.com;
+	ssl on;
+	ssl_certificate /path/jiuyou.crt;
+	ssl_certificate_key /path/jiuyou.key;
+
+	index index.html index.htm;
+
+	location / {
+		...
+	}
+}
+```
+
+### 苹果要求的证书
+
+ 1. 服务器所有连接使用 TLS1.2 以上的版本 (opensll 1.0.2)
+ 2. HTTPS 证书必须使用 SHA256 以上的 hash 算法签名
+ 3. HTTPS 证书必须使用 RSA 2048 位或 ECC 256 位以上公钥算法
+ 4. 使用前向加密技术
+
+
+
+查看 openssl 版本
+
+```
+[root@localhost ~]# openssl version
+OpenSSL 1.0.2k-fips  26 Jan 2017
+```
+
+查看证书的签名信息
+
+```
+openssl x509 -noout -text -in jiuyou.crt
+```
+
+生成符合苹果要求的证书
+
+```
+openssl req -days 3650 -x509 -sha256 -nodes -newkey rsa:2048 -keyout jiuyou.key -out jiuyou_apple.crt
+```
+
+!> 注意：以上命令会同时生成 `jiuyou.key` 和 `jiuyou_apple.crt` 文件
+
+### 优化
+
+``` perl
+server {
+	keepalive_timeout 100;
+
+	ssl on;
+	ssl_session_cache shared:SSL:10m; # 大约能缓存一万个左右的 session 会话
+	ssl_session_timeout 10m;  # session 10分钟过期
+
+	...
+}
 ```
