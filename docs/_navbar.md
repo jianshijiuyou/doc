@@ -15,8 +15,10 @@
   * [通用语法·基本配置](nginx/基本配置.md)
   * [用HTTP核心模块配置一个静态Web服务器](nginx/用HTTP核心模块配置一个静态Web服务器.md)
   * [用HTTP proxy module配置一个反向代理服务器](nginx/用HTTP_proxy_module配置一个反向代理服务器.md)
+  * [杂项](nginx/杂项.md)
 * Python
   * [内建函数](python/内建函数.md)
+  * [itertools](python/itertools.md)
 * Docker
   * [常用命令](docker/常用命令.md)
 * 算法
