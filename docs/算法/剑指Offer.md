@@ -1,0 +1,131 @@
+### 面试题 2：实现 Singleton 模式
+> [http://python.jobbole.com/87294/](http://python.jobbole.com/87294/)
+
+
+1 使用 `__new__` 方法
+
+``` python
+class Singleton:
+    def __new__(cls, *args, **kw):
+        if not hasattr(cls, '_instance'):
+            cls._instance = super(*args, **kw)
+        return cls._instance
+```
+
+加锁
+
+``` python
+import threading
+
+class Singleton:
+    lock = threading.RLock()
+    def __new__(cls, *args, **kw):
+        cls.lock.acquire()
+        if not hasattr(cls, '_instance'):
+            cls._instance = super(*args, **kw)
+        cls.lock.release()
+        return cls._instance
+```
+
+
+2 使用装饰器实现
+
+``` python
+import functools
+
+def singleton(cls):
+    instances = {}
+    @functools.wraps(cls)
+    def get_instance(*args, **kw):
+        if not cls in instances:
+            instances[cls] = cls(*args, **kw)
+        return instances[cls]
+    return get_instance
+
+@singleton
+class A:
+    pass
+```
+
+3 使用 metaclass
+
+``` python
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kw):
+        if not cls in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kw)
+        return cls._instances
+
+
+class A(metaclass=Singleton):
+    pass
+```
+
+4 使用模块
+
+### 面试题 3：数组中重复的数字
+
+#### 题目一：找出数组中重复的数字
+
+``` python
+def duplicate(alist):
+    if not isinstance(alist, list) or not alist:
+        return StopIteration
+    
+    for n in alist:
+        if not isinstance(n, int) or n < 0 or n >= len(alist):
+            return StopIteration
+    
+    for i, n in enumerate(alist):
+        while not alist[i] == i:
+            if alist[i] == alist[alist[i]]:
+                yield alist[i]
+                break
+            o = alist[i]
+            alist[i], alist[o] = alist[o], alist[i]
+```
+
+时间复杂度：`O(n)`  
+空间复杂度：`O(1)`
+
+
+#### 题目二：不修改数组找出重复的数字
+
+用类似二分查找算法的方式，不需要辅助数组
+
+``` python
+def getDuplication(alist):
+    
+    if not isinstance(alist, list) or not alist:
+        return -1
+    
+    start = 1
+    end = len(alist) - 1
+    while end >= start:
+        middle = ((end - start) >> 1) + start
+        print(middle)
+        count = countRange(alist, start, middle)
+        if end == start:
+            if count > 1:
+                return start
+            else:
+                break
+        
+        if count > (middle - start + 1):
+            end = middle
+        else:
+            start = middle + 1
+    
+    return -1
+
+def countRange(alist, start, end):
+    count = 0
+    for i in alist:
+        if start <= i <= end:
+            count += 1
+    return count
+```
+
+时间复杂度：`O(nlogn)`  
+空间复杂度：`O(1)`
