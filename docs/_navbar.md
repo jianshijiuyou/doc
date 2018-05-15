@@ -19,6 +19,7 @@
 * Python
   * [内建函数](python/内建函数.md)
   * [itertools](python/itertools.md)
+  * [Django 笔记](python/django笔记.md)
 * Docker
   * [常用命令](docker/常用命令.md)
 * 算法

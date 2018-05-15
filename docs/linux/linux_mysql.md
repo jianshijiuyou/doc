@@ -1,9 +1,8 @@
 ## CentOS 安装 MySQL
 
-> [原文连接](https://www.cnblogs.com/lzj0218/p/5724446.html)
+### 安装
 
-
-1.检测系统是否已经安装过mysql或其依赖，若已装过要先将其删除，否则第 4 步使用 yum 安装时会报错：
+1.检测系统是否已经安装过 mysql 或其依赖，若已装过要先将其删除，否则第 4 步使用 yum 安装时会报错：
 
 ```
 >>> yum list installed | grep mysql
@@ -64,6 +63,7 @@ service mysqld start
 systemctl start mysqld
 ```
 
+### 修改密码
 
 查看 root 密码：
 
@@ -86,42 +86,58 @@ ERROR 1820 (HY000): You must reset your password using ALTER USER statement befo
 
 ```
 mysql> SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpass');
+
+# mysql 8 用
+mysql> alter user 'root'@'localhost' identified by 'newpass';
 ```
 
-!> 如果在此步报错ERROR 1819，请向下翻查看原因及解决方法
+!> 如果在此步报错 ERROR 1819，请向下翻查看原因及解决方法
 
 
-6.查看mysqld是否开机自启动，并设置为开机自启动：
+### 开机启动
+
+6.查看 mysqld 是否开机自启动，并设置为开机自启动：
 
 ```
 chkconfig --list | grep mysqld
 chkconfig mysqld on
+
+# systemd 采用
+systemctl is-enabled mysqld
+systemctl enable mysqld
 ```
 
-7.修改字符集为UTF-8：
+### 设置字符集
+
+!> mysql 8 默认就是 `utf8mb4`
+
+7.修改字符集为 UTF-8：
 
 
 ```
 vim /etc/my.cnf
 ```
 
-在[mysqld]部分添加：
+在 `[mysqld]` 部分添加：
 
 ```
 character-set-server=utf8
 ```
 
-在文件末尾新增[client]段，并在[client]段添加：
+在文件末尾新增 `[client]` 段，并在 `[client]` 段添加：
 
 ```
 default-character-set=utf8
 ```
 
 
-修改好之后重启mysqld服务：
+修改好之后重启 mysqld 服务：
 
 ```
 service mysqld restart
+
+# systemd 用
+systemctl restart mysqld
 ```
 
 查看修改结果：
@@ -154,7 +170,7 @@ mysql> show variables like "%character%";
 ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
 ```
 
-这一错误其实与 `validate_password_policy` 值的设置有关：
+这一错误其实与 `validate_password_policy` 值（或者其他密码策略）的设置有关：
 
 `validate_password_policy` 值默认为 `1`，即 `MEDIUM`，所以刚开始设置的密码必须符合长度要求，且必须含有数字，小写或大写字母，特殊字符
 
@@ -163,29 +179,31 @@ ERROR 1819 (HY000): Your password does not satisfy the current policy requiremen
 !> 在 mysql8 下 `validate_password_policy` 变成 `validate_password.policy` 了
 
 ```
-mysql> set global validate_password_policy=0;
+mysql> set global validate_password.policy=0;
 Query OK, 0 rows affected (0.00 sec)
 ```
 
-这样，对密码要求就只有长度了，而密码的最小长度由validate_password_length值决定
+这样，对密码要求就只有长度了，而密码的最小长度由 `validate_password_length` 值决定
 
-validate_password_length参数默认为8，它有最小值的限制，最小值为：
+`validate_password_length` 参数默认为 `8`，它有最小值的限制，最小值为：
 
 ```
 validate_password_number_count+ validate_password_special_char_count+ (2 * validate_password_mixed_case_count)
 ```
 
-其中，validate_password_number_count指定了密码中数字的长度，validate_password_special_char_count指定了密码中特殊字符的长度，validate_password_mixed_case_count指定了密码中大小字母的长度。这些参数的默认值均为1，所以validate_password_length最小值为4，如果显性指定validate_password_length的值小于4，尽管不会报错，但validate_password_length的值将设为4
+其中，`validate_password_number_count` 指定了密码中数字的长度，`validate_password_special_char_count` 指定了密码中特殊字符的长度， `validate_password_mixed_case_count` 指定了密码中大小字母的长度。这些参数的默认值均为1，所以 `validate_password_length` 最小值为 `4`，如果显性指定 `validate_password_length` 的值小于 `4`，尽管不会报错，但 `validate_password_length` 的值将设为 `4`
 
 
-设置validate_password_length的值：
+设置 `validate_password_length` 的值：
+
+!> mysql 8 是 `validate_password.length`
 
 ```
-mysql> set global validate_password_length=4;
+mysql> set global validate_password.length=4;
 Query OK, 0 rows affected (0.00 sec)
 ```
 
-如果修改了validate_password_number_count，validate_password_special_char_count，validate_password_mixed_case_count中任何一个值，则validate_password_length将进行动态修改。
+如果修改了 `validate_password_number_count`，`validate_password_special_char_count`，`validate_password_mixed_case_count` 中任何一个值，则 `validate_password_length` 将进行动态修改。
 
 
 
@@ -230,3 +248,8 @@ grant all privileges on *.* to 'root'@'%' identified by '123456' with grant opti
 # 刷新
 flush privileges;
 ```
+
+
+## 参考
+
+[CentOS6.5安装MySQL5.7详细教程](https://www.cnblogs.com/lzj0218/p/5724446.html)
