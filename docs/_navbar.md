@@ -1,6 +1,6 @@
 * Linux
-  * [Linux 上装 Python](linux/first_linux.md)  
-  * [CentOS 6.5 安装 MySQL 5.7](linux/centos65_mysql57.md)  
+  * [Linux 上装 Python](linux/install_python.md)  
+  * [linux 安装 MySQL](linux/linux_mysql.md)  
   * [Django+uWSGI+Nginx](linux/Django_uWSGI_Nginx.md)  
   * [virtualenv + virtualenvwrapper](linux/virtualenv_virtualenvwrapper.md)  
   * [常用命令](linux/base_command.md)  

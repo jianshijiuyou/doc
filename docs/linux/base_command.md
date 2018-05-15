@@ -1,3 +1,26 @@
+## 换源  
+
+清华大学开源软件镜像站： [https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)  
+
+
+## 配置 cnpm
+
+node 请去官网下压缩包安装
+
+cnpm 淘宝镜像：[http://npm.taobao.org/](http://npm.taobao.org/)
+
+## 字体安装
+
+首先下载字体，然后复制到 `/usr/share/fonts/` 目录下
+
+然后依次执行以下命令
+
+``` bash
+sudo mkfontscale
+sudo mkfontdir
+sudo fc-cache -fv
+```
+
 ## 常用的 RPM 软件包命令
 
 | 说明      |     命令 |
@@ -251,6 +274,8 @@ Linux 系统中时刻运行着许多进程，如果能够合理地管理它们�
 
 当执行 `ps aux` 命令后通常会看到如下进程状态
 
+!> 或者 `ps -ef`
+
 |USER|	PID|	%CPU|	%MEM|	VSZ|	RSS|	TTY|	STAT	|START|	TIME|	COMMAND
 |:----
 |进程的所有者	|进程ID号|	运算器占用率|	内存占用率|	虚拟内存使用量（单位是KB）|	占用的固定内存量（单位是KB）|	所在终端	|进程状态|	被启动的时间|	实际使用CPU的时间	|命令名称与参数
@@ -320,8 +345,11 @@ killall 命令用于终止某个指定名称的服务所对应的全部进程，
 
 ifconfig 命令用于获取网卡配置与网络状态等信息，格式为“ifconfig [网络设备] [参数]”。
 
-### uname
+### 系统版本内核CPU
 uname 命令用于查看系统内核与系统版本等信息，格式为“uname [-a]”。
+
+或者 `cat /proc/version`
+
 ```
 [jiuyou@localhost ~]$ uname -a 
 Linux localhost.localdomain 3.10.0-693.el7.x86_64 #1 SMP Tue Aug 22 21:09:27 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
@@ -354,6 +382,35 @@ REDHAT_SUPPORT_PRODUCT="centos"
 REDHAT_SUPPORT_PRODUCT_VERSION="7"
 
 ```
+
+查看 CPU 信息
+
+```
+cat /proc/cpuinfo
+```
+
+### 内存磁盘 
+
+查看内存及用量：
+
+```
+free -m  # M 为单位
+
+free -g # G 为单位
+```
+
+查看各分区使用情况：
+
+```
+df -h
+```
+
+查看当前目录文件及文件夹大小：
+
+```
+du -sh *
+```
+
 
 ### uptime
 uptime 用于查看系统的负载信息，格式为 uptime。

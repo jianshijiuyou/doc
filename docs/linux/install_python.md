@@ -1,90 +1,3 @@
-# 换源  
-
-清华大学开源软件镜像站： [https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)  
-
-# ubuntu 安装 mysql 
-
-安装：
-
-``` bash
-sudo apt install mysql-server
-```
-
-配置文件：
-```
- /etc/mysql/mysql.conf.d/mysqld.cnf
-```
-
-测试：
-
-``` bash
-mysql -uroot -p
-```
-
-重启
-``` bash
-sudo service mysql restart
-```
-
-允许远程登陆：
-
-首先修改配置文件，允许所有 ip
-```
-bind-address            = 0.0.0.0
-
-```
-
-然后再 mysql shell 中输入如下命令：
-
-``` bash
-#grant all privileges on 库名.表名 to '用户名'@'IP地址' identified by '密码' with grant option;
-
-grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option;
-# 刷新
-flush privileges;
-```
-
-# 安装 virtualenv
-
-``` bash
-sudo apt install python-virtualenv
-```
-
-建立 python 虚拟环境
-用 -p 参数指定 python 版本
-``` bash
-virtualenv -p python3 testenv
-```
-
-进入虚拟环境
-
-```
-source testenv/bin/activate
-```
-
-成功进入的标志
-```
-(testenv) jianxin@ubuntu:~/pycode$ 
-```
-
-# 配置 cnpm
-
-node 请去官网下压缩包安装
-
-cnpm 淘宝镜像：[http://npm.taobao.org/](http://npm.taobao.org/)
-
-
-# 字体安装
-
-首先下载字体，然后复制到 `/usr/share/fonts/` 目录下
-
-然后依次执行以下命令
-
-``` bash
-sudo mkfontscale
-sudo mkfontdir
-sudo fc-cache -fv
-```
 
 # python3.6 安装
 
@@ -176,7 +89,7 @@ pip install mysqlclient
 default_storage_engine
 ```
 
-# centos 安装 gcc
+## centos 安装 gcc
 
 ``` bash
 yum install -y gcc wget
