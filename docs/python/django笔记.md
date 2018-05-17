@@ -26,4 +26,6 @@ pip install django[=x.xx.x]
 | `python manage.py sqlmigrate [app name] [0001]` | 查看迁移时执行的 sql 指令
 | `python manage.py shell` | shell
 | `python manage.py test` | 执行测试
+| `python manage.py test [app name]` | 测试指定应用
+| `python manage.py test [appname.tests.test_xxx_xx]` | 测试指定文件（不能加 `py` 后缀）
 | `python manage.py test [--verbosity=2]` | `Verbosity` 决定了将要打印到控制台的通知和调试信息量; <br>`0` 是无输出，`1` 是正常输出，`2` 是详细输出。
