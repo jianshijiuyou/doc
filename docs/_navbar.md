@@ -18,10 +18,12 @@
   * [用HTTP proxy module配置一个反向代理服务器](nginx/用HTTP_proxy_module配置一个反向代理服务器.md)
   * [杂项](nginx/杂项.md)
 * Python
+  * [python 杂谈](python/python杂谈.md)
   * [内建函数](python/内建函数.md)
   * [itertools](python/itertools.md)
   * [单元测试框架](python/单元测试框架.md)
   * [Django 笔记](python/django笔记.md)
+  * [Django 模型·字段类型](python/django模型字段类型.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)
