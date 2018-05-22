@@ -167,3 +167,114 @@ def find(matrix, number):
 
     return False
 ```
+### 面试题 10：斐波那契数列
+青蛙跳台阶问题
+
+矩形覆盖问题
+
+
+时间复杂度： `O(n)`
+
+``` python
+def fibonacci(n):
+    if n < 2:
+        return n
+    fib_one = 0
+    fib_two = 1
+    fib_n = 0
+    for i in range(2,n+1):
+        fib_n = fib_one + fib_two
+        fib_one = fib_two
+        fib_two = fib_n
+    return fib_n
+```
+
+### 番外：快速排序
+
+``` python
+def partition(data, start, end):
+    i = start + 1
+    j = end
+    v = data[start]
+    while True:
+        while data[i] < v and i != end:
+            i += 1
+        while v < data[j] and j != start:
+            j -= 1
+        if i >= j:
+            break
+        data[i], data[j] = data[j], data[i]
+    
+    data[start], data[j] = data[j], data[start]
+
+    return j
+
+def quick_sort(data, start, end):
+    if start >= end:
+        return
+    
+    j = partition(data, start, end) 
+    quick_sort(data, start, j-1)
+    quick_sort(data, j+1, end)
+```
+### 面试题 11：旋转数组中的最小数字
+
+采用二分查找法解决
+
+``` python
+def min(data):
+    head = 0
+    foot = len(data)-1
+    mid = head
+    while data[head] >= data[foot]:
+        if (head + 1) == foot:
+            mid = foot
+            break
+        mid = round((foot + head)/2)
+        if data[head] <= data[mid]:
+            head = mid
+        elif data[mid] <= data[foot]:
+            foot = mid
+    return data[mid]
+```
+
+以上代码如果遇到数组 `[1, 0, 1, 1, 1]` 或者 `[1, 1, 1, 0, 1]` 就无法找出最小值了，此时需要顺序查找：
+
+``` python
+def min(data):
+    head = 0
+    foot = len(data)-1
+    mid = head
+    while data[head] >= data[foot]:
+        if (head + 1) == foot:
+            mid = foot
+            break
+        mid = round((foot + head)/2)
+        if data[head] == data[foot] and data[head] == data[mid]:
+            # 进行顺序查找
+            return min_in_order(data, head, foot)
+
+        if data[head] <= data[mid]:
+            head = mid
+        elif data[mid] <= data[foot]:
+            foot = mid
+    return data[mid]
+
+def min_in_order(data, head, foot):
+    result = data[head]
+    for i in range(head+1, foot+1):
+        if result > data[i]:
+            result = data[i]
+    return result
+```
+
+### 面试题 15：二进制中 1 的个数
+
+``` python
+def number_of_1(n):
+    count = 0
+    while n:
+        count += 1
+        n = (n-1) & n
+    return count
+```
