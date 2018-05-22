@@ -1,6 +1,5 @@
 # 模型字段参考
 
-
 ## 字段选项
 
 以下参数适用于所有字段类型。全部都是可选的。
@@ -125,7 +124,6 @@ lambda 表达式不能用于默认字段选项，因为它们不能被迁移序�
 
 这些错误消息通常不会传播到表单。
 
-
 ### help_text
 
 用表单小部件显示额外的 “帮助” 文本。即使您的字段未用于表单，对于文档也很有用。
@@ -147,7 +145,6 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 `primary_key=True`意味着 `null=False` 且 `unique=True`。一个对象只允许有一个主键。
 
 主键字段是只读的。如果您更改现有对象上主键的值并保存它，则会在旧对象旁边创建一个新对象。
-
 
 ### unique
 
@@ -185,7 +182,6 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 
 要为此字段运行的验证器列表。
 
-
 ## 字段类型
 
 ### AutoField
@@ -198,16 +194,13 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 
 `class BigAutoField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#BigAutoField)
 
-
 一个 64 位整数，与 `AutoField` 非常相似，只是保证适合 1 到 9223372036854775807 之间的数字。
 
 ### BigIntegerField
 
 `class BigIntegerField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#BigIntegerField)
 
-
 一个 64 位整数，与 `IntegerField` 非常相似，只不过它保证适合从 -9223372036854775808 到 9223372036854775807 之间的数字。此字段的默认表单小部件是 `TextInput` 。
-
 
 ### BinaryField
 
@@ -219,7 +212,7 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 
 ### BooleanField
 
-`class BooleanField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#BooleanField)  
+`class BooleanField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#BooleanField)
 
 一个 true/false 字段。
 
@@ -245,11 +238,9 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 
 字段的最大长度（以字符为单位）。`max_length` 在数据库级别和 Django 的验证中执行。
 
-
 ### DateField
 
 `class DateField(auto_now=False, auto_now_add=False, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#DateField)
-
 
 表示日期，由 Python 以 `datetime.date` 实例表示。有一些额外的可选参数：
 
@@ -272,15 +263,13 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 
 !> 按照当前的实现，将 `auto_now` 或 `auto_now_add` 设置为 `True` 将导致该字段具有 `editable=False` 和 `blank=True` 设置。
 
-
 ### DateTimeField
 
-`class DateTimeField(auto_now=False, auto_now_add=False, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#DateTimeField)  
+`class DateTimeField(auto_now=False, auto_now_add=False, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#DateTimeField)
 
 表示日期和时间，由 Python 以 `datetime.datetime` 实例表示。采用与 `DateField` 相同的额外参数。
 
 此字段的默认表单小部件是单个 `TextInput`。admin 使用两个独立的 `TextInput` 小部件和 JavaScript 快捷键。
-
 
 ### DecimalField
 
@@ -296,21 +285,19 @@ help_text="Please use the following format: <em>YYYY-MM-DD</em>."
 
 数字中的小数位数。
 
-
 例如，要将精度为 2 位小数的数字存储到 999，您可以使用：
 
 ``` python
 models.DecimalField(..., max_digits=5, decimal_places=2)
 ```
+
 当 `localize` 为 `False` 或 `TextInput` 时，此字段的默认表单小部件为 `NumberInput`。
 
 ### DurationField
 
-`class DurationField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#DurationField)  
-
+`class DurationField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#DurationField)
 
 用于存储时间段的字段 - 由 `timedelta` 建模。
-
 
 ### EmailField
 
@@ -321,7 +308,6 @@ models.DecimalField(..., max_digits=5, decimal_places=2)
 ### FileField
 
 `class FileField(upload_to=None, max_length=100, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/files/#FileField)
-
 
 文件上传字段。
 
@@ -373,7 +359,7 @@ class MyModel(models.Model):
 2. 将 `FileField` 或 `ImageField` 添加到模型中，定义 `upload_to` 选项以指定用于上传文件的 `MEDIA_ROOT` 子目录。
 3. 所有将存储在数据库中的文件都是一个路径（相对于 `MEDIA_ROOT`）。你很可能想使用 Django 提供的便捷 url 属性。例如，如果您的 `ImageField` 被称为 `mug_shot` ，则可以使用 {{object.mug_shot.url}} 在模板中获取图像的绝对路径。
 
-例如，假设您的 `MEDIA_ROOT` 设置为 `'/home/media'`，`upload_to` 设置为 `'photos/%Y/%m/%d'`。`upload_to` 的 `'%Y/%m/%d'` 部分是 `strftime()` 格式;`'％Y'` 是四位数年份，`'％m'` 是两位数月份，`'％d'` 是两位数日期。如果您在 2007年1月15日 上传文件，它将被保存在 ` /home/media/photos/2007/01/15` 目录中。
+例如，假设您的 `MEDIA_ROOT` 设置为 `'/home/media'`，`upload_to` 设置为 `'photos/%Y/%m/%d'`。`upload_to` 的 `'%Y/%m/%d'` 部分是 `strftime()` 格式;`'％Y'` 是四位数年份，`'％m'` 是两位数月份，`'％d'` 是两位数日期。如果您在 2007年1月15日 上传文件，它将被保存在 `/home/media/photos/2007/01/15` 目录中。
 
 如果您想要检索上传文件的磁盘文件名或文件大小，可分别使用 `name` 和 `size` 属性;
 
@@ -415,7 +401,6 @@ class MyModel(models.Model):
 
 可选参数。`True`或 `False`。默认值是 `False`。指定是否应该包含指定位置的文件夹。`allow_folders` 或 `allow_files` 必须有一个是 `True`。
 
-
 当然，这些参数可以一起使用。
 
 一个潜在的问题是匹配适用于基本文件名，而不是完整路径。所以，这个例子：
@@ -428,5 +413,62 @@ FilePathField(path="/home/images", match="foo.*", recursive=True)
 
 `FilePathField` 实例在数据库中创建为 `varchar` 默认最大长度为 100 个字符的字段。与其他字段一样，您可以使用 `max_length` 参数更改最大长度。
 
+### FloatField
 
-###
+`class FloatField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#FloatField)
+
+由 Python 中的 `float` 实例表示的浮点数。
+
+当 `localize` 为 `False` 或 `TextInput` 时，此字段的默认表单小部件为 `NumberInput`。
+
+### ImageField
+
+`class ImageField(upload_to=None, height_field=None, width_field=None, max_length=100, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/files/#ImageField)
+
+继承 `FileField` 的所有属性和方法，但也验证上传的对象是不是有效的 image。
+
+除了可用于 `FileField` 的特殊属性外，`ImageField` 还具有 `height` 和 `width` 属性。
+
+为了便于查询这些属性，`ImageField` 有两个额外的可选参数：
+
+#### height_field
+
+每次保存模型实例时自动填充为图像的高度。
+
+#### width_field
+
+每次保存模型实例时自动填充为图像的宽度。
+
+!> 使用 `ImageField` 必须要安装 Pillow 库
+
+`ImageField` 实例在数据库中创建为默认最大长度为 100 个字符的 varchar 字段。其他字段一样，您可以使用 `max_length` 参数更改最大长度。
+
+该字段的默认表单小部件是 `ClearableFileInput`。
+
+### IntegerField
+
+`class IntegerField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#IntegerField)
+
+一个整数。在 Django 支持的所有数据库中，值从 -2147483648 到 2147483647 都是安全的。当 `localize` 为 `False` 或 `TextInput` 时，此字段的默认表单小部件为 `NumberInput`。
+
+### GenericIPAddressField
+
+`class GenericIPAddressField(protocol='both', unpack_ipv4=False, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#GenericIPAddressField)
+
+一个 IPv4 或 IPv6 地址，采用字符串格式（例如 `192.0.2.30` 或者 `2a02:42fe::4`）。该字段的默认表单小部件是一个 `TextInput`。
+
+#### protocol
+
+限制有效输入的协议。接受的值是 `'both'`（默认），`'IPv4'` 或 `'IPv6'`。匹配不区分大小写。
+
+#### unpack_ipv4
+
+解压 IPv4 映射的地址，如 `::ffff:192.0.2.1`。如果启用此选项，则该地址将解压到 `192.0.2.1`。默认是禁用的。只能在 `protocol` 设置为 `'both'` 时使用。
+
+### NullBooleanField
+
+`class NullBooleanField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#NullBooleanField)
+
+像一个 `BooleanField`，但允许 `NULL` 作为其中一个选项。使用它而不是使用 `null=True` 的 `BooleanField`。此字段的默认表单小部件是 `NullBooleanSelect`。
+
+### PositiveIntegerField
