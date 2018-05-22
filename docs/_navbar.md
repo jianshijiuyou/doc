@@ -9,6 +9,7 @@
   * [用户身份与文件权限](linux/用户身份与文件权限.md)  
   * [存储结构与磁盘划分](linux/存储结构与磁盘划分.md)  
   * [系统服务和防火墙](linux/系统服务和防火墙.md)  
+  * [docker常用命令](linux/docker常用命令.md)  
 * Nginx
   * [安装](nginx/安装.md)
   * [命令行控制](nginx/命令行控制.md)
@@ -17,11 +18,12 @@
   * [用HTTP proxy module配置一个反向代理服务器](nginx/用HTTP_proxy_module配置一个反向代理服务器.md)
   * [杂项](nginx/杂项.md)
 * Python
+  * [python 杂谈](python/python杂谈.md)
   * [内建函数](python/内建函数.md)
   * [itertools](python/itertools.md)
+  * [单元测试框架](python/单元测试框架.md)
   * [Django 笔记](python/django笔记.md)
-* Docker
-  * [常用命令](docker/常用命令.md)
+  * [Django 模型·字段类型](python/django模型字段类型.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)
@@ -33,3 +35,6 @@
   * [平衡查找树](算法/algorithm_9.md)
   * [散列表](算法/algorithm_10.md)
   * [剑指Offer](算法/剑指Offer.md)
+* 其他
+  * [Docker 常用命令](其他/docker常用命令.md)  
+  * [Git 常用命令](其他/git_command.md)  

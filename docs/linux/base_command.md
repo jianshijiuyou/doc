@@ -639,11 +639,31 @@ anaconda-ks.cfg: ASCII text
 /dev/sda: block special
 ```
 
-## 打包压缩与搜索命令
+## 打包压缩
 
-### tar
+| 命令 | 说明
+|:-----------
+| xz | 使用 LZMA 算法的高性能解压缩工具
+| gzip | 流行的 GNU gzip 解压缩程序 <br> 压缩：`gzip filename` <br> 解压缩：`gzip -d filename.gz`
+| bzip2 | 免费无专利 <br> 压缩：`bzip2 filename` <br> 解压缩：`bzip2 -d filename.bz2`
+| zip/unzip | 兼容 WinZIP
+| rar | 兼容 WinRAR
+| 7za | 使用 LZMA 算法的高性能解压缩工具
+| tar | 文件打包、归档 <br> 压缩：`tar -czvf 压缩包名称.tar.gz 要打包的目录` <br> 解压缩：`tar -xzvf 压缩包名称.tar.gz`
 
-tar 命令用于对文件进行打包压缩或解压，格式为“tar [选项] [文件]”。
+| 文件后缀 | 说明 |
+|:---------
+| .bz2 | bzip2
+| .gz | gzip
+| .xz | xz 
+| .tar | tar
+| .tbz | tar + bzip2
+| .tgz | tar + gzip
+| .zip | zip
+| .rar | rar
+| .7z | 7za
+
+tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 
 |参数	|作用
 |:-----
@@ -658,8 +678,7 @@ tar 命令用于对文件进行打包压缩或解压，格式为“tar [选项] 
 |-P	|使用绝对路径来压缩
 |-C	|指定解压到的目录
 
-一般使用 “tar -czvf 压缩包名称.tar.gz 要打包的目录” 命令把指定的文件进行打包压缩；相应的解压命令为 “tar -xzvf 压缩包名称.tar.gz”。
-
+## 搜索
 
 ### grep
 
@@ -673,17 +692,49 @@ grep 命令用于在文本中执行关键词搜索，并显示匹配的结果，
 |-n	|显示行号
 |-v	|反向选择—仅列出没有“关键词”的行
 
+一些例子
 
-使用 grep 命令来查找出当前系统中不允许登录系统的所有用户信息：
+在文件 myfile 中查找包含字符串 mystr 的行
 ```
-[root@linuxprobe ~]# grep /sbin/nologin /etc/passwd
-bin:x:1:1:bin:/bin:/sbin/nologin
-daemon:x:2:2:daemon:/sbin:/sbin/nologin
-adm:x:3:4:adm:/var/adm:/sbin/nologin
-lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
-mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
-operator:x:11:0:operator:/root:/sbin/nologin
+grep -n mystr myfile
 ```
+
+显示 myfile 中第一个字符为字母的所有行
+
+```
+grep '^[a-zA-Z]' myfile
+```
+
+在文件 myfile 中查找首字符不是 # 的行（即过滤掉注释行）
+
+```
+grep -v '^#' myfile
+```
+
+列出 `/etc` 目录（包括子目录）下所有文件内容中包含字符串 “root” 的文件名
+
+```
+grep -lr root /etc/*
+```
+
+查找 `/etc/passwd` 文件中以 `a` 开头的行
+
+```
+grep ^a /etc/passwd
+```
+查找 `/etc/passwd` 文件中以 `a` 开头的行，显示行号
+
+```
+grep -n ^a /etc/passwd
+```
+
+查找/etc/passwd文件中以login结束的行；
+
+```
+grep login$ /etc/passwd
+```
+
+
 
 ### find
 
