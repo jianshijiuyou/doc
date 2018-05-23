@@ -24,6 +24,8 @@
   * [单元测试框架](python/单元测试框架.md)
   * [Django 笔记](python/django笔记.md)
   * [Django 模型·字段类型](python/django模型字段类型.md)
+  * [Django 模型·Meta 选项](python/djangoMeta选项.md)
+  * [Django QuerySet·查询](python/django查询.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)

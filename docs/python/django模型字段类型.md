@@ -472,3 +472,278 @@ FilePathField(path="/home/images", match="foo.*", recursive=True)
 像一个 `BooleanField`，但允许 `NULL` 作为其中一个选项。使用它而不是使用 `null=True` 的 `BooleanField`。此字段的默认表单小部件是 `NullBooleanSelect`。
 
 ### PositiveIntegerField
+
+`class NullBooleanField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#PositiveIntegerField)
+
+像 `IntegerField` 一样，但必须是正数或零（0）。在 Django 支持的所有数据库中，值从 0 到 2147483647 都是安全的。出于向后兼容性的原因，接受值 0。
+
+### PositiveSmallIntegerField
+
+`class PositiveSmallIntegerField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#PositiveSmallIntegerField)
+
+像 `PositiveIntegerField` 一样，但只允许在某个（数据库相关）点下的值。在 Django 支持的所有数据库中，从 0 到 32767 的值都是安全的。
+
+### SlugField
+
+`class SlugField(max_length=50, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#SlugField)
+
+作为某些东西的简短标签，只能包含字母，数字，下划线或连字符。他们一般被用于 URL。
+
+就像 `CharField` 一样，您可以指定 `max_length`。如果未指定 `max_length`，则 Django 将使用默认长度 50。
+
+使用此字段意味着将 `db_index` 设置为 `True`。
+
+根据其他值的值自动预先填充 `SlugField` 通常很有用。您可以在 admin 中使用 `prepopulated_fields` 自动执行此操作。
+
+#### allow_unicode
+
+如果为 `True`，则该字段除 ASCII 字母外还接受 Unicode 字母。默认为 `False`。
+
+### SmallIntegerField
+
+`class SmallIntegerField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#SmallIntegerField)
+
+像 `IntegerField` 一样，但只允许在某个（数据库相关）点下的值。在 Django 支持的所有数据库中，-32768 到 32767 的值都是安全的。
+
+### TextField
+
+`class TextField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#TextField)
+
+一个大文本字段。该字段的默认表单小部件是一个 `Textarea`。
+
+如果您指定了 `max_length` 属性，它将反映在自动生成的表单字段的 Textarea 小部件中。但是它不是在模型或数据库级别实施的。
+
+### TimeField
+
+`class TimeField(auto_now=False, auto_now_add=False, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#TimeField)
+
+表示时间，在 Python 中由 `datetime.time` 实例表示。接受与 `DateField` 相同的自动填充选项。
+
+该字段的默认表单小部件是一个 `TextInput`。admin 添加了一些 `JavaScript` 快捷方式。
+
+### URLField
+
+`class URLField(max_length=200, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#URLField)
+
+一个表示 URL 的 `CharField`。
+
+该字段的默认表单小部件是一个 `TextInput`。
+
+像所有 `CharField` 子类一样，`URLField` 采用可选的 `max_length` 参数。如果您不指定 `max_length` ，则使用默认值 200。
+
+### UUIDField
+
+`class UUIDField(**options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/#UUIDField)
+
+用于存储 UUID 的字段。使用 Python 的 `UUID` 类。在 PostgreSQL 上使用时，它将以 `uuid` 数据类型存储，否则以 `char(32)` 存储。
+
+使用 `primary_key` 参数的 `UUIDField` 是 `AutoField` 的一个很好的替代方案。数据库不会为您生成 UUID，因此建议使用 ` default`：
+
+``` python
+import uuid
+from django.db import models
+
+class MyUUIDModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # other fields
+```
+!> 请注意，`default` 接收的是一个可调用对象，而不是一个 `UUID` 实例。
+
+## 关系字段
+
+### ForeignKey
+
+`class ForeignKey(to, on_delete, **options)` [[source]](https://docs.djangoproject.com/zh-hans/2.0/_modules/django/db/models/fields/related/#ForeignKey)
+
+多对一的关系。需要两个位置参数：与模型相关的类和 `on_delete` 选项。
+
+创建递归关系 -- 与自身具有多对一关系的对象 -- 使用 `models.ForeignKey('self', on_delete=models.CASCADE)` 。
+
+如果您需要在尚未定义的模型上创建关系，则可以使用模型的名称，而不是模型对象本身：
+
+``` python
+from django.db import models
+
+class Car(models.Model):
+    manufacturer = models.ForeignKey(
+        'Manufacturer',
+        on_delete=models.CASCADE,
+    )
+    # ...
+
+class Manufacturer(models.Model):
+    # ...
+    pass
+```
+
+当抽象模型被定义为具体模型的子类时，解析在抽象模型上定义的关系，并且与抽象模型的 app_label 不相关：
+
+`products/models.py`
+
+``` python
+from django.db import models
+
+class AbstractCar(models.Model):
+    manufacturer = models.ForeignKey('Manufacturer', on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+```
+
+`production/models.py`
+
+``` python
+from django.db import models
+from products.models import AbstractCar
+
+class Manufacturer(models.Model):
+    pass
+
+class Car(AbstractCar):
+    pass
+
+# Car.manufacturer will point to `production.Manufacturer` here.
+```
+
+要引用另一个应用程序中定义的模型，可以使用完整的应用程序标签明确指定一个模型。例如，如果上面的Manufacturer模型是在另一个称为production的应用程序中定义的，则需要使用：
+
+``` python
+class Car(models.Model):
+    manufacturer = models.ForeignKey(
+        'production.Manufacturer',
+        on_delete=models.CASCADE,
+    )
+```
+
+当解决两个应用程序之间的循环导入依赖关系时，这种称为懒惰关系的引用可能很有用。
+
+数据库索引是在 `ForeignKey` 上自动创建的。您可以通过将 `db_index` 设置为 `False` 来禁用此功能。如果要为一致性而不是连接创建外键，或者要创建替代索引（如部分索引或多列索引），则可能需要避免索引的开销。
+
+**数据库表示**
+
+在幕后，Django 将 “_id” 附加到字段名称以创建其数据库字段名称。在上例中，`Car` 模型的数据库表将有一个 `manufacturer_id` 列（你可以通过指定db_column来明确地改变它）。但是，除非您编写自定义 SQL，否则您的代码不应该处理数据库列名称。您应该始终处理模型对象的字段名称。
+
+**参数**
+
+#### on_delete
+
+当由 `ForeignKey` 引用的对象被删除时，Django 将模拟由 `on_delete` 参数指定的 SQL 约束的行为。例如，如果您有一个可以为空的 `ForeignKey`，并且您希望在删除引用的对象时将其设置为 `null`：
+
+``` python
+user = models.ForeignKey(
+    User,
+    models.SET_NULL,
+    blank=True,
+    null=True,
+)
+```
+
+`on_delete` 的可能值可在 `django.db.models` 中找到：
+
+* `CASCADE`：级联删除。 Django 模拟 SQL 约束 ON DELETE CASCADE 的行为，并删除包含 `ForeignKey` 的对象。
+* `PROTECT`：通过引发 `ProtectedError`（ `django.db.IntegrityError` 的子类）来防止删除引用的对象。
+* `SET_NULL`：设置 `ForeignKey` 为 `null`; 这只有在 `null=True` 时才可能。
+* `SET_DEFAULT`：将 `ForeignKey`设置为其默认值; 必须设置了 `ForeignKey`的 `default` 参数才行。
+* `SET()`：将 `ForeignKey` 设置为传递给 `SET()` 的值，或者如果传递了可调用对象，则调用它的结果。在大多数情况下，为了避免在导入 `models.py` 时执行查询，必须传递可调用对象：  
+    ``` python
+    from django.conf import settings
+    from django.contrib.auth import get_user_model
+    from django.db import models
+
+    def get_sentinel_user():
+        return get_user_model().objects.get_or_create(username='deleted')[0]
+
+    class MyModel(models.Model):
+        user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.SET(get_sentinel_user),
+        )
+    ```
+* `DO_NOTHING`：不采取行动。如果数据库后端强制执行参照完整性，则会导致 `IntegrityError`，除非您手动将 SQL ON DELETE 约束添加到数据库字段。
+
+#### limit_choices_to
+
+当此字段使用 ModelForm 或 admin 呈现时，为此字段的可用选项设置限制（默认情况下，查询集中的所有对象可供选择）。可以使用字典，Q 对象或返回字典或 Q 对象的可调用对象。
+
+举个栗子
+
+``` python
+staff_member = models.ForeignKey(
+    User,
+    on_delete=models.CASCADE,
+    limit_choices_to={'is_staff': True},
+)
+```
+
+使 ModelForm 上的相应字段仅列出具有 `is_staff=True` 的用户。这可能对 Django 管理员有帮助。
+
+可调用表单可以是有用的，例如，当与 Python 日期时间模块结合使用时，可以按日期范围限制选择。例如：
+
+``` python
+def limit_pub_date_choices():
+    return {'pub_date__lte': datetime.date.utcnow()}
+
+limit_choices_to = limit_pub_date_choices
+```
+
+如果 `limit_choices_to` 为或返回Q对象，这对于复杂查询很有用，那么只有在该模型的 `ModelAdmin` 的 `raw_id_fields` 中未列出该字段时，它才会对管理员中可用的选择产生影响。
+
+#### related_name
+
+从相关对象返回到这个关系的名称。这也是 `related_query_name` 的默认值（用于来自目标模型的反向过滤器名称的名称）。请注意，在定义关系抽象模型时，您必须设置此值;当你这样做时，一些特殊的语法是可用的。
+
+如果你希望 Django 不要反向关联，请将 `related_name` 设置为 `'+'` 或以 `'+'` 结尾。例如，这将确保用户模型不会与此模型有反向关系：
+
+``` python
+user = models.ForeignKey(
+    User,
+    on_delete=models.CASCADE,
+    related_name='+',
+)
+```
+
+#### related_query_name
+
+用于来自目标模型的反向过滤器名称的名称。它默认设置为 `related_name` 或 `default_related_name` 的值，否则默认为模型的名称：
+
+``` python
+# Declare the ForeignKey with related_query_name
+class Tag(models.Model):
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        related_name="tags",
+        related_query_name="tag",
+    )
+    name = models.CharField(max_length=255)
+
+# That's now the name of the reverse filter
+Article.objects.filter(tag__name="important")
+```
+
+像 `related_name` 一样，`related_query_name` 支持通过一些特殊语法的应用程序标签和类插值。
+
+#### to_field
+
+关系所在的相关对象上的字段。默认情况下，Django 使用相关对象的主键。如果您引用不同的字段，则该字段必须具有 `unique=True`。
+
+#### db_constraint
+
+控制是否应在数据库中为该外键创建约束。默认值为 `True`，这几乎可以肯定你想要的; 将其设置为 `False` 可能对数据完整性非常不利。也就是说，以下是您可能需要执行此操作的一些场景：
+
+* 您的遗留数据无效。
+* 你正在分解你的数据库。
+
+如果设置为 `False`，则访问不存在的相关对象将引发其 `DoesNotExist` 异常。
+
+#### swappable
+
+没看懂
+
+### ManyToManyField
+
+略
+
+### OneToOneField
+
+略
