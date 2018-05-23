@@ -278,3 +278,35 @@ def number_of_1(n):
         n = (n-1) & n
     return count
 ```
+
+### 面试题 16：数值的整数次方
+
+``` python
+def power_with_unsigned_exponent(base, exponent):
+    if exponent == 0.0:
+        return 1.0
+    if exponent == 1:
+        return base
+    
+    result = power_with_unsigned_exponent(base, exponent >> 1)
+    result *= result
+    if exponent & 1 == 1:
+        result *= base
+    
+    return result
+
+def power(base, exponent):
+    
+    if base == 0.0 and exponent < 0:
+        raise ValueError("exponent can't is netative when base is 0")
+    abs_exponent = exponent
+    if exponent < 0:
+        abs_exponent = -exponent
+
+    result = power_with_unsigned_exponent(base, abs_exponent)
+
+    if exponent < 0:
+        return 1.0 / result
+    
+    return result
+```
