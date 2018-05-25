@@ -310,3 +310,24 @@ def power(base, exponent):
     
     return result
 ```
+
+### 面试题 21：调整数组顺序使奇数位于偶数前面
+
+#### 方法一
+
+初级方法
+
+``` python
+def reorder(data):
+    start = 0
+    end = len(data) - 1
+    while True:
+        while data[start] & 1:
+            start += 1
+        
+        while not data[end] & 1:
+            end -= 1
+        if start > end:
+            break
+        data[start], data[end] = data[end], data[start]
+```
