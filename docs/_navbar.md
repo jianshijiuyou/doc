@@ -1,15 +1,12 @@
 * Linux
-  * [Linux 上装 Python](linux/install_python.md)  
   * [linux 安装 MySQL](linux/linux_mysql.md)  
   * [Django+uWSGI+Nginx](linux/Django_uWSGI_Nginx.md)  
-  * [virtualenv + virtualenvwrapper](linux/virtualenv_virtualenvwrapper.md)  
   * [常用命令](linux/base_command.md)  
   * [管道符、重定向与环境变量](linux/管道符、重定向与环境变量.md)  
   * [Vim 文本编辑器](linux/Vim文本编辑器.md)  
   * [用户身份与文件权限](linux/用户身份与文件权限.md)  
   * [存储结构与磁盘划分](linux/存储结构与磁盘划分.md)  
   * [系统服务和防火墙](linux/系统服务和防火墙.md)  
-  * [docker常用命令](linux/docker常用命令.md)  
 * Nginx
   * [安装](nginx/安装.md)
   * [命令行控制](nginx/命令行控制.md)
@@ -18,6 +15,7 @@
   * [用HTTP proxy module配置一个反向代理服务器](nginx/用HTTP_proxy_module配置一个反向代理服务器.md)
   * [杂项](nginx/杂项.md)
 * Python
+  * [Linux 上 Python 环境搭建](python/install_python.md)  
   * [python 杂谈](python/python杂谈.md)
   * [内建函数](python/内建函数.md)
   * [itertools](python/itertools.md)
@@ -27,6 +25,7 @@
   * [Django 模型·Meta 选项](python/djangoMeta选项.md)
   * [Django QuerySet·查询](python/django查询.md)
   * [Django QuerySet·API](python/djangoquerysetapi.md)
+  * [Django 模型实例参考](python/django模型实例参考.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)
@@ -41,3 +40,5 @@
 * 其他
   * [Docker 常用命令](其他/docker常用命令.md)  
   * [Git 常用命令](其他/git_command.md)  
+* code
+  * [记一次异步下载图片的代码](code/记一次异步下载图片的代码.md)
