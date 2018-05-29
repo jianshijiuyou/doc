@@ -27,7 +27,8 @@
   * [Django QuerySet·API](python/djangoquerysetapi.md)
   * [Django 模型实例参考](python/django模型实例参考.md)
   * [Django URL 配置](python/djangourlconf.md)
-  * [Django 文件上传](python/djangofileuploads.md)
+  * [Django 文件上传与管理](python/djangofileuploads.md)
+  * [Django 认证](python/django认证.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)
