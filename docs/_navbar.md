@@ -29,6 +29,7 @@
   * [Django URL 配置](python/djangourlconf.md)
   * [Django 文件上传与管理](python/djangofileuploads.md)
   * [Django 认证](python/django认证.md)
+  * [Django 信号](python/djangosignals.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)

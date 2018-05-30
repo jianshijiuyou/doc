@@ -255,6 +255,230 @@ Bollean 类型。指定该用户具有所有权限而不明确分配它们。
 
 # 自定义 Django 中的认证机制
 
-## 指定身份认证后端
+## 其他身份认证来源
+
+### 指定身份认证后端
 
 在幕后，Django 维护着一个 “身份认证后端” 列表，用于检查身份认证。当有人调用 `django.contrib.auth.authenticate()` 时，Django 尝试在所有身份验证后端进行身份验证。如果第一个验证方法失败，Django 会尝试第二个验证方法，依此类推，直到尝试完所有后端。
+
+在 `AUTHENTICATION_BACKENDS` setting 中指定要使用的身份验证后端列表。这应该是一个 Python 路径名列表，指向知道如何进行身份验证的 Python 类。这些类可以在你的 Python 路径上的任何地方。
+
+默认情况下，`AUTHENTICATION_BACKENDS` 被设置为：
+
+``` python
+['django.contrib.auth.backends.ModelBackend']
+```
+
+这是检查 Django 用户数据库并查询内置权限的基本身份验证后端。它不提供通过任何速率限制机制防止暴力攻击的保护。您可以在自定义身份验证后端实现自己的速率限制机制，也可以使用大多数 Web 服务器提供的机制。
+
+`AUTHENTICATION_BACKENDS` 的顺序很重要，所以如果相同的用户名和密码在多个后端有效，Django 将在第一次正确匹配时停止处理。
+
+如果后端引发 `PermissionDenied` 异常，认证将立即失败。 Django 不会检查后面的后端。
+
+### 编写身份认证后端
+
+认证后端是一个实现两个必需方法的类：`get_user(user_id)` 和 `authenticate(request, **credentials)`，以及一组可选的与权限相关的授权方法。
+
+`get_user` 方法需要一个 `user_id` - 可以是一个用户名，数据库 ID 或其他，但必须是用户对象的主键，并返回一个用户对象。
+
+`authenticate` 方法将 `request` 参数和凭据作为关键字参数。大多数情况下，它看起来像这样：
+
+``` python
+class MyBackend:
+    def authenticate(self, request, username=None, password=None):
+        # Check the username/password and return a user.
+        ...
+```
+
+但它也可以验证 token，如下所示：
+
+``` python
+class MyBackend:
+    def authenticate(self, request, token=None):
+        # Check the token and return a user.
+        ...
+```
+
+无论使用哪种方式，`authenticate()` 都应该检查它获取的凭据，并在凭证有效时返回与这些凭证相匹配的用户对象。如果它们无效，则应返回 `None`。
+
+`request` 是一个 `HttpRequest`，如果没有提供给 `authenticate()`（将其传递给后端），它可能是 `None`。
+
+Django admin 与 Django `User` 对象紧密耦合。处理这个问题的最好方法是为每个存在于后端的用户创建一个 Django `User` 对象（例如，在您的 LDAP 目录，外部 SQL 数据库等中）。您可以编写脚本来提前执行此操作，或者您的 `authenticate` 方法可以在用户第一次登录时执行。
+
+以下是一个示例后端，它会根据 `settings.py` 文件中定义的用户名和密码变量进行身份验证，并在用户首次进行身份验证时创建一个 Django `User` 对象：
+
+``` python
+from django.conf import settings
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.models import User
+
+class SettingsBackend:
+    """
+    Authenticate against the settings ADMIN_LOGIN and ADMIN_PASSWORD.
+
+    Use the login name and a hash of the password. For example:
+
+    ADMIN_LOGIN = 'admin'
+    ADMIN_PASSWORD = 'pbkdf2_sha256$30000$Vo0VlMnkR4Bk$qEvtdyZRWTcOsCnI/oQ7fVOu1XAURIZYoOZ3iq8Dr4M='
+    """
+
+    def authenticate(self, request, username=None, password=None):
+        login_valid = (settings.ADMIN_LOGIN == username)
+        pwd_valid = check_password(password, settings.ADMIN_PASSWORD)
+        if login_valid and pwd_valid:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                # Create a new user. There's no need to set a password
+                # because only the password from settings.py is checked.
+                user = User(username=username)
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
+            return user
+        return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+```
+
+## 扩展现有的 User 模型
+
+有两种方法可以扩展默认 `User` 模型，而不用替换自己的模型。如果您需要的更改是纯粹的行为，并且不需要对存储在数据库中的内容进行任何更改，则可以基于 `User` 创建代理模型。这允许代理模型提供的任何功能，包括默认排序，自定义管理器或自定义模型方法。
+
+如果您希望存储与 `User` 相关的信息，则可以将 `OneToOneField` 用于包含字段的模型以获取更多信息。这种一对一模式通常称为 profile 模型，因为它可能存储有关站点用户的非 auth 相关信息。例如，您可以创建一个 `Employee` 模型：
+
+``` python
+from django.contrib.auth.models import User
+
+class Employee(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    department = models.CharField(max_length=100)
+```
+
+假设现有员工 Fred Smith 拥有 `User` 和 `Employee` 模型，则可以使用 Django 的标准相关模型约定访问相关信息：
+
+``` python
+>>> u = User.objects.get(username='fsmith')
+>>> freds_department = u.employee.department
+```
+
+要将 profile 模型的字段添加到 admin 的用户页面，请在应用程序的 `admin.py` 中定义 `InlineModelAdmin`（对于本示例，我们将使用 `StackedInline`），并将其添加到 `UserAdmin` 类，该类用 `User` 类注册：
+
+``` python
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+
+from my_user_profile_app.models import Employee
+
+# Define an inline admin descriptor for Employee model
+# which acts a bit like a singleton
+class EmployeeInline(admin.StackedInline):
+    model = Employee
+    can_delete = False
+    verbose_name_plural = 'employee'
+
+# Define a new User admin
+class UserAdmin(BaseUserAdmin):
+    inlines = (EmployeeInline, )
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+```
+
+这些 profile 模型在任何方面都不是特别的 - 它们只是恰好与用户模型具有一对一链接的 Django 模型。因此，它们不会在创建用户时自动创建，但可以根据需要使用 `django.db.models.signals.post_save` 来创建或更新相关模型。
+
+使用相关模型会产生额外的查询或连接来检索相关数据。根据您的需要，包含相关字段的自定义用户模型可能是您更好的选择，但是，与项目应用程序中默认用户模型的现有关系可能会证明额外的数据库负载。
+
+## 替换自定义 `User` 模型
+
+某些类型的项目可能具有身份验证要求，而 Django 的内置 `User` 模型并不总是适合的。例如，在一些网站上，使用电子邮件地址作为您的身份标记而不是用户名更有意义。
+
+Django 允许您通过为引用自定义模型的 `AUTH_USER_MODEL` setting 提供值来覆盖默认用户模型：
+
+``` python
+AUTH_USER_MODEL = 'myapp.MyUser'
+```
+
+myapp 表示 Django 应用程序的名称（它必须位于 `INSTALLED_APPS` 中），MyUser 是用作用户模型的 Django 模型的名称。
+
+### 启动项目时使用自定义用户模型
+
+如果您正在开始一个新项目，强烈建议设置一个自定义用户模型，即使默认的用户模型对您来说已经足够。此模型的行为与默认用户模型的行为相同，但如果需要，您可以在将来自定义它：
+
+
+``` python
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    pass
+```
+
+不要忘记指向 `AUTH_USER_MODEL`。在创建任何迁移或首次运行 `manage.py migrate` 之前执行此操作。
+
+另外，请在应用程序的 `admin.py` 中注册模型：
+
+``` python
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from .models import User
+
+admin.site.register(User, UserAdmin)
+```
+
+### 引用 User 模型
+
+如果直接引用 `User` （例如，通过在外键中引用），那么您的代码将不适用于 `AUTH_USER_MODEL` setting 已更改为不同用户模型的项目。
+
+`get_user_model()`
+
+不要直接引用 `User`，而应该使用 `django.contrib.auth.get_user_model()` 引用 `User` 模型。此方法将返回当前活动的用户模型 - 如果指定了用户模型，则返回自定义用户模型，否则返回 `User`。
+
+在为用户模型定义外键或多对多关系时，应使用 `AUTH_USER_MODEL` setting 指定自定义模型。例如：
+
+``` python
+from django.conf import settings
+from django.db import models
+
+class Article(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+```
+
+连接到用户模型发送的信号时，应使用 `AUTH_USER_MODEL` setting 指定自定义模型。例如：
+
+``` python
+from django.conf import settings
+from django.db.models.signals import post_save
+
+def post_save_receiver(sender, instance, created, **kwargs):
+    pass
+
+post_save.connect(post_save_receiver, sender=settings.AUTH_USER_MODEL)
+```
+
+一般来说，用导入时执行的代码中的 `AUTH_USER_MODEL` setting 来引用用户模型是最容易的，但是，也可以在 Django 导入模型时调用 `get_user_model()`，以便使用 `models.ForeignKey(get_user_model(), ...)`。
+
+如果您的应用使用多个用户模型进行测试，例如使用 `@override_settings(AUTH_USER_MODEL=...)`，并且将 `get_user_model()` 的结果缓存在模块级变量中，则可能需要侦听 `setting_changed` 信号以清除缓存。例如：
+
+``` python
+from django.apps import apps
+from django.contrib.auth import get_user_model
+from django.core.signals import setting_changed
+from django.dispatch import receiver
+
+@receiver(setting_changed)
+def user_model_swapped(**kwargs):
+    if kwargs['setting'] == 'AUTH_USER_MODEL':
+        apps.clear_cache()
+        from myapp import some_module
+        some_module.UserModel = get_user_model()
+```
+
