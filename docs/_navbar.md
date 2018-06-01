@@ -21,6 +21,7 @@
   * [itertools](python/itertools.md)
   * [单元测试框架](python/单元测试框架.md)
   * [正则表达式](python/python正则表达式.md)
+  * [asyncio 指南](python/asynciolearn.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)
