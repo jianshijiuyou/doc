@@ -82,4 +82,313 @@ def callback(t, future):
 task.add_done_callback(functools.partial(callback, 2))
 ```
 
-可以看到，`coroutine` 执行结束时候会调用回调函数。并通过参数 `future` 获取协程执行的结果。我们创建的 `task` 和回调里的future对象，实际上是同一个对象。
+可以看到，`coroutine` 执行结束时候会调用回调函数。并通过参数 `future` 获取协程执行的结果。我们创建的 `task` 和回调里的 `future` 对象，实际上是同一个对象。
+
+## future 与 result
+
+回调中我们使用了 `future` 对象的 `result` 方法。前面不绑定回调的例子中，我们可以看到 `task` 有 `fiinished` 状态。在那个时候，可以直接读取 `task` 的 `result` 方法。
+
+``` python
+import asyncio
+
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    return "this is result"
+
+loop = asyncio.get_event_loop()
+coro = to_some_work(2)
+task = asyncio.ensure_future(coro)
+loop.run_until_complete(task)
+print(task.result())
+
+# waiting 2
+# this is result
+```
+
+## 阻塞和 await
+
+使用 `async` 可以定义协程对象，使用 `await` 可以针对耗时的操作进行挂起，就像生成器里的 `yield` 一样，函数让出控制权。协程遇到 `await`，事件循环将会挂起该协程，执行别的协程，直到其他的协程也挂起或者执行完毕，再进行下一个协程的执行。
+
+耗时的操作一般是一些 `IO` 操作，例如网络请求，文件读取等。我们使用 `asyncio.sleep` 函数来模拟 `IO` 操作。协程的目的也是让这些 `IO` 操作异步化。
+
+``` python
+import asyncio
+import time
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    await asyncio.sleep(2)
+    return "this is result"
+
+loop = asyncio.get_event_loop()
+coro = to_some_work(2)
+task = asyncio.ensure_future(coro)
+start_time = time.time()
+loop.run_until_complete(task)
+end_time = time.time()
+print(task.result())
+print('total time: {}'.format(end_time-start_time))
+
+# waiting 2
+# this is result
+# total time: 2.000361442565918
+```
+
+在 `sleep` 的时候，使用 `await` 让出控制权。即当遇到阻塞调用的函数的时候，使用 `await` 方法将协程的控制权让出，以便 `loop` 调用其他的协程。现在我们的例子就用耗时的阻塞操作了。
+
+## 并发和并行
+
+> 并发和并行一直是容易混淆的概念。并发通常指有多个任务需要同时进行，并行则是同一时刻有多个任务执行。用上课来举例就是，并发情况下是一个老师在同一时间段辅助不同的人功课。并行则是好几个老师分别同时辅助多个学生功课。简而言之就是一个人同时吃三个馒头还是三个人同时分别吃一个的情况，吃一个馒头算一个任务。
+
+`asyncio` 实现并发，就需要多个协程来完成任务，每当有任务阻塞的时候就 `await`，然后其他协程继续工作。
+
+``` python
+import asyncio
+import time
+
+
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    await asyncio.sleep(x)
+    return "this is result: {}".format(x)
+
+loop = asyncio.get_event_loop()
+coro1 = to_some_work(1)
+coro2 = to_some_work(3)
+coro3 = to_some_work(2)
+tasks = [
+    asyncio.ensure_future(coro1),
+    asyncio.ensure_future(coro2),
+    asyncio.ensure_future(coro3),
+]
+start_time = time.time()
+loop.run_until_complete(asyncio.wait(tasks))
+end_time = time.time()
+
+for task in tasks:
+    print(task.result())
+
+print('total time: {}'.format(end_time-start_time))
+
+# waiting 1
+# waiting 3
+# waiting 2
+# this is result: 1
+# this is result: 3
+# this is result: 2
+# total time: 2.9870269298553467
+```
+
+> `asyncio.wait(tasks)` 也可以使用 `asyncio.gather(*tasks)` 替代，前者接受一个 `task` 列表，后者接收一堆 `task`。
+
+总共需要 `6` 秒的事情通过并发只需要 `3` 秒就可以完成了
+
+## 协程嵌套
+
+使用 `async` 可以定义协程，可以再协程中 `await` 另一个协程。
+
+``` python
+import asyncio
+import time
+
+
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    await asyncio.sleep(x)
+    return "this is result: {}".format(x)
+
+async def main():
+    coro1 = to_some_work(1)
+    coro2 = to_some_work(3)
+    coro3 = to_some_work(2)
+    tasks = [
+        asyncio.ensure_future(coro1),
+        asyncio.ensure_future(coro2),
+        asyncio.ensure_future(coro3),
+    ]
+    dones, pendings = await asyncio.wait(tasks)
+    for task in dones:
+        print(task.result())
+
+start_time = time.time()
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+
+end_time = time.time()
+print('total time: {}'.format(end_time-start_time))
+```
+
+如果使用的是 `asyncio.gather` 创建协程对象，那么 `await` 的返回值就是协程运行的结果。
+
+``` python
+    results = await asyncio.gather(*tasks)
+    for result in results:
+        print(result)
+```
+
+不在 `main` 协程函数里处理结果，直接返回 `await` 的内容，那么最外层的 `run_until_complete` 将会返回 `main` 协程的结果。
+
+``` python
+import asyncio
+import time
+
+
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    await asyncio.sleep(x)
+    return "this is result: {}".format(x)
+
+async def main():
+    coro1 = to_some_work(1)
+    coro2 = to_some_work(3)
+    coro3 = to_some_work(2)
+    tasks = [
+        asyncio.ensure_future(coro1),
+        asyncio.ensure_future(coro2),
+        asyncio.ensure_future(coro3),
+    ]
+    return await asyncio.gather(*tasks) # *************
+
+
+start_time = time.time()
+
+loop = asyncio.get_event_loop()
+results = loop.run_until_complete(main()) # *************
+for result in results:
+    print(result)
+
+end_time = time.time()
+print('total time: {}'.format(end_time-start_time))
+```
+
+或者返回使用 `asyncio.wait` 方式挂起协程。
+
+``` python
+import asyncio
+import time
+
+
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    await asyncio.sleep(x)
+    return "this is result: {}".format(x)
+
+async def main():
+    coro1 = to_some_work(1)
+    coro2 = to_some_work(3)
+    coro3 = to_some_work(2)
+    tasks = [
+        asyncio.ensure_future(coro1),
+        asyncio.ensure_future(coro2),
+        asyncio.ensure_future(coro3),
+    ]
+    return await asyncio.wait(tasks) # *************
+
+
+start_time = time.time()
+
+loop = asyncio.get_event_loop()
+dones, pending = loop.run_until_complete(main()) # *************
+for task in dones:
+    print(task.result())
+
+end_time = time.time()
+print('total time: {}'.format(end_time-start_time))
+```
+
+也可以使用 `asyncio` 的 `as_completed` 方法
+
+``` python
+import asyncio
+import time
+
+
+async def to_some_work(x):
+    print('waiting {}'.format(x))
+    await asyncio.sleep(x)
+    return "this is result: {}".format(x)
+
+async def main():
+    coro1 = to_some_work(1)
+    coro2 = to_some_work(3)
+    coro3 = to_some_work(2)
+    tasks = [
+        asyncio.ensure_future(coro1),
+        asyncio.ensure_future(coro2),
+        asyncio.ensure_future(coro3),
+    ]
+    for task in asyncio.as_completed(tasks):
+        result = await task
+        print(result)
+
+
+start_time = time.time()
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+
+end_time = time.time()
+print('total time: {}'.format(end_time-start_time))
+
+# waiting 1
+# waiting 3
+# waiting 2
+# this is result: 1
+# this is result: 2
+# this is result: 3
+# total time: 3.0048904418945312
+```
+
+!> 注意：使用 `as_completed` 的时候，每执行完一个任务就直接返回了，所以结果是按照时间顺序打印的，和之前的都不一样。
+
+## 协程停止
+
+`future` 对象有几个状态：
+
+* Pending
+* Running
+* Done
+* Cancelled
+
+创建 `future` 的时候，`task` 为 `pending`，事件循环调用执行的时候当然就是 `running`，调用完毕自然就是 `done`，如果需要停止事件循环，就需要先把 `task` 取消。可以使用 `asyncio.Task` 获取事件循环的 `task`
+
+# 结合 aiohttp
+
+一个下载图片的例子
+
+``` python
+import re
+import asyncio
+import aiohttp
+
+
+async def download_img(url):
+    filename_pattern = re.compile(r".*filename=\"(.*?)\";.*?")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            cd = resp.headers['Content-Disposition']
+            filename_match = filename_pattern.match(cd)
+            imgname = filename_match.groups()[0]
+            with open("images/{}".format(imgname),'wb') as fp:
+                img = await resp.read()
+                fp.write(img)
+
+def main():
+    pattern = re.compile(r".*(https.*file\?h=\d+&i=\d+.*?)")
+    img_urls = []
+    with open('imagesurl.txt', 'r') as fp:
+        for line in fp:
+            match = pattern.match(line)
+            if match:
+                url = match.groups()[0]
+                img_urls.append(url)
+    
+    loop = asyncio.get_event_loop()
+    to_do = [download_img(url) for url in img_urls]
+    wait_coro = asyncio.wait(to_do)
+    loop.run_until_complete(wait_coro)
+    loop.close()
+
+if __name__ == '__main__':
+    main()
+```

@@ -36,5 +36,3 @@
 * 其他
   * [Docker 常用命令](其他/docker常用命令.md)  
   * [Git 常用命令](其他/git_command.md)  
-* code
-  * [记一次异步下载图片的代码](code/记一次异步下载图片的代码.md)
