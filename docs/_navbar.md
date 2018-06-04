@@ -16,7 +16,7 @@
   * [杂项](nginx/杂项.md)
 * Python
   * [Linux 上 Python 环境搭建](python/install_python.md)  
-  * [Python 杂谈](python/python杂谈.md)
+  * [Python 杂谈（时间，字符串格式化等...）](python/python杂谈.md)
   * [内建函数](python/内建函数.md)
   * [itertools](python/itertools.md)
   * [单元测试框架](python/单元测试框架.md)
