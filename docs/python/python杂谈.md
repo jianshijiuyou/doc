@@ -23,6 +23,43 @@ echo '{"json":"obj"}' | python -m json.tool
 # }
 ```
 
+# 计时
+
+``` python
+>>> import timeit
+#执行命令
+>>> t2 = timeit.Timer('x=range(1000)')
+#显示时间
+>>> t2.timeit()
+10.620039563513103
+
+#执行命令
+>>> t1 = timeit.Timer('sum(x)', 'x = (i for i in range(1000))')
+#显示时间
+>>> t1.timeit()
+0.1881566039438201
+```
+
+或者
+
+``` python
+In [1]: from timeit import timeit
+  
+In [2]: timeit('x=1')  
+Out[2]: 0.03820111778328037  
+  
+In [3]: timeit('x=map(lambda x:x*10,range(32))')  
+Out[3]: 8.05639690328919  
+```
+
+在 ipython 中可以直接使用
+
+``` python
+In [1]: timeit y=map(lambda x:x**10,range(32))
+372 ns ± 4.94 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+```
+
+
 # 时间格式
 
 `date`, `datetime`, 和 `time` 都支持 `strftime(format)` 方法。
@@ -151,28 +188,28 @@ type            ::=  "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" |
 
 | Type | 含义
 |:------------
-|`'b'`	| Binary format. Outputs the number in base 2.
-|`'c'`	| Character. Converts the integer to the corresponding unicode character before printing.
-|`'d'`	| Decimal Integer. Outputs the number in base 10.
-|`'o'`	| Octal format. Outputs the number in base 8.
-|`'x'`	| Hex format. Outputs the number in base 16, using lower- case letters for the digits above 9.
-|`'X'`	| Hex format. Outputs the number in base 16, using upper- case letters for the digits above 9.
-|`'n'`	| Number. This is the same as 'd', except that it uses the current locale setting to insert the appropriate number separator characters.
-|None	| The same as 'd'.
+|`'b'`	| 二进制格式。输出基数为 2 的数字。
+|`'c'`	| 字符。打印前将整数转换为相应的 unicode 字符。
+|`'d'`	| 十进制整数。以 10 为基数输出数字。
+|`'o'`	| 八进制格式。输出基数为 8 的数字。
+|`'x'`	| 十六进制格式。输出基数为 16 的数字，对于 9 以上的数字使用小写字母。
+|`'X'`	| 十六进制格式。输出基数为 16 的数字，对于 9 以上的数字使用大写字母。
+|`'n'`	| 整数。这与 `'d'` 相同，除了它使用当前区域设置插入适当的数字分隔符。
+|None	| 同 `'d'`。
 
 浮点和小数值的可用表示类型有：
 
 | Type | 含义
 |:------------
-|`'e'`	|Exponent notation. Prints the number in scientific notation using the letter ‘e’ to indicate the exponent. The default precision is 6.
-|`'E'`	|Exponent notation. Same as 'e' except it uses an upper case ‘E’ as the separator character.
-|`'f'`	|Fixed point. Displays the number as a fixed-point number. The default precision is 6.
-|`'F'`	|Fixed point. Same as 'f', but converts nan to NAN and inf to INF.
-|`'g'`	|xxxxxxxxxxx
-|`'G'`	|General format. Same as 'g' except switches to 'E' if the number gets too large. The representations of infinity and NaN are uppercased, too.
-|`'n'`	|Number. This is the same as 'g', except that it uses the current locale setting to insert the appropriate number separator characters.
-|`'%'`	|Percentage. Multiplies the number by 100 and displays in fixed ('f') format, followed by a percent sign.
-|None	|Similar to 'g', except that fixed-point 
+|`'e'`	|指数表示法。使用字母 `'e'` 以科学记数法打印数字以指示指数。默认精度为 `6`。
+|`'E'`	|指数表示法。与 `'e'` 相同，只是它使用大写字母 `'E'` 作为分隔符。
+|`'f'`	|浮点数。将该数字显示为一个浮点数。默认精度为 `6`。
+|`'F'`	|浮点数。与 `'f'` 相同，但将 `nan` 转换为 `NAN` 并将 `inf` 转换为 `INF`。
+|`'g'`	|略
+|`'G'`	|略
+|`'n'`	|略
+|`'%'`	|百分比。将数字乘以 100，并以浮点 (`'f'`) 格式显示，然后显示百分号。
+|None	|类似 `'g'`
 
 ## 格式化例子
 
