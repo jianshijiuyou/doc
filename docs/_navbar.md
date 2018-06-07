@@ -25,6 +25,8 @@
   * [asyncio 指南](python/asynciolearn.md)
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
+* Redis
+  * [Redis 介绍与安装](redis/redis介绍与安装.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)

@@ -257,13 +257,9 @@ curl -v www.baidu.com > /dev/null
 
 ### ps
 
-ps 命令用于查看系统中的进程状态，格式为“ps [参数]”。
+ps 命令用于查看系统中的进程状态。
 
-|参数	|作用
-|:---|:---
-|-a	|显示所有进程（包括其他用户的进程）
-|-u	|用户以及其他详细信息
-|-x	|显示没有控制终端的进程
+![](http://os6ycxx7w.bkt.clouddn.com/images/fdf2a8dc-f42c-43cc-9a04-1cf01c4b0ec1.png)
 
 Linux 系统中时刻运行着许多进程，如果能够合理地管理它们，则可以优化系统的性能。在 Linux 系统中，有 5 种常见的进程状态，分别为运行、中断、不可中断、僵死与停止，其各自含义如下所示。
  * **R（运行）**：进程正在运行或在运行队列中等待。
@@ -274,7 +270,7 @@ Linux 系统中时刻运行着许多进程，如果能够合理地管理它们�
 
 当执行 `ps aux` 命令后通常会看到如下进程状态
 
-!> 或者 `ps -ef`
+> 或者 `ps -ef`
 
 |USER|	PID|	%CPU|	%MEM|	VSZ|	RSS|	TTY|	STAT	|START|	TIME|	COMMAND
 |:----
@@ -320,13 +316,10 @@ alias rm='rm -i'
 
 ### kill
 
-kill 命令用于终止某个指定 PID 的服务进程，格式为“kill [参数] [进程 PID]”。
+kill 命令用于终止某个指定 PID 的服务进程，格式为 `kill -signal %jobnumber`。
 
-强制停止 sshd 服务。
+![](http://os6ycxx7w.bkt.clouddn.com/images/3bcf2325-48b7-43ee-8ab3-c212157bd788.png)
 
-```
-[root@linuxprobe ~]# kill 2156
-```
 
 ### killall
 killall 命令用于终止某个指定名称的服务所对应的全部进程，格式为：“killall [参数] [进程名称]”。
