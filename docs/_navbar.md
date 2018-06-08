@@ -26,7 +26,8 @@
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
 * Redis
-  * [Redis 介绍与安装](redis/redis介绍与安装.md)
+  * [Redis 安装与介绍](redis/redis安装与介绍.md)
+  * [Redis 通用命令和数据结构](redis/通用命令和数据结构.md)
 * 算法
   * [初级排序算法总结](算法/algorithm_2.md)
   * [归并排序](算法/algorithm_3.md)
