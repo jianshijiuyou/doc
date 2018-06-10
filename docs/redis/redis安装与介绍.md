@@ -10,8 +10,8 @@ sudo apt install make gcc
 下载 & 编译
 
 ```
-wget http://download.redis.io/redis-stable.tar.gz
-tar xvzf redis-stable.tar.gz
+wget http://download.redis.io/releases/redis-[stable].tar.gz
+tar xvzf redis-[stable].tar.gz
 cd redis-stable
 make
 ```
@@ -140,12 +140,20 @@ sudo pip install redis hiredis
 测试
 
 ``` python
->>> import redis
->>> conn = redis.Redis()
->>> conn.set('hello', 'world')
-True
->>> conn.get('hello')
-'world'
+In [1]: import redis
+
+In [2]: client = redis.StrictRedis(host='127.0.0.1', port='6379')
+
+In [3]: set_result = client.set('hello', 'python-redis')
+
+In [4]: set_result
+Out[4]: True
+
+In [5]: value = client.get('hello')
+
+In [6]: value
+Out[6]: b'python-redis'
+
 ```
 
 # 概念
