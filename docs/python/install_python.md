@@ -1,5 +1,68 @@
 
-# python3.6 安装
+# python 3.6 在线安装
+
+## Ubuntu
+
+> [原文链接](http://pythonguidecn.readthedocs.io/zh/latest/starting/install3/linux.html)
+
+如果您使用的是 Ubuntu 16.10 或更新版本，可以通过以下命令简单地安装 Python 3.6:
+
+```
+$ sudo apt-get update
+$ sudo apt-get install python3.6
+```
+
+如果您使用的是其他版本的 Ubuntu（比如LTS发行版），我们推荐使用 [deadsnakes PPA](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa) 来安装 Python 3.6:
+
+```
+$ sudo apt-get install software-properties-common
+$ sudo add-apt-repository ppa:deadsnakes/ppa
+$ sudo apt-get update
+$ sudo apt-get install python3.6
+```
+
+[pip 安装](https://pip.pypa.io/en/latest/installing/)
+
+## centos7
+
+> [原文链接](https://janikarhunen.fi/how-to-install-python-3-6-1-on-centos-7.html)
+
+首先安装必要的程序
+
+``` bash
+sudo yum update
+sudo yum install yum-utils
+sudo yum groupinstall development
+```
+
+安装 Python 3.6
+
+标准的 yum 版本库还没有提供最新的 Python 版本，所以我需要安装一个名为 IUM（Inline with Upstream Stable）的附加版本库，它提供了必要的 RPM 软件包。
+
+``` bash
+sudo yum install https://centos7.iuscommunity.org/ius-release.rpm
+```
+
+现在安装了 repository ，我可以继续安装 Python 3.6：
+
+``` bash
+sudo yum install python36u
+```
+
+现在是检查 Python 版本的时候了
+
+``` bash
+python3.6 -V
+```
+
+接下来是 pip 和一些开发包。
+
+``` bash
+sudo yum install python36u-pip
+sudo yum install python36u-devel
+```
+
+# python 3.6 源码安装
 
 下载源码包
 
@@ -230,6 +293,7 @@ pipenv [OPTIONS] COMMAND [ARGS]...
 | `update` | 这个命令会删除所有软件包然后重新安装最新的版本。
 | `run` | 使用 virtualenv 运行命令 <br> <br> 例如：`pipenv run python main.py`
 
+# requirements.txt
 
 生存 requirements.txt 文件
 
