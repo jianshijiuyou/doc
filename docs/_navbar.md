@@ -25,20 +25,21 @@
   * [asyncio 指南](python/asynciolearn.md)
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
-* Redis
-  * [Redis 安装与介绍](redis/redis安装与介绍.md)
-  * [Redis 通用命令和数据结构](redis/通用命令和数据结构.md)
-* 算法
-  * [初级排序算法总结](算法/algorithm_2.md)
-  * [归并排序](算法/algorithm_3.md)
-  * [快速排序](算法/algorithm_4.md)
-  * [优先队列和堆排序](算法/algorithm_5.md)
-  * [排序算法总结](算法/algorithm_6.md)
-  * [符号表](算法/algorithm_7.md)
-  * [二叉查找树](算法/algorithm_8.md)
-  * [平衡查找树](算法/algorithm_9.md)
-  * [散列表](算法/algorithm_10.md)
-  * [剑指Offer](算法/剑指Offer.md)
-* 其他
-  * [Docker 常用命令](其他/docker常用命令.md)  
-  * [Git 常用命令](其他/git_command.md)  
+* DB
+  * [Redis 概念&安装](db/redis安装与介绍.md)
+  * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
+  * [MongoDB 概念&安装](db/mongodb_install.md)
+* Algorithm
+  * [初级排序算法总结](algorithm/algorithm_2.md)
+  * [归并排序](algorithm/algorithm_3.md)
+  * [快速排序](algorithm/algorithm_4.md)
+  * [优先队列和堆排序](algorithm/algorithm_5.md)
+  * [排序算法总结](algorithm/algorithm_6.md)
+  * [符号表](algorithm/algorithm_7.md)
+  * [二叉查找树](algorithm/algorithm_8.md)
+  * [平衡查找树](algorithm/algorithm_9.md)
+  * [散列表](algorithm/algorithm_10.md)
+  * [剑指Offer](algorithm/剑指Offer.md)
+* Other
+  * [Docker 常用命令](other/docker常用命令.md)  
+  * [Git 常用命令](other/git_command.md)  
