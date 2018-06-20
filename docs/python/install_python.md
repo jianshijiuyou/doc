@@ -295,8 +295,26 @@ pipenv [OPTIONS] COMMAND [ARGS]...
 
 # requirements.txt
 
-生存 requirements.txt 文件
+pipenv 生成 requirements.txt 文件
 
 ```
 pipenv lock -r [--dev] > requirements.txt
+```
+
+pipenv 安装 requirements.txt 文件中的所有包
+
+```
+pipenv install -r requirements.txt
+```
+
+pip 生成 requirements.txt 文件
+
+```
+pip freeze > requirements.txt
+```
+
+pip 安装 requirements.txt 文件中的所有包
+
+```
+pip install -r requirements.txt
 ```
