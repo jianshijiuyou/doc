@@ -1,5 +1,4 @@
 * Linux
-  * [linux 安装 MySQL](linux/linux_mysql.md)  
   * [Django+uWSGI+Nginx](linux/Django_uWSGI_Nginx.md)  
   * [常用命令](linux/base_command.md)  
   * [管道符、重定向与环境变量](linux/管道符、重定向与环境变量.md)  
@@ -25,7 +24,9 @@
   * [asyncio 指南](python/asynciolearn.md)
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
+  * [爬虫常用库整理](python/爬虫常用库整理.md)
 * DB
+  * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)
   * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
   * [MongoDB 概念&安装](db/mongodb_install.md)

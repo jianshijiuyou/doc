@@ -298,3 +298,8 @@ MongoDB 实例默认将其数据文件存储在 `/var/lib/mongo` 中，并将其
     sudo rm -r /var/log/mongodb
     sudo rm -r /var/lib/mongo
     ```
+
+# robomongo
+
+[robomongo](https://robomongo.org/) 是 MongoDB 的一个 GUI 工具。
+

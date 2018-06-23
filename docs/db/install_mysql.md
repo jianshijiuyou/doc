@@ -212,7 +212,8 @@ Query OK, 0 rows affected (0.00 sec)
 安装：
 
 ``` bash
-sudo apt install mysql-server
+sudo apt update
+sudo apt install mysql-server mysql-client
 ```
 
 配置文件：
@@ -231,7 +232,7 @@ mysql -uroot -p
 sudo service mysql restart
 ```
 
-允许远程登陆：
+### 允许远程登陆
 
 首先修改配置文件，允许所有 ip
 ```

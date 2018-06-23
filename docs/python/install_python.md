@@ -293,6 +293,14 @@ pipenv [OPTIONS] COMMAND [ARGS]...
 | `update` | 这个命令会删除所有软件包然后重新安装最新的版本。
 | `run` | 使用 virtualenv 运行命令 <br> <br> 例如：`pipenv run python main.py`
 
+## 换源
+
+更换到豆瓣的 pipy 源
+
+```
+sed -i s/pypi.org/pypi.doubanio.com/g Pipfile
+```
+
 # requirements.txt
 
 pipenv 生成 requirements.txt 文件
