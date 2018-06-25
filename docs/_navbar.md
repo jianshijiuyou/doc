@@ -25,6 +25,8 @@
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
   * [爬虫常用库整理](python/爬虫常用库整理.md)
+* 爬虫
+  * [基础库的使用](爬虫/baselib.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)

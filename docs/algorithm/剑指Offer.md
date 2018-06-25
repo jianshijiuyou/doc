@@ -8,7 +8,7 @@
 class Singleton:
     def __new__(cls, *args, **kw):
         if not hasattr(cls, '_instance'):
-            cls._instance = super(*args, **kw)
+            cls._instance = super().__new__(cls, *args, **kw)
         return cls._instance
 ```
 
@@ -22,7 +22,7 @@ class Singleton:
     def __new__(cls, *args, **kw):
         cls.lock.acquire()
         if not hasattr(cls, '_instance'):
-            cls._instance = super(*args, **kw)
+            cls._instance = super().__new__(cls, *args, **kw)
         cls.lock.release()
         return cls._instance
 ```
