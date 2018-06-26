@@ -459,3 +459,58 @@ print(r.status_code
 其他认证，如 OAuth1 等，请参考官方文档
 
 [https://github.com/requests/requests-oauthlib](https://github.com/requests/requests-oauthlib)
+
+# 猫眼电影TOP100
+
+``` python
+import requests
+import re
+import time
+import json
+from requests.exceptions import RequestException
+
+
+headers = {
+    'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+}
+
+def get_one_page(url):
+    try:
+        r = requests.get(url, headers=headers)
+        if r.status_code == requests.codes.ok:
+            return r.text
+        return None
+    except RequestException:
+        return None
+
+def parse_one_page(html):
+    pattern = re.compile(r'<dd>.*?board-index.*?>(\d.*?)</i>.*?<img data-src="(.*?)".*?' +
+                         r'<p class="name"><a.*?>(.*?)</a></p>.*?' +
+                         r'<p class="star">(.*?)</p>.*?' +
+                         r'<p class="releasetime">(.*?)</p>.*?' + 
+                         r'<p class="score"><i class="integer">(.*?)</i><i class="fraction">(.*?)</i></p>', re.S)
+    source = pattern.finditer(html)
+    for item in source:
+        yield {
+            'index': item[1],
+            'image': item[2],
+            'title': item[3],
+            'actor': item[4].strip()[3:],
+            'time': item[5][5:],
+            'score': item[6] + item[7]
+        }
+
+def main(url):
+    html = get_one_page(url)
+    data = parse_one_page(html)
+    with open('maoyan.txt', 'a') as f:
+        for item in data:
+            f.write(json.dumps(item, ensure_ascii=False) + '\n')
+
+if __name__ == '__main__':
+    base = 'http://maoyan.com/board/4?offset={}'
+    for i in range(0, 100, 10):
+        url = base.format(i)
+        main(url)
+        time.sleep(1)
+```
