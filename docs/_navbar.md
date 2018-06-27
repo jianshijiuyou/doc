@@ -30,6 +30,7 @@
   * [requests 的使用](爬虫/requests.md)
   * [xpath 的使用](爬虫/xpath.md)
   * [Beautiful Soup 的使用](爬虫/beautifulsoup.md)
+  * [PyQuery 的使用](爬虫/pyquery.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)
