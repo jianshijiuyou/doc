@@ -24,6 +24,7 @@
   * [asyncio 指南](python/asynciolearn.md)
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
+  * [PyMongo 指南](python/pymongo.md)
 * 爬虫
   * [爬虫常用库整理](爬虫/爬虫常用库整理.md)
   * [urllib 的使用](爬虫/baselib.md)
