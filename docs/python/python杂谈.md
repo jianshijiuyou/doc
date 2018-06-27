@@ -13,7 +13,9 @@ python -m http.server [port]
 ```
 默认 `8000` 端口
 
-# 命令行格式化 JSON
+# JSON 相关
+
+## 命令行格式化
 
 ``` python
 echo '{"json":"obj"}' | python -m json.tool
@@ -22,6 +24,56 @@ echo '{"json":"obj"}' | python -m json.tool
 #     "json": "obj"
 # }
 ```
+
+## 用法
+
+JSON 字符串转字典
+
+``` python
+import json
+
+s = '''
+{
+    "name": "jack",
+    "age": 18
+}
+'''
+
+data = json.loads(s)
+print(data)
+print(type(data))
+
+# {'name': 'jack', 'age': 18}
+# <class 'dict'>
+```
+
+!> loads() 中的 json 字符串内数据必须使用双引号，单引号会报错
+
+字典转 JSON 字符串
+
+``` python
+import json
+
+d = {
+    'name': '张三',
+    'age': 18
+}
+
+data = json.dumps(d, ensure_ascii=False, indent=2)
+print(data)
+print(type(data))
+
+# {
+#   "name": "张三",
+#   "age": 18
+# }
+# <class 'str'>
+
+```
+
+`ensure_ascii=False` 是为了保存成中文
+
+`indent` 添加缩进
 
 # 计时
 

@@ -199,3 +199,30 @@ soup.select('.panel .panel-heading')
 soup.select('ul li')
 soup.select('#list-2 .element')
 ```
+
+# 知乎发现列表抓取
+
+``` python
+import requests
+from bs4 import BeautifulSoup
+
+
+headers = {
+    'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+}
+url = 'https://www.zhihu.com/explore'
+text = requests.get(url, headers=headers).text
+html = BeautifulSoup(text, 'lxml')
+items = html.find_all(class_='explore-feed feed-item')
+with open('zhihu.txt', 'w') as f:
+    for item in items:
+        question = item.h2.a.string
+        author_ = item.find(class_='author-link-line')
+        author = author_.a.string if author_.a else author_.span.string
+        answer = item.find(class_='content').string
+        print(question, file=f)
+        print(author, file=f)
+        print(answer, file=f)
+        print('='*30, file=f)
+
+```
