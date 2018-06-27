@@ -223,3 +223,34 @@ print(result)
 # [<Element a at 0x7f1589781c48>]
 # [<Element li at 0x7f1589781b88>, <Element li at 0x7f1589781c88>, <Element li at 0x7f1589781cc8>, <Element li at 0x7f1589781d08>]
 ```
+
+## 逐层获取
+
+先获取 li 节点，再获取每个 li 节点下面的子节点
+
+``` python
+from lxml import etree
+
+text = '''
+<div>
+    <ul>
+        <li class="item-0"><a href="link1.html">first item</a></li>
+        <li class="item-1"><a href="link2.html">second item</a></li>
+        <li class="item-inactive"><a href="link3.html">third item</a></li>
+        <li class="item-1"><a href="link4.html">fourth item</a></li>
+        <li class="item-0"><a href="link5.html">fifth item</a>
+    </ul>
+</div>
+'''
+html = etree.HTML(text)
+lis = html.xpath('//li')
+for li in lis:
+    a = li.xpath('a')[0]
+    print(a.text)
+
+# first item
+# second item
+# third item
+# fourth item
+# fifth item
+```
