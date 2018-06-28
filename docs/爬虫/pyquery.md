@@ -274,3 +274,59 @@ li = doc('li:gt(2)') # 第三个 li 之后的 li 节点
 li = doc('li:nth-child(2n)') # 偶数位置 li 节点
 li = doc('li:contains(second)') # 包含 second 文本的 li 节点
 ```
+
+# 微博热门抓取
+
+``` python
+import requests
+from pyquery import PyQuery as pq
+from pymongo import MongoClient
+import time
+
+headers = {
+    'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+    'Referer': 'https://m.weibo.cn/',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json, text/plain, */*',
+    'Host': 'm.weibo.cn'
+}
+
+base_url = 'https://m.weibo.cn/api/container/getIndex?containerid=102803&openApp=0&page={}'
+
+def get_page(page):
+    try:
+        url = base_url.format(page)
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except requests.ConnectionError as e:
+        print('error====', e.args)
+        return None
+
+def parse_page(json):
+    data = json.get('data')
+    cards = data.get('cards')
+    for card in cards:
+        mblog = card.get('mblog', None)
+        if mblog:
+            weibo = {}
+            weibo['id'] = mblog.get('id')
+            weibo['text'] = pq(mblog.get('text')).text()
+            weibo['comments'] = mblog.get('comments_count')
+            weibo['attitudes'] = mblog.get('attitudes_count')
+            weibo['reposts'] = mblog.get('reposts_count')
+            yield weibo
+
+client = MongoClient()
+weibo = client.weibo
+remen = weibo.remen
+
+if __name__ == '__main__':
+    for page in range(1, 11):
+        json = get_page(page)
+        for weibo in parse_page(json):
+            remen.insert_one(weibo)
+        print('爬取 {} 页...'.format(page))
+        time.sleep(1)
+```
