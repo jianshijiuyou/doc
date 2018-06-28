@@ -392,3 +392,118 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+# 多线程多进程
+
+多线程应该使用 `threading` 模块  
+多进程应该使用 `multiprocessing` 模块
+
+`concurrent.futures` 模块是对上面两个的封装，使用起来更加简单
+
+## 多线程
+
+
+``` python
+from concurrent import futures
+import threading
+
+def task(args):
+    print(threading.current_thread().getName())
+    return args
+
+MAX_WORKERS = 5
+
+with futures.ThreadPoolExecutor(MAX_WORKERS) as executor:
+    res = executor.map(task, range(10))
+    print(list(res))
+
+# ThreadPoolExecutor-0_0
+# ThreadPoolExecutor-0_0
+# ThreadPoolExecutor-0_1
+# ThreadPoolExecutor-0_1
+# ThreadPoolExecutor-0_2
+# ThreadPoolExecutor-0_2
+# ThreadPoolExecutor-0_1
+# ThreadPoolExecutor-0_4
+# ThreadPoolExecutor-0_2
+# ThreadPoolExecutor-0_0
+# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+方法二
+
+``` python
+from concurrent import futures
+import threading
+
+def task(args):
+    print(threading.current_thread().getName())
+    return args
+
+with futures.ThreadPoolExecutor(max_workers=3) as executor:
+    to_do = []
+    for item in range(10):
+        future = executor.submit(task, item) # 添加任务
+        to_do.append(future)
+
+    for future in futures.as_completed(to_do): # 当任务完成就返回结果
+        result = future.result()
+        print(result)
+
+# ThreadPoolExecutor-0_0
+# ThreadPoolExecutor-0_0
+# ThreadPoolExecutor-0_1
+# 1
+# ThreadPoolExecutor-0_0
+# ThreadPoolExecutor-0_1
+# ThreadPoolExecutor-0_2
+# 0
+# ThreadPoolExecutor-0_0
+# ThreadPoolExecutor-0_1
+# ThreadPoolExecutor-0_2
+# 2
+# ThreadPoolExecutor-0_0
+# 4
+# 3
+# 5
+# 6
+# 7
+# 8
+# 9
+```
+
+## 多进程
+
+``` python
+from concurrent import futures
+import multiprocessing
+
+def task(args):
+    print(multiprocessing.current_process().name)
+    return args
+
+with futures.ProcessPoolExecutor() as executor: # 默认为 os.cpu_count() 数量的进程
+    res = executor.map(task, range(10))
+    print(list(res))
+```
+
+或者
+
+``` python
+from concurrent import futures
+import multiprocessing
+
+def task(args):
+    print(multiprocessing.current_process().name)
+    return args
+
+with futures.ProcessPoolExecutor() as executor:
+    to_do = []
+    for item in range(10):
+        future = executor.submit(task, item) # 添加任务
+        to_do.append(future)
+
+    for future in futures.as_completed(to_do): # 当任务完成就返回结果
+        result = future.result()
+        print(result)
+```
