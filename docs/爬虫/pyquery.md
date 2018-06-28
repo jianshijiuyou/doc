@@ -330,3 +330,90 @@ if __name__ == '__main__':
         print('爬取 {} 页...'.format(page))
         time.sleep(1)
 ```
+
+# 头条街拍图片抓取
+
+``` python
+import requests
+import os
+import time
+from hashlib import md5
+from urllib.parse import urlencode
+from concurrent import futures
+
+
+headers = {
+    'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36',
+    'Referer': 'https://www.toutiao.com/search/?keyword=%E8%A1%97%E6%8B%8D',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept': 'application/json, text/javascript',
+    'content-type': 'application/x-www-form-urlencoded',
+}
+
+# img_base_url = 'http://p3.pstatp.com/origin/pgc-image/{}'
+page_base_url = 'https://www.toutiao.com/search_content/?'
+
+def get_page(offset):
+    data = {
+        'offset': offset,
+        'format': 'json',
+        'keyword': '街拍',
+        'autoload': True,
+        'count': 20,
+        'cur_tab': 1,
+        'from': 'search_tab'
+    }
+    url = page_base_url + urlencode(data)
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except requests.ConnectionError as e:
+        print('error', e.args)
+        return None
+
+def get_img_urls(json):
+    data = json.get('data')
+    for item in data:
+        image_list = item.get('image_list', None)
+        if image_list:
+            for img_url in image_list:
+                # img_name = os.path.basename(img_url.get('url'))
+                yield img_url.get('url')[2:]
+
+def img_counter():
+    count = 0
+    def counter():
+        nonlocal count
+        count += 1
+        print('已保存 {} 张图片'.format(count))
+    return counter
+
+img_add_msg = img_counter()
+
+def save_img(url):
+    if not os.path.exists('img'):
+        os.mkdir('img')
+    try:
+        response = requests.get("http://"+url)
+        if response.status_code == 200:
+            file_md5 = md5(response.content).hexdigest()
+            filename = '{}/{}.{}'.format('img', file_md5, 'jpg')
+            if not os.path.exists(filename):
+                with open(filename, 'wb') as f:
+                    f.write(response.content)
+                img_add_msg()
+    except requests.ConnectionError as e:
+        print('error', e.args)
+        
+
+if __name__ == '__main__':
+    with futures.ThreadPoolExecutor(max_workers=10) as executor:
+        for offset in range(0, 100, 20):
+            json = get_page(offset)
+            for img_url in get_img_urls(json):
+                executor.submit(save_img, img_url)
+            time.sleep(1)
+
+```

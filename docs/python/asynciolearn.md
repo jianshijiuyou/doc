@@ -472,6 +472,8 @@ with futures.ThreadPoolExecutor(max_workers=3) as executor:
 # 9
 ```
 
+!> 如果发现任务函数提前结束，加上返回值试试
+
 ## 多进程
 
 ``` python
