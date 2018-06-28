@@ -275,6 +275,14 @@ li = doc('li:nth-child(2n)') # 偶数位置 li 节点
 li = doc('li:contains(second)') # 包含 second 文本的 li 节点
 ```
 
+# 问题
+
+当 html 中有 xmlns 属性时可能会出问题，请替换掉
+
+``` python
+doc = pq(html.replace('xmlns', 'another_attr'))
+```
+
 # 微博热门抓取
 
 ``` python
@@ -417,3 +425,4 @@ if __name__ == '__main__':
             time.sleep(1)
 
 ```
+

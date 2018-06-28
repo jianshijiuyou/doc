@@ -681,6 +681,8 @@ tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 |-P	|使用绝对路径来压缩
 |-C	|指定解压到的目录
 
+![](http://os6ycxx7w.bkt.clouddn.com/images/20180628205407.png)
+
 ## 搜索
 
 ### grep
