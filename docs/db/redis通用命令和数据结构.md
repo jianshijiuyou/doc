@@ -397,3 +397,18 @@ AOF 文件会越来越大，使用 `bgrewriteaof` 命令可以重写 AOF 文件�
 
 ![](http://os6ycxx7w.bkt.clouddn.com/images/20180611165211503.png)
 
+# redis-py 使用
+
+redis-py 库提供了两个类 Redis 和 StrictRedis 来实现 Redis 的命令操作。
+
+推荐使用 StrictRedis，它和 Redis 命令参数表现一致。
+
+``` python
+from redis import StrictRedis
+
+redis = StrictRedis()
+redis.set('name', 'Bob')
+print(redis.get('name'))
+```
+
+推荐阅读 [https://cuiqingcai.com/5587.html](https://cuiqingcai.com/5587.html)

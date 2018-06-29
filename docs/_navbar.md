@@ -24,7 +24,9 @@
   * [asyncio 指南](python/asynciolearn.md)
   * [python 高级编程](python/python高级编程.md)
   * [描述符使用指南](python/descriptorhowtoguide.md)
+  * [元类的使用](python/usemetaclsss.md)
   * [PyMongo 指南](python/pymongo.md)
+
 * 爬虫
   * [爬虫常用库整理](爬虫/爬虫常用库整理.md)
   * [urllib 的使用](爬虫/baselib.md)
@@ -33,6 +35,7 @@
   * [Beautiful Soup 的使用](爬虫/beautifulsoup.md)
   * [PyQuery 的使用](爬虫/pyquery.md)
   * [Selenium 的使用](爬虫/selenium.md)
+  * [验证码识别](爬虫/验证码识别.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)

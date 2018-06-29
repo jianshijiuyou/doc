@@ -277,11 +277,24 @@ li = doc('li:contains(second)') # 包含 second 文本的 li 节点
 
 # 问题
 
+## xmlns 问题
+
 当 html 中有 xmlns 属性时可能会出问题，请替换掉
 
 ``` python
 doc = pq(html.replace('xmlns', 'another_attr'))
 ```
+
+## 乱码问题
+
+``` python
+doc('xxx').html().encode('ISO-8859-1').decode('gb2312')
+# or
+doc('xxx').html().encode('latin1').decode('gb2312')
+```
+
+是 gb2312 还是别的看网站什么编码了
+
 
 # 微博热门抓取
 

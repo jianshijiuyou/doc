@@ -384,9 +384,9 @@ import requests
 
 proxies = {
     'http': 'http://127.0.0.1:1080',
-    'https': 'http://127.0.0.1:1080'
+    'https': 'https://127.0.0.1:1080'
 }
-r = requests.get('https://www.google.com', proxies=proxies)
+r = requests.get('http://httpbin.org/get', proxies=proxies)
 print(r.text)
 ```
 
@@ -395,7 +395,7 @@ print(r.text)
 ``` python
 proxies = {
     'http': 'http://user:paaword@127.0.0.1:1080',
-    'https': 'http://user:paaword@127.0.0.1:1080'
+    'https': 'https://user:paaword@127.0.0.1:1080'
 }
 r = requests.get('https://www.google.com', proxies=proxies)
 print(r.text)
@@ -405,7 +405,7 @@ print(r.text)
 
 先安装 socks 库
 
-`pip install requests[socks]`
+`pip install 'requests[socks]'`
 
 实际是安装 `PySocks`
 

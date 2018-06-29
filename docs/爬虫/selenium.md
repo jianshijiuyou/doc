@@ -284,6 +284,35 @@ finally:
     browser.close()
 ```
 
+# 代理设置
+
+chrome
+
+``` python
+from selenium import webdriver
+
+proxy = '127.0.0.1:1080'
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--proxy-server=http://' + proxy)
+browser = webdriver.Chrome(chrome_options=chrome_options)
+browser.get('http://httpbin.org/get')
+```
+
+PhantomJS
+
+``` python
+from selenium import webdriver
+
+service_args = [
+    '--proxy=127.0.0.1:1080',
+    '--proxy-type=http',
+    # '--proxy-auth=username:passwrod'
+]
+browser = webdriver.PhantomJS(service_args=service_args)
+browser.get('http://httpbin.org/get')
+
+```
+
 # Chrome Headless 模式
 
 使用 Chrome 的无界面模式（59 版本以上）
