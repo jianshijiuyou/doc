@@ -21,7 +21,7 @@
 | `git merge <branch name>` | 把当前分支和指定分支合并 <br> 一般在 master 分支上操作，合并其他分支
 | `git merge --abort` | 取消合并
 | `git rebase master` | 把当前分支所有的 commit 提交到 master 分支上 <br> 一般执行还需要执行 `git checkout master` 和 `git merge branch1` <br> **一般不会在 master 分支上执行 `rebase`**
-
+| `git config --global core.editor vim` | 将默认 commit 的编辑器修改为 vim |
 
 # 问题修复
 

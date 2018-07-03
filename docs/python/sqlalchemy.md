@@ -7,11 +7,13 @@
 
 ``` python
 from sqlalchemy import create_engine
-# engine = create_engine('mysql+mysqlconnector://username:password@ip:port/database')
+# engine = create_engine('mysql+pymysql://username:password@ip:port/database')
 engine = create_engine('sqlite:///:memory:',echo=True)
 ```
 
 `echo` 参数为 `True` 时，会显示每条执行的 SQL 语句，可以关闭。`create_engine()` 返回一个 `Engine` 的实例，它表示通过数据库语法处理细节的核心接口，在这种情况下，数据库语法将会被解释称 Python 的类方法。
+
+> [MySql 的各种方言支持详情](http://docs.sqlalchemy.org/en/latest/dialects/mysql.html)
 
 ## 声明映射类
 
@@ -25,15 +27,42 @@ Base = declarative_base()
 然后就可以创建映射类了
 
 ``` python
-from sqlalchemy import Column, Integer, String
-
-class User(Base):
-    __tablename__= 'users'
-    id= Column(Integer(), primary_key=True)
-    name = Column(String(10))
+>>> from sqlalchemy import Column, Integer, String
+>>> class User(Base):
+...     __tablename__ = 'users'
+...
+...     id = Column(Integer, primary_key=True)
+...     name = Column(String)
+...     fullname = Column(String)
+...     password = Column(String)
+...
+...     def __repr__(self):
+...        return "<User(name='%s', fullname='%s', password='%s')>" % (
+...                             self.name, self.fullname, self.password)
 ```
 
 !> 用 `Declarative` 构造的一个类至少需要一个 `__tablename__` 属性，一个主键行。
+
+## 创建数据库
+
+如果数据库已经存在，则可以不执行
+
+``` python
+>>> Base.metadata.create_all(engine)
+SELECT ...
+PRAGMA table_info("users")
+()
+CREATE TABLE users (
+    id INTEGER NOT NULL, name VARCHAR,
+    fullname VARCHAR,
+    password VARCHAR,
+    PRIMARY KEY (id)
+)
+()
+COMMIT
+```
+
+## 创建映射类实例
 
 完成映射后，现在让我们创建并检查一个 `User` 对象：
 
@@ -449,3 +478,13 @@ SQLAlchemy 默认是将相关字段设置为 `None`，而不是级联删除，�
 ...     def __repr__(self):
 ...         return "<Address(email_address='%s')>" % self.email_address
 ```
+
+# 第三方库
+
+[sqlalchemy-mixins](https://github.com/absent1706/sqlalchemy-mixins)
+
+像 Django ORM 一样操作查询
+
+[sqlalchemy-repr](https://github.com/manicmaniac/sqlalchemy-repr)
+
+自动生成一个 SQLAlchemy 模型的漂亮 `repr`。
