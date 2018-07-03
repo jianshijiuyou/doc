@@ -26,6 +26,7 @@
   * [描述符使用指南](python/descriptorhowtoguide.md)
   * [元类的使用](python/usemetaclsss.md)
   * [PyMongo 指南](python/pymongo.md)
+  * [SQLAlchemy 指南](python/sqlalchemy.md)
 
 * 爬虫
   * [爬虫常用库整理](爬虫/爬虫常用库整理.md)
