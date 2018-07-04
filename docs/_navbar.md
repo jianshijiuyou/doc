@@ -37,6 +37,7 @@
   * [PyQuery 的使用](爬虫/pyquery.md)
   * [Selenium 的使用](爬虫/selenium.md)
   * [验证码识别](爬虫/验证码识别.md)
+  * [Charles 的使用](爬虫/charles.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)

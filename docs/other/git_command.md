@@ -22,6 +22,8 @@
 | `git merge --abort` | 取消合并
 | `git rebase master` | 把当前分支所有的 commit 提交到 master 分支上 <br> 一般执行还需要执行 `git checkout master` 和 `git merge branch1` <br> **一般不会在 master 分支上执行 `rebase`**
 | `git config --global core.editor vim` | 将默认 commit 的编辑器修改为 vim |
+| `git config –global user.name "YOUR NAME"` | 全局配置用户名
+| `git config –global user.email "YOUR EMAIL ADDRESS"` | 全局配置邮箱
 
 # 问题修复
 
