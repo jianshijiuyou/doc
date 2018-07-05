@@ -237,3 +237,11 @@ ITEM_PIPELINES = {
 MONGO_URI = 'localhost'
 MONGO_DB = 'tutorial'
 ```
+
+# Scrapy shell
+
+测试地址
+
+```
+scrapy shell http://doc.scrapy.org/en/latest/_static/selectors-sample1.html
+```
