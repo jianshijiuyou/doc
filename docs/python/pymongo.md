@@ -199,6 +199,16 @@ result = collection.update_many({'age': {'$gt': 16}}, {'$inc': {'age': 1}})
 print(result.matched_count, result.modified_count)
 ```
 
+## 更新插入
+
+存在即更新，不存在则插入
+
+``` python
+collection.update({'nickname': 'xxx'}, {'age': 18}, True)
+```
+
+第三个参数为 True 则实现上述逻辑
+
 # 删除
 
 ``` python

@@ -8,7 +8,7 @@
 class Singleton:
     def __new__(cls, *args, **kw):
         if not hasattr(cls, '_instance'):
-            cls._instance = super().__new__(cls, *args, **kw)
+            cls._instance = super().__new__(cls)
         return cls._instance
 ```
 
@@ -63,6 +63,21 @@ class A(metaclass=Singleton):
 ```
 
 4 使用模块
+
+5 还是老方法实用
+
+``` python
+class Singleton:
+
+    def __init__(self):
+        print('__init__')
+
+    @classmethod
+    def instance(cls):
+        if not hasattr(cls, '_instance'):
+            cls._instance = cls()
+        return cls._instance
+```
 
 ### 面试题 3：数组中重复的数字
 

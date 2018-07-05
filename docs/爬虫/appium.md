@@ -213,3 +213,143 @@ els = driver.find_element_by_class_name('listview')
 action1 = TouchAction(driver)
 action1.press(els[0]).move_to(x=10, y=0).move_to(x=10, y=-75).release()
 ```
+
+# 问题
+
+## 中文输入问题
+
+[https://www.cnblogs.com/yoyoketang/p/6128820.html](https://www.cnblogs.com/yoyoketang/p/6128820.html)
+
+# appium 结合 mitmdump 抓取京东 app 商品评论
+
+mitmdump 对应代码
+
+``` python
+import json
+import re
+from urllib.parse import unquote
+from pymongo import MongoClient
+
+
+class JingDong:
+
+    def __init__(self):
+        self.client = MongoClient('mongodb://127.0.0.1:27017/')
+        self.jingdong = self.client.jingdong
+        self.wares = self.jingdong.wares
+        self.comments = self.jingdong.comments
+
+    @classmethod
+    def instance(cls):
+        if not hasattr(cls, '_instance'):
+            cls._instance = cls()
+        return cls._instance
+
+def response(flow):
+    wares = JingDong.instance().wares
+    comments = JingDong.instance().comments
+    # 获取商品信息
+    url = 'https://cdnware.m.jd.com'
+    if flow.request.url.startswith(url):
+        text = flow.response.text
+        data = json.loads(text)
+        try:
+            basicInfo = data.get('wareInfo').get('basicInfo')
+            ware = {
+                'ware_id': basicInfo.get('wareId'),
+                'name': basicInfo.get('wareId'),
+                'wareImage': basicInfo.get('wareImage')
+            }
+            print(ware)
+            wares.insert_one(ware)
+        except Exception as e:
+            print(e.args)
+    # 获取评论信息
+    # url = 'https://api.m.jd.com/client.action?functionId=getCommentListWithCard'
+    url = 'functionId=getCommentListWithCard'
+    if url in flow.request.url:
+        request_body = unquote(flow.request.text)
+        pattern = re.compile(r'"sku":"(\d+)"')
+        result = re.search(pattern, request_body)
+        if result:
+            ware_id = result.group(1)
+            data = json.loads(flow.response.text)
+            commentInfoList = data.get('commentInfoList')
+            for item in commentInfoList:
+                commentInfo = item.get('commentInfo')
+                comment = {
+                    'ware_id': ware_id,
+                    'msg': commentInfo.get('commentData'),
+                    'data': commentInfo.get('commentDate'),
+                    'nickName': commentInfo.get('userNickName'),
+                    'pictures': commentInfo.get('pictureInfoList')
+                }
+                print(comment)
+                comments.insert_one(comment)
+```
+
+appium 对应代码
+
+``` python
+import time
+from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+
+KEYWORD = '手机'
+
+desired_caps = {
+    "platformName": "Android",
+    "deviceName": "YQ601",
+    "appPackage": "com.jingdong.app.mall",
+    "appActivity": "com.jingdong.app.mall.main.MainActivity",
+    "unicodeKeyboard": True, # 解决中文输入问题
+    "resetKeyboard": True # 禁用软键盘，解决中文输入问题
+}
+
+driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+wait = WebDriverWait(driver, 50)
+# 同意协议
+agree = wait.until(EC.presence_of_element_located((By.ID, 'com.jingdong.app.mall:id/bsw')))
+agree.click()
+
+# 关闭广告
+close_button = wait.until(EC.presence_of_element_located((By.ID, 'com.jingdong.app.mall:id/l6')))
+close_button.click()
+# 点击搜索框
+search_edit = wait.until(EC.presence_of_element_located((By.ID, 'com.jingdong.app.mall:id/rc')))
+search_edit.click()
+
+# 输入关键字
+search_text = wait.until(EC.presence_of_element_located((By.ID, 'com.jd.lib.search:id/search_text')))
+search_text.set_text(KEYWORD)
+
+# 点击搜索
+search = wait.until(EC.presence_of_element_located((By.ID, 'com.jingdong.app.mall:id/avm')))
+search.click()
+
+# 点击条目
+item = wait.until(EC.presence_of_element_located((By.ID, 'com.jd.lib.search:id/product_list_item')))
+item.click()
+
+
+# 等待加载完成
+wait.until(EC.presence_of_element_located((By.ID, 'com.jd.lib.productdetail:id/detail_desc_description')))
+# 向下滑动
+driver.swipe(400, 800, 400, 100, 300)
+
+# 点击评论
+comment = wait.until(EC.presence_of_element_located((By.ID, 'com.jd.lib.productdetail:id/pd_tab3')))
+comment.click()
+
+# 等待加载完成
+wait.until(EC.presence_of_element_located((By.ID, 'com.jd.lib.shareorder:id/comment_list_item_root')))
+
+while True:
+    # 向下滑动
+    driver.swipe(400, 800, 400, 100, 300)
+    time.sleep(1)
+```
