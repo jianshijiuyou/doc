@@ -40,6 +40,7 @@
   * [Charles 的使用](爬虫/charles.md)
   * [mitmproxy 的使用](爬虫/mitmproxy.md)
   * [appium 的使用](爬虫/appium.md)
+  * [Scrapy 入门](爬虫/scrapy_first.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)
