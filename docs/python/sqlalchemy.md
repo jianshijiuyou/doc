@@ -43,9 +43,9 @@ Base = declarative_base()
 
 !> 用 `Declarative` 构造的一个类至少需要一个 `__tablename__` 属性，一个主键行。
 
-## 创建数据库
+## 创建数据库表
 
-如果数据库已经存在，则可以不执行
+如果数据库表已经存在，则可以不执行
 
 ``` python
 >>> Base.metadata.create_all(engine)

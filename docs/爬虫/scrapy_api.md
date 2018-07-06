@@ -252,3 +252,397 @@ DOWNLOADER_MIDDLEWARES = {
 ```
 scrapy crawl httpbin
 ```
+
+# Spider Middleware
+
+作用
+
+* 在 `Response` 从 Downloader 发送给 Spider 之前对其进行处理
+* 在 `Request` 从 Spider 发送给 Scheduler 之前对其进行处理
+* 在 `Item` 从 Spider 发送给 Item Pipeline 之前对其进行处理
+
+## 使用说明
+
+Scrapy 内置了许多爬虫中间件，都定义在 `SPIDER_MIDDLEWARES_BASE` 变量中
+
+``` python
+{
+    'scrapy.spidermiddlewares.httperror.HttpErrorMiddleware': 50,
+    'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': 500,
+    'scrapy.spidermiddlewares.referer.RefererMiddleware': 700,
+    'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware': 800,
+    'scrapy.spidermiddlewares.depth.DepthMiddleware': 900,
+}
+```
+
+自己写的中间件应该放在 `SPIDER_MIDDLEWARES` 中
+
+``` python
+SPIDER_MIDDLEWARES = {
+    'myproject.middlewares.CustomSpiderMiddleware': 543,
+}
+```
+
+##  核心方法
+
+* `process_spider_input(response, spider)`
+
+    当 `Response` 被中间件处理时调用
+
+    应该返回 `None` 或者抛出异常
+
+    如果返回 None，一切照旧
+
+    如果抛出异常，终止调用链，而调用 `Request` 的 `errback()` 方法。`errback` 的输出将会被重新输入到中间件中，使用 `process_spider_output()` 方法来处理，当其抛出异常时则调用 `process_spider_exception()` 来处理。
+
+* `process_spider_output(response, result, spider)`
+
+    当 Spider 处理 `Response` 返回结果时被调用
+
+    `result` 时包含 `Request` 或 `Item` 对象的可迭代对象，即 Spider 返回的结果
+
+    必须返回包含 `Request` 或 `Item` 对象的可迭代对象
+
+* `process_spider_exception(response, exception, spider)`
+
+    当 Spider 或 Spider Middleware 的 `process_spider_input()` 方法抛出异常时被调用
+
+    必须返回 `None` 或返回包含 `Response` 或 `Item` 对象的可迭代对象
+
+    如果返回 `None`，Scrapy 将继续处理异常
+
+    如果返回可迭代对象，则其他 Spider Middleware 的 `process_spider_output()` 方法被调用，其他的  `process_spider_exception()` 方法则不会被调用
+
+
+* `process_start_requests(start_requests, spider)`
+
+    该方法以 Spider 启动的 `Request` 为参数被调用，执行过程类似 `process_spider_output()` ，只不过它没有关联的 `Response`，且必须返回 `Request`。
+
+    必须返回包含 `Request` 对象的可迭代对象
+
+# Item Pipeline
+
+当 Spider 解析完 Response 之后，Item 就会传递到 Item Pipeline，被定义的 Item Pipeline 组件会顺次调用，完成一连串的处理过程，如数据清洗，存储等。
+
+主要功能：
+
+* 清理 HTML 数据
+* 验证爬取数据，检查爬取字段。
+* 查重并丢弃重复字段
+* 将爬取结果保存到数据库
+
+## 核心方法
+
+自定义 Item Pipeline 必须要实现 `process_item(self, item, spider)` 方法。还有几个比较实用的方法。
+
+* `process_item(self, item, spider)`
+
+    必须实现的方法，必须返回 Item 类型的值或者抛出 `DropItem` 异常
+
+    如果返回 Item ，一切照旧，调用链继续
+
+    如果抛出 `DropItem` 异常，此 Item 会被丢弃，不在处理
+
+* `open_spider(self, spider)`
+
+    Spider 开启的时候被自动调用
+
+* `close_spider(self, spider)`
+
+    Spider 关闭的时候自动调用
+
+* `from_crawler(cls, crawler)`
+
+    类方法，用于创建 Pipeline 实例，返回一个 Class 实例，时一种依赖注入方式，可以从 crawler 中拿到 Scrapy 的所有核心组件，如 settings。
+
+## 实例：360图片抓取
+
+### 创建项目
+
+```
+scrapy startproject images360
+cd images360/
+scrapy genspider images image.so.com
+```
+
+`images.py`
+
+``` python
+# -*- coding: utf-8 -*-
+from urllib.parse import urlencode
+import scrapy
+
+# http://image.so.com/zj?ch=photography&sn=30&listtype=new&temp=1
+class ImagesSpider(scrapy.Spider):
+    name = 'images'
+    allowed_domains = ['image.so.com']
+    start_urls = ['http://image.so.com/']
+    MAX_PAGE = 4
+
+    def start_requests(self):
+        data = {
+            'ch': 'photography',
+            'listtype': 'new',
+            'temp': 1
+        }
+        base_url = 'http://image.so.com/zj?'
+        for sn in range(30, self.MAX_PAGE*30, 30):
+            data['sn'] = sn
+            params = urlencode(data)
+            url = base_url + params
+            yield scrapy.Request(url, callback=self.parse)
+
+    def parse(self, response):
+        pass
+```
+
+`settings.py`
+
+``` python
+# Obey robots.txt rules
+ROBOTSTXT_OBEY = False
+```
+
+测试是否可抓取
+
+```
+scrapy crawl images
+```
+
+### 信息提取
+
+`items.py`
+
+``` python
+from scrapy import Item, Field
+
+class ImageItem(Item):
+    collection = 'images'
+    id_ = Field()
+    url = Field()
+    title = Field()
+    thumb = Field()
+```
+
+`images.py`
+
+``` python
+def parse(self, response):
+    result = json.loads(response.text) 
+    items = result.get('list')
+    for item in items:
+        img = ImageItem()
+        img['id_'] = item.get('imageid')
+        img['url'] = item.get('qhimg_url')
+        img['title'] = item.get('group_title')
+        img['thumb'] = item.get('qhimg_thumb_url')
+        yield img
+```
+
+### 存储信息
+
+#### MongoDB
+
+`pipelines.py`
+
+``` python
+import pymongo
+
+class MongoPipeline(object):
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri
+        self.mongo_db = mongo_db
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            mongo_uri=crawler.settings.get('MONGO_URI'),
+            mongo_db=crawler.settings.get('MONGO_DB')
+        )
+
+    def open_spider(self, spider):
+        self.client = pymongo.MongoClient(self.mongo_uri)
+        self.db = self.client[self.mongo_db]
+
+    def process_item(self, item, spider):
+        self.db[item.collection].insert_one(dict(item))
+        return item
+
+    def close_spider(self, spider):
+        self.client.close()
+```
+
+`settings.py`
+
+``` python
+MONGO_URI = 'localhost'
+MONGO_DB = 'images360'
+
+ITEM_PIPELINES = {
+   'images360.pipelines.MongoPipeline': 300,
+}
+```
+
+#### MySQL
+
+`pipelines.py`
+
+``` python
+from images360.mysql_entity import Images, create_all
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+class MysqlPipeline(object):
+    def __init__(self, host, database, user, password, port):
+        self.host = host
+        self.database = database
+        self.user = user
+        self.password = password
+        self.port = port
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            host=crawler.settings.get('MYSQL_HOST'),
+            database=crawler.settings.get('MYSQL_DATABASE'),
+            user=crawler.settings.get('MYSQL_USER'),
+            password=crawler.settings.get('MYSQL_PASSWORD'),
+            port=crawler.settings.get('MYSQL_PORT')
+        )
+
+    def open_spider(self, spider):
+        self.engine = create_engine('mysql+pymysql://{}:{}@{}:{}/{}'.format(
+            self.user,
+            self.password,
+            self.host,
+            self.port,
+            self.database
+        ))
+        create_all(self.engine)
+        self._Session = sessionmaker(bind=self.engine)
+        # Session.configure(bind=engine) 
+        self.session = self._Session()
+        
+
+    def process_item(self, item, spider):
+        image = Images(
+            idstr=item['id_'],
+            url=item['url'],
+            title=item['title'],
+            thumb=item['thumb']
+        )
+        self.session.add(image)
+        self.session.commit()
+        return item
+
+    def close_spider(self, spider):
+        self.session.close()
+```
+
+`mysql_entity.py`
+
+``` python
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+
+
+Base = declarative_base()
+
+class Images(Base):
+    __tablename__ = 'images'
+
+    id_ = Column(Integer, primary_key=True)
+    idstr = Column(String(50))
+    url = Column(String(200))
+    title = Column(String(200))
+    thumb = Column(String(200))
+
+def create_all(engine):
+    Base.metadata.create_all(engine)
+```
+
+`settings.py`
+
+``` python
+MYSQL_HOST = 'localhost'
+MYSQL_PORT = '3306'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = '123456'
+MYSQL_DATABASE = 'images360'
+
+ITEM_PIPELINES = {
+   'images360.pipelines.MongoPipeline': 300,
+   'images360.pipelines.MysqlPipeline': 301,
+}
+```
+
+#### Image Pipeline
+
+> [官方文档](https://doc.scrapy.org/en/latest/topics/media-pipeline.html)
+
+Scrapy 提供了专门处理下载的 Pipeline，包括文件下载和图片下载。
+
+在 `settings.py` 中配置存储路径
+
+``` python
+IMAGES_STORE = './images'
+```
+
+路径为项目下的 `images` 文件夹
+
+内置的 `ImagesPipeline` 会默认读取 `Item` 的 `image_urls` 字段，并认为该字段是一个列表，它会遍历 `Item` 的 `image_urls` 字段，取出 URL 进行图片下载。
+
+这里需要自定义 `ImagesPipeline`
+
+`pipelines.py`
+
+``` python
+from scrapy import Request
+from scrapy.exceptions import DropItem
+from scrapy.pipelines.images import ImagesPipeline
+
+class ImagePipeline(ImagesPipeline):
+    def file_path(self, request, response=None, info=None):
+        url = request.url
+        file_name = url.split('/')[-1]
+        return file_name
+
+    def item_completed(self, results, item, info):
+        image_paths = [x['path'] for ok, x in results if ok]
+        if not image_paths:
+            raise DropItem('Image Download Filed')
+        return item
+
+    def get_media_requests(self, item, info):
+        yield Request(item['url'])
+```
+
+* get_media_requests
+
+    返回包含图片 URL 的 Request 的可迭代对象
+
+* file_path
+
+    `request` 就是下载当前图片的 request，该方法用来返回需要保存的图片的文件名
+
+* item_completed
+
+    当单个 Item 下载完成时调用，`results` 就是下载结果，它时一个列表，每一项都是一个元组，包含了下载成功或失败的信息。这里的处理是如果下载失败就丢弃这个 Item。
+
+`settings.py`
+
+``` python
+ITEM_PIPELINES = {
+    'images360.pipelines.ImagePipeline': 300,
+    'images360.pipelines.MongoPipeline': 301,
+    'images360.pipelines.MysqlPipeline': 302,
+}
+```
+
+这里把下载图片的优先级设置的最高，如果下载失败，那 item 就不用保存了
+
+完成
+
+```
+scrapy crawl images
+```
