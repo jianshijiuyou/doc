@@ -646,3 +646,185 @@ ITEM_PIPELINES = {
 ```
 scrapy crawl images
 ```
+
+# Scrapy 对接 Selenium
+
+以抓取淘宝为例
+
+## 新建项目
+
+```
+scrapy startproject scrapyseleniumtest
+cd scrapyseleniumtest/
+scrapy genspider taobao www.taobao.com
+```
+
+修改 `settings.py` 文件
+
+``` python
+ROBOTSTXT_OBEY = False
+```
+
+定义 Item
+
+``` python
+from scrapy import Item, Field
+
+class ProductItem(Item):
+    collection = 'products'
+    image = Field()
+    price = Field()
+    deal = Field()
+    title = Field()
+    shop = Field()
+    location = Field()
+```
+
+`taobao.py`
+
+``` python
+import scrapy
+from urllib.parse import quote
+from scrapyseleniumtest.items import ProductItem
+
+class TaobaoSpider(scrapy.Spider):
+    name = 'taobao'
+    allowed_domains = ['www.taobao.com']
+    base_url = 'https://s.taobao.com/search?q={}'
+
+    def start_requests(self):
+        for keyword in self.settings.get('KEYWORDS'):
+            for page in range(1, self.settings.get('MAX_PAGE') + 1):
+                url = self.base_url.format(quote(keyword))
+                yield scrapy.Request(url=url, callback=self.parse, meta={'page': page}, dont_filter=True)
+
+```
+
+`settings.py`
+
+``` python
+KEYWORDS = ['iPad']
+MAX_PAGE = 10
+```
+
+由于每次请求的 url 相同，所以用 `meta` 参数来标记页码，同时设置 `dont_filter` 不去重。后面会用 selenium 跳转到指定页面。
+
+## 对接 Selenium
+
+采用 Downloader Middleware 来实现。 在中间件的 `process_request()` 方法里对每个请求进行处理，启动浏览器进行渲染，再将结果构造成 `HtmlResponse` 对象返回。
+
+``` python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import TimeoutException
+from scrapy.http import HtmlResponse
+from logging import getLogger
+
+
+class SeleniumMiddleware(object):
+    def __init__(self):
+        self.logger = getLogger(__name__)
+        self.timeout = 20
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--headless')
+        self.browser = webdriver.Chrome(chrome_options=chrome_options)
+        self.browser.set_window_size(1400, 700)
+        self.browser.set_page_load_timeout(self.timeout)
+        self.wait = WebDriverWait(self.browser, self.timeout)
+
+    def __del__(self):
+        self.browser.close()
+
+    def process_request(self, request, spider):
+        self.logger.debug('Chrome is Starting')
+        page = request.meta.get('page', 1)
+        try:
+            self.browser.get(request.url)
+            if page > 1:
+                input_ = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#mainsrp-pager div.form .input')))
+                button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#mainsrp-pager div.form .btn')))
+                input_.clear()
+                input_.send_keys(page)
+                button.click()
+                ############## 页面跳转完成
+            # 等待页面加载
+            self.wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#mainsrp-pager .item.active > span'), str(page)))
+            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#mainsrp-itemlist .items .item')))
+            # 返回 HtmlReponse
+            return HtmlResponse(url=request.url, body=self.browser.page_source, request=request,
+                                encoding='utf-8', status=200)
+        except TimeoutException:
+            return HtmlResponse(url=request.url, status=500, request=request)
+```
+
+`settings.py`
+
+``` python
+DOWNLOADER_MIDDLEWARES = {
+   'scrapyseleniumtest.middlewares.SeleniumMiddleware': 543,
+}
+```
+
+## 解析页面
+
+``` python
+def parse(self, response):
+    products = response.css('#mainsrp-itemlist .items .item')
+    for product in products:
+        item = ProductItem()
+        item['image'] = product.css('.J_ItemPic.img::attr(data-src)').extract_first()
+        item['price'] = product.css('.price strong::text').extract_first()
+        item['deal'] = product.css('.deal-cnt::text').extract_first()
+        item['title'] = ''.join(product.xpath('.//div[contains(@class, "title")]//text()').extract()).strip()
+        item['shop'] = ''.join(product.xpath('.//div[contains(@class, "shop")]//text()').extract()).strip()
+        item['location'] = product.css('.location::text').extract_first()
+        yield item
+```
+
+## 存储结果
+
+``` python
+import pymongo
+
+class MongoPipeline(object):
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri
+        self.mongo_db = mongo_db
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            mongo_uri=crawler.settings.get('MONGO_URI'),
+            mongo_db=crawler.settings.get('MONGO_DB')
+        )
+
+    def open_spider(self, spider):
+        self.client = pymongo.MongoClient(self.mongo_uri)
+        self.db = self.client[self.mongo_db]
+
+    def process_item(self, item, spider):
+        self.db[item.collection].insert_one(dict(item))
+        return item
+
+    def close_spider(self, spider):
+        self.client.close()
+```
+
+`settings.py`
+
+``` python
+ITEM_PIPELINES = {
+   'scrapyseleniumtest.pipelines.MongoPipeline': 300,
+}
+
+MONGO_URI = 'localhost'
+MONGO_DB = 'taobao'
+```
+
+完成
+
+```
+scrapy crawl taobao
+```
