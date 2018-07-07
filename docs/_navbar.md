@@ -28,7 +28,7 @@
   * [PyMongo 指南](python/pymongo.md)
   * [SQLAlchemy 指南](python/sqlalchemy.md)
 
-* 爬虫（内容基本出自 cuiqingcai.com）
+* 爬虫
   * [爬虫常用库整理](爬虫/爬虫常用库整理.md)
   * [urllib 的使用](爬虫/baselib.md)
   * [requests 的使用](爬虫/requests.md)
@@ -42,6 +42,7 @@
   * [appium 的使用](爬虫/appium.md)
   * [Scrapy 入门](爬虫/scrapy_first.md)
   * [Scrapy 模块讲解](爬虫/scrapy_api.md)
+  * [Scrapy 通用爬虫](爬虫/scrapy_commn.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)
