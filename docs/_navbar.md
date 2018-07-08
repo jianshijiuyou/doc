@@ -43,6 +43,7 @@
   * [Scrapy 入门](爬虫/scrapy_first.md)
   * [Scrapy 模块讲解](爬虫/scrapy_api.md)
   * [Scrapy 通用爬虫](爬虫/scrapy_commn.md)
+  * [Scrapy 爬取微博](爬虫/scrapy_weibo.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)
