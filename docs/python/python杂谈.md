@@ -111,6 +111,33 @@ In [1]: timeit y=map(lambda x:x**10,range(32))
 372 ns ± 4.94 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
 ```
 
+# 时间
+
+获取当前时间的秒数表示，浮点型
+
+``` python
+In [28]: time.time()
+Out[28]: 1531122516.644759
+```
+
+获取当前时间的对象表示
+
+``` python
+In [30]: time.localtime()
+Out[30]: time.struct_time(tm_year=2018, tm_mon=7, tm_mday=9, tm_hour=15, tm_min=48, tm_sec=52, tm_wday=0, tm_yday=190, tm_isdst=0)
+
+In [32]: time.localtime(1531022517)
+Out[32]: time.struct_time(tm_year=2018, tm_mon=7, tm_mday=8, tm_hour=12, tm_min=1, tm_sec=57, tm_wday=6, tm_yday=189, tm_isdst=0)
+
+```
+
+格式化例子
+
+``` python
+In [43]: time.strftime('%Y-%m-%d %H:%M', time.localtime())
+Out[43]: '2018-07-09 15:59'
+```
+
 
 # 时间格式
 
