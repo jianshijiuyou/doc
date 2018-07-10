@@ -27,6 +27,7 @@
   * [元类的使用](python/usemetaclsss.md)
   * [PyMongo 指南](python/pymongo.md)
   * [SQLAlchemy 指南](python/sqlalchemy.md)
+  * [Logging 指南](python/logging_basic.md)
 
 * 爬虫
   * [爬虫常用库整理](爬虫/爬虫常用库整理.md)

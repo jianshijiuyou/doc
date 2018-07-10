@@ -73,8 +73,6 @@ In [6]: %timeit {}.fromkeys(l).keys()
 {'a': 1, 'b': 2}
 >>> dict(zip("ab", range(2)))
 {'a': 0, 'b': 1}
->>> dict(map(None, "abc", range(2)))
-{'a': 0, 'c': None, 'b': 1}
 >>> dict.fromkeys("abc", 1) # ⽤序列做 key,并提供默认 value
 {'a': 1, 'c': 1, 'b': 1}
 >>> {k:v for k, v in zip("abc", range(3))} # 字典解析
