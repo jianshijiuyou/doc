@@ -55,7 +55,7 @@ class Singleton(type):
     def __call__(cls, *args, **kw):
         if not cls in cls._instances:
             cls._instances[cls] = super().__call__(*args, **kw)
-        return cls._instances
+        return cls._instances[cls]
 
 
 class A(metaclass=Singleton):
