@@ -97,3 +97,65 @@ sock.shutdown(socket.SHUT_WR)
 * `SHUT_WR`: 最长用的参数值，表示调用方不再向套接字写入数据，通信对方也不会再读取任何数据并认为遇到了文件结束符。
 * `SHUT_RD`: 表示不再从套接字读取数据，当对方尝试发送更多数据时，就会引发文件结束错误。
 * `SHUT_RDWR`: 表示不再写入也不再读取。关闭双向通信。
+
+# 高并发 Demo
+
+使用 Tornado 实现高并发
+
+server
+
+``` python
+from tornado.tcpserver import TCPServer
+from tornado.iostream import StreamClosedError
+from tornado.ioloop import IOLoop
+
+class EchoServer(TCPServer):
+    async def handle_stream(self, stream, address):
+        print('address:{}'.format(address))
+        while True:
+            try:
+                data = await stream.read_until(b"\n")
+                await stream.write(data)
+            except StreamClosedError:
+                print('客户端断开连接 {}'.format(address))
+                break
+
+server = EchoServer()
+server.listen(8888)
+IOLoop.current().start()
+```
+
+测试 client
+
+``` python
+import socket
+import asyncio
+
+async def task(index):
+    print('创建第 {} 个连接'.format(index))
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(('192.168.31.31', 8888))
+    address = sock.getsockname()
+    try:
+        while True:
+            sock.sendall(b'this is test text\n')
+            data = sock.recv(1024)
+            print(address)
+            await asyncio.sleep(1)
+    except Exception:
+        print('关闭连接')
+        sock.close()
+
+loop = asyncio.get_event_loop()
+
+tasks = [task(i) for i in range(2000)]
+
+loop.run_until_complete(asyncio.wait(tasks))
+
+```
+
+linux 下默认只能同时保持 1024 个文件句柄，需要修改这个设置
+
+https://blog.csdn.net/fdipzone/article/details/34588803
+
+同时连接数也受内存，带宽等的限制
