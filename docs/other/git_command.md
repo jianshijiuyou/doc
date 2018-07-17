@@ -8,6 +8,7 @@
 | `git init` | 在本地初始化仓库
 | `git remote add <origin> <URL>` | 添加远程仓库
 | `git status` | 查看工作目录当前状态
+| `git diff` | 查看当前工作目录的改动
 | `git add <filename>` | 添加要跟踪的文件 <br> 常用: `git add .`
 | `git commit [-m "log"]` | 提交，`-m` 后跟提交时附带的日志
 | `git log` | 查看提交历史 <br> 查看详细历史：`git log -p` <br> 简要统计：`git log --stat`
