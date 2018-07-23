@@ -254,3 +254,13 @@ flush privileges;
 ## 参考
 
 [CentOS6.5安装MySQL5.7详细教程](https://www.cnblogs.com/lzj0218/p/5724446.html)
+
+## 图形话工具安装
+
+ubuntu 18.04 安装 workbench
+
+```
+apt install mysql-workbench
+```
+
+https://blog.csdn.net/lhs960124/article/details/80404849
