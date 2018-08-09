@@ -21,6 +21,12 @@ sudo mkfontdir
 sudo fc-cache -fv
 ```
 
+安装 zsh 的 oh-my-zsh 的 agnoster-zsh-theme 主题后分支图标乱码问题
+
+需要设置终端字体为 `droid sans mono dotted for powerline regular`
+
+![](http://os6ycxx7w.bkt.clouddn.com/images/d0908542-62ca-4d21-be21-95574bccc6ab.png)
+
 ## 常用的 RPM 软件包命令
 
 | 说明      |     命令 |
@@ -96,6 +102,14 @@ sudo fc-cache -fv
 
 
 ## 常用系统工作命令
+
+### 代码行数查看
+
+例子
+
+```
+find ./src -name "*.py" |xargs cat|grep -v ^$|wc -l
+```
 
 ### echo
 
