@@ -62,6 +62,7 @@
   * [平衡查找树](algorithm/algorithm_9.md)
   * [散列表](algorithm/algorithm_10.md)
   * [剑指Offer](algorithm/剑指Offer.md)
-* Other
-  * [Docker 常用命令](other/docker常用命令.md)  
-  * [Git 常用命令](other/git_command.md)  
+* Tools
+  * [Docker 常用命令](tools/docker常用命令.md)  
+  * [Git 常用命令](tools/git_command.md)  
+  * [HTTPie 使用指南](tools/httpie.md)  
