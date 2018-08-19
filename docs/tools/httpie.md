@@ -115,7 +115,7 @@ $ http example.org/file > file
 $ http --download example.org/file
 ```
 
-使用命名 [session](#session) 在对同一主机的请求之间建立某些方面或通信持久性：
+使用命名 [session](#Session) 在对同一主机的请求之间建立某些方面或通信持久性：
 
 ``` bash
 $ http --session=logged-in -a username:password httpbin.org/get API-Key:123
@@ -385,585 +385,423 @@ $ http httpbin.org/headers 'Header;'
 
 # Cookies
 
-HTTP clients send cookies to the server as regular `HTTP headers`_. That means,
-HTTPie does not offer any special syntax for specifying cookies — the usual
-``Header:Value`` notation is used:
+HTTP 客户端将 cookie 作为常规 HTTP 首部发送到服务器。这意味着，HTTPie 不提供任何指定 cookie 的特殊语法 - 通常使用 `Header:Value` ：
 
+发送一个 cookie：
 
-Send a single cookie:
+``` bash
+ $ http example.org Cookie:sessionid=foo
 
-.. code-block:: bash
+GET / HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Cookie: sessionid=foo
+Host: example.org
+User-Agent: HTTPie/0.9.9
+```
 
-    $ http example.org Cookie:sessionid=foo
+发送多个 cookie（注意用引号引起来，防止 shell 转义）：
 
-.. code-block:: http
+``` bash
+$ http example.org 'Cookie:sessionid=foo;another-cookie=bar'
 
-    GET / HTTP/1.1
-    Accept: */*
-    Accept-Encoding: gzip, deflate
-    Connection: keep-alive
-    Cookie: sessionid=foo
-    Host: example.org
-    User-Agent: HTTPie/0.9.9
+GET / HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Cookie: sessionid=foo;another-cookie=bar
+Host: example.org
+User-Agent: HTTPie/0.9.9
+```
 
+如果您经常在请求中处理 cookie，那么您很可能会喜欢 [session](#Session) 功能。
 
-Send multiple cookies
-(note the header is quoted to prevent the shell from interpreting the ``;``):
 
-.. code-block:: bash
+# 身份验证
 
-    $ http example.org 'Cookie:sessionid=foo;another-cookie=bar'
+当前支持的身份验证方案是 Basic 和 Digest 。有两个控制身份验证的标志：
 
-.. code-block:: http
+| - | - |
+|:-----------
+| `--auth, -a` | 传递 `username:password` 对作为参数。或者，如果您只指定<br>用户名（`-a username`），则会在发送请求之前提示您<br>输入密码。要发送空密码，请传递 `username:`。还支持<br> `username:password@hostname` URL 语法。<br>（但通过 `-a` 传递的凭证具有更高的优先级）
+| `--auth-type, -A` | 指定身份验证机制。可能的值是 `basic` 和 `digest`。<br>默认值为 `basic`，因此通常可以省略。
 
-    GET / HTTP/1.1
-    Accept: */*
-    Accept-Encoding: gzip, deflate
-    Connection: keep-alive
-    Cookie: sessionid=foo;another-cookie=bar
-    Host: example.org
-    User-Agent: HTTPie/0.9.9
+## Basic 认证
 
+``` bash
+$ http -a username:password example.org
+```
 
-If you often deal with cookies in your requests, then chances are you'd appreciate
-the `sessions`_ feature.
+## Digest 认证
 
+``` bash
+$ http -A digest -a username:password example.org
+```
 
-Authentication
-==============
 
-The currently supported authentication schemes are Basic and Digest
-(see `auth plugins`_ for more). There are two flags that control authentication:
+## 单独输入密码
 
-===================     ======================================================
-``--auth, -a``          Pass a ``username:password`` pair as
-                        the argument. Or, if you only specify a username
-                        (``-a username``), you'll be prompted for
-                        the password before the request is sent.
-                        To send an empty password, pass ``username:``.
-                        The ``username:password@hostname`` URL syntax is
-                        supported as well (but credentials passed via ``-a``
-                        have higher priority).
+``` bash
+$ http -a username example.org
+```
 
-``--auth-type, -A``     Specify the auth mechanism. Possible values are
-                        ``basic`` and ``digest``. The default value is
-                        ``basic`` so it can often be omitted.
-===================     ======================================================
+## .netrc
 
 
+也支持来自 `~/.netrc` 文件的授权信息：
 
-Basic auth
-----------
+``` bash
+$ cat ~/.netrc
+machine httpbin.org
+login httpie
+password test
 
+$ http httpbin.org/basic-auth/httpie/test
+HTTP/1.1 200 OK
+[...]
+```
 
-.. code-block:: bash
+## Auth 插件
 
-    $ http -a username:password example.org
+可以将其他身份验证机制安装为插件。它们可以在 [Python Package Index](https://pypi.python.org/pypi?%3Aaction=search&term=httpie&submit=search) 中找到。这里有几个选择：
 
+* [httpie-api-auth](https://github.com/pd/httpie-api-auth>): ApiAuth
+* [httpie-aws-auth](https://github.com/httpie/httpie-aws-auth): AWS / Amazon S3
+* [httpie-edgegrid](https://github.com/akamai-open/httpie-edgegrid): EdgeGrid
+* [httpie-hmac-auth](https://github.com/guardian/httpie-hmac-auth): HMAC
+* [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth): JWTAuth (JSON Web Tokens)
+* [httpie-negotiate](https://github.com/ndzou/httpie-negotiate): SPNEGO (GSS Negotiate)
+* [httpie-ntlm](https://github.com/httpie/httpie-ntlm): NTLM (NT LAN Manager)
+* [httpie-oauth](https://github.com/httpie/httpie-oauth): OAuth
+* [requests-hawk](https://github.com/mozilla-services/requests-hawk): Hawk
 
-Digest auth
------------
+# HTTP 重定向
 
+默认情况下，不会遵循 HTTP 重定向，只显示第一个响应：
 
-.. code-block:: bash
+``` bash
+$ http httpbin.org/redirect/3
+```
 
-    $ http -A digest -a username:password example.org
+## 跟随 Location
 
+要指示 HTTPie 遵循 `30x` 响应的 `Location` 首部并显示最终响应，请使用 `--follow, -F` 选项：
 
-Password prompt
----------------
+``` bash
+$ http --follow httpbin.org/redirect/3
+```
 
-.. code-block:: bash
+## 显示中间重定向响应
 
-    $ http -a username example.org
+如果您还希望查看中间的 requests/responses，那么再加上 `--all` 选项：
 
+``` bash
+$ http --follow --all httpbin.org/redirect/3
+```
 
-``.netrc``
-----------
+## 限制最大重定向次数
 
-Authentication information from your ``~/.netrc`` file is honored as well:
+要更改最多 `30` 个重定向的默认限制，请使用 `--max-redirects=<limit>` 选项：
 
-.. code-block:: bash
+``` bash
+$ http --follow --all --max-redirects=5 httpbin.org/redirect/3
+```
 
-    $ cat ~/.netrc
-    machine httpbin.org
-    login httpie
-    password test
+# 代理
 
-    $ http httpbin.org/basic-auth/httpie/test
-    HTTP/1.1 200 OK
-    [...]
+您可以通过每个协议的 `--proxy` 参数指定要使用的代理（在跨协议重定向的情况下包含在值中）：
 
+``` bash
+$ http --proxy=http:http://10.10.1.10:3128 --proxy=https:https://10.10.1.10:1080 example.org
+```
 
-Auth plugins
-------------
+使用 Basic 认证：
 
-Additional authentication mechanism can be installed as plugins.
-They can be found on the `Python Package Index <https://pypi.python.org/pypi?%3Aaction=search&term=httpie&submit=search>`_.
-Here's a few picks:
+``` bash
+$ http --proxy=http:http://user:pass@10.10.1.10:3128 example.org
+```
 
-* `httpie-api-auth <https://github.com/pd/httpie-api-auth>`_: ApiAuth
-* `httpie-aws-auth <https://github.com/httpie/httpie-aws-auth>`_: AWS / Amazon S3
-* `httpie-edgegrid <https://github.com/akamai-open/httpie-edgegrid>`_: EdgeGrid
-* `httpie-hmac-auth <https://github.com/guardian/httpie-hmac-auth>`_: HMAC
-* `httpie-jwt-auth <https://github.com/teracyhq/httpie-jwt-auth>`_: JWTAuth (JSON Web Tokens)
-* `httpie-negotiate <https://github.com/ndzou/httpie-negotiate>`_: SPNEGO (GSS Negotiate)
-* `httpie-ntlm <https://github.com/httpie/httpie-ntlm>`_: NTLM (NT LAN Manager)
-* `httpie-oauth <https://github.com/httpie/httpie-oauth>`_: OAuth
-* `requests-hawk <https://github.com/mozilla-services/requests-hawk>`_: Hawk
+## 环境变量
 
+您还可以通过环境变量 `HTTP_PROXY` 和 `HTTPS_PROXY` 配置代理，并且底层请求库也将选择它们。如果要禁用某些主机地址的代理，可以在 `NO_PROXY` 中指定它们。
 
+在你的 `~/.bash_profile` 中：
 
+``` bash
+export HTTP_PROXY=http://10.10.1.10:3128
+export HTTPS_PROXY=https://10.10.1.10:1080
+export NO_PROXY=localhost,example.com
+```
 
-HTTP redirects
-==============
+## SOCKS
 
-By default, HTTP redirects are not followed and only the first
-response is shown:
+Homebrew 安装的 HTTPie 开箱即用 SOCKS 代理支持。要启用 SOCKS 代理支持，请使用 `pip` 安装 `requests[socks]`：
 
+``` bash
+$ pip install -U requests[socks]
+```
 
-.. code-block:: bash
+用法与其他类型的代理相同：
 
-    $ http httpbin.org/redirect/3
+``` bash
+$ http --proxy=http:socks5://user:pass@host:port --proxy=https:socks5://user:pass@host:port example.org
+```
 
+# HTTPS
 
-Follow ``Location``
--------------------
+## 服务器 SSL 证书验证
 
-To instruct HTTPie to follow the ``Location`` header of ``30x`` responses
-and show the final response instead, use the ``--follow, -F`` option:
+要跳过主机的 SSL 证书验证，您可以传递 `--verify=no`（默认为 `yes`）：
 
+``` bash
+$ http --verify=no https://example.org
+```
 
-.. code-block:: bash
+## 自定义 CA bundle
 
-    $ http --follow httpbin.org/redirect/3
 
+您还可以使用 `--verify=<CA_BUNDLE_PATH>` 来设置自定义 CA bundle 路径：
 
-Showing intermediary redirect responses
----------------------------------------
+``` bash
+$ http --verify=/ssl/custom_ca_bundle https://example.org
+```
 
-If you additionally wish to see the intermediary requests/responses,
-then use the ``--all`` option as well:
+## 客户端 SSL 证书
 
+要使用客户端证书进行 SSL 通信，可以使用 `--cert` 传递 cert 文件的路径：
 
-.. code-block:: bash
+``` bash
+$ http --cert=client.pem https://example.org
+```
 
-    $ http --follow --all httpbin.org/redirect/3
+如果私钥未包含在 cert 文件中，您可以使用 `--cert-key` 传递密钥文件的路径：
 
+``` bash
+$ http --cert=client.crt --cert-key=client.key https://example.org
+```
 
+## SSL 版本
 
-Limiting maximum redirects followed
------------------------------------
+使用 `--ssl=<PROTOCOL>` 指定要使用的所需协议版本。默认为 SSL v2.3，它是协商服务器和你安装的 OpenSSL 支持的最高协议。可用的协议有 ``ssl2.3``, ``ssl3``, ``tls1``, ``tls1.1``, ``tls1.2``。（实际可用的协议集因你安装的 OpenSSL 而异。）
 
-To change the default limit of maximum ``30`` redirects, use the
-``--max-redirects=<limit>`` option:
+``` bash
+# Specify the vulnerable SSL v3 protocol to talk to an outdated server:
+$ http --ssl=ssl3 https://vulnerable.example.org
+```
 
+## SNI (Server Name Indication)
 
-.. code-block:: bash
+如果您使用的 HTTPie 中的 Python 版本低于 2.7.9（可以使用 `http --debug` 验证）并且需要与使用 SNI 的服务器通信，则需要安装一些其他依赖项：
 
-    $ http --follow --all --max-redirects=5 httpbin.org/redirect/3
+``` bash
+$ pip install --upgrade requests[security]
+```
 
+您可以使用以下命令测试 SNI 支持：
 
-Proxies
-=======
+``` bash
+$ http https://sni.velox.ch
+```
 
-You can specify proxies to be used through the ``--proxy`` argument for each
-protocol (which is included in the value in case of redirects across protocols):
+# 输出选项
 
-.. code-block:: bash
+认情况下，HTTPie 仅输出最终响应，并打印整个响应消息（ headers 以及 body）。您可以通过以下几个选项控制应该打印的内容：
 
-    $ http --proxy=http:http://10.10.1.10:3128 --proxy=https:https://10.10.1.10:1080 example.org
+| - | - |
+|:---------
+| `--headers, -h` | 仅打印响应首部。|
+| `--body, -b` | 仅打印响应正文。|
+| `--verbose, -v` | 打印整个 HTTP 交换（请求和响应）。<br>此选项还启用 `--all`（见下文）。|
+| `--print, -p` | 选择 HTTP 交换的部分。|
 
+``--verbose`` 通常可用于调试请求和生成文档示例：
 
-With Basic authentication:
+``` bash
+$ http --verbose PUT httpbin.org/put hello=world
+PUT /put HTTP/1.1
+Accept: application/json, */*
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+Host: httpbin.org
+User-Agent: HTTPie/0.2.7dev
 
-.. code-block:: bash
+{
+    "hello": "world"
+}
 
-    $ http --proxy=http:http://user:pass@10.10.1.10:3128 example.org
 
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 477
+Content-Type: application/json
+Date: Sun, 05 Aug 2012 00:25:23 GMT
+Server: gunicorn/0.13.4
 
-Environment variables
----------------------
+{
+    […]
+}
+```
 
-You can also configure proxies by environment variables ``HTTP_PROXY`` and
-``HTTPS_PROXY``, and the underlying Requests library will pick them up as well.
-If you want to disable proxies configured through the environment variables for
-certain hosts, you can specify them in ``NO_PROXY``.
+## 应该打印 HTTP 交换的哪些部分
 
-In your ``~/.bash_profile``:
+所有其他输出选项都只是 `--print, -p` 的快捷方式。它接受一个字符串，每个字符代表 HTTP 交换的特定部分：
 
-.. code-block:: bash
+| 字符  | 代表 |
+|:--------------------------
+|``H``   |    request headers
+|``B``     |  request body
+|``h``    |   response headers
+|``b``   |    response body
 
- export HTTP_PROXY=http://10.10.1.10:3128
- export HTTPS_PROXY=https://10.10.1.10:1080
- export NO_PROXY=localhost,example.com
+打印请求和响应首部：
 
+``` bash
+$ http --print=Hh PUT httpbin.org/put hello=world
+```
 
-SOCKS
------
+## 查看中间请求/响应
 
-Homebrew-installed HTTPie comes with SOCKS proxy support out of the box. To enable SOCKS proxy support for non-Homebrew  installations, you'll need to install ``requests[socks]`` manually using ``pip``:
+要查看所有 HTTP 通信，即最终 请求/响应 以及任何可能的中间 请求/响应，请使用 `--all` 选项。中间 HTTP 通信包括重定向（使用 `--follow`），使用 HTTP digest 认证时的第一个未授权请求（ `--auth=digest` ）等。
 
+``` bash
+# Include all responses that lead to the final one:
+$ http --all --follow httpbin.org/redirect/3
+```
 
-.. code-block:: bash
+中间 请求/响应 默认根据 `--print, -p` 格式化（及其上述快捷方式）。如果您想更改它，请使用 `--history-print, -P` 选项。它采用与 `--print, -p` 相同的参数，但仅适用于中间请求。
 
-    $ pip install -U requests[socks]
+``` bash
+# Print the intermediary requests/responses differently than the final one:
+$ http -A digest -a foo:bar --all -p Hh -P H httpbin.org/digest-auth/auth/foo/bar
+```
 
-Usage is the same as for other types of `proxies`_:
+## 有条件的 body 下载
 
-.. code-block:: bash
+作为优化，仅当响应主体是输出的一部分时才从服务器下载响应主体。这与执行 `HEAD` 请求类似，不同之处在于它适用于您使用的任何 HTTP 方法。
 
-    $ http --proxy=http:socks5://user:pass@host:port --proxy=https:socks5://user:pass@host:port example.org
+假设有一个 API 在更新时返回整个资源，但您只对响应首部感兴趣，以便在更新后查看状态代码：
 
+``` bash
+$ http --headers PATCH example.org/Really-Huge-Resource name='New Name'
+```
 
-HTTPS
-=====
+由于我们仅在此处打印 HTTP 首部，因此只要收到所有响应首部，就会关闭与服务器的连接。因此，带宽和时间不会浪费下载您不关心的主体。 始终下载响应首部，即使它们不是输出的一部分。
 
 
-Server SSL certificate verification
------------------------------------
+# 重定向输入
 
-To skip the host's SSL certificate verification, you can pass ``--verify=no``
-(default is ``yes``):
+传递请求数据的通用方法是通过重定向 `stdin`（标准输入）管道。这些数据被缓冲，然后没有进一步处理用作请求主体。使用管道有多种有用的方法：
 
-.. code-block:: bash
+从文件重定向：
 
-    $ http --verify=no https://example.org
+``` bash
+ $ http PUT example.com/person/1 X-API-Token:123 < person.json
+```
 
+或者另一个程序的输出：
 
-Custom CA bundle
-----------------
+``` bash
+$ grep '401 Unauthorized' /var/log/httpd/error_log | http POST example.org/intruders
+```
 
-You can also use ``--verify=<CA_BUNDLE_PATH>`` to set a custom CA bundle path:
+简单数据的数据你可以使用 `echo`：
 
-.. code-block:: bash
+``` bash
+$ echo '{"name": "John"}' | http PATCH example.com/person/1 X-API-Token:123
+```
 
-    $ http --verify=/ssl/custom_ca_bundle https://example.org
+您甚至可以使用 HTTPie 将 Web 服务连接在一起：
 
+``` bash
+$ http GET https://api.github.com/repos/jakubroztocil/httpie | http POST httpbin.org/post
+```
 
+您可以使用 `cat` 在终端上输入多行数据：
 
-Client side SSL certificate
----------------------------
-To use a client side certificate for the SSL communication, you can pass
-the path of the cert file with ``--cert``:
+``` bash
+$ cat | http POST example.com
+<paste>
+^D
+```
 
-.. code-block:: bash
+``` bash
+$ cat | http POST example.com/todos Content-Type:text/plain
+- buy milk
+- call parents
+^D
+```
 
-    $ http --cert=client.pem https://example.org
+在 OS X 上，您可以使用 `pbpaste` 发送剪贴板的内容：
 
+``` bash
+$ pbpaste | http PUT example.com
+```
 
-If the private key is not contained in the cert file you may pass the
-path of the key file with ``--cert-key``:
+通过 `stdin` 传递数据不能与命令行中指定的数据字段组合：
 
-.. code-block:: bash
+``` bash
+$ echo 'data' | http POST example.org more=data   # 这是无效的
+```
 
-    $ http --cert=client.crt --cert-key=client.key https://example.org
+要防止 HTTPie 读取 `stdin` 数据，可以使用 `--ignore-stdin` 选项。
 
 
-SSL version
------------
+## 从文件名中请求数据
 
-Use the ``--ssl=<PROTOCOL>`` to specify the desired protocol version to use.
-This will default to SSL v2.3 which will negotiate the highest protocol that both
-the server and your installation of OpenSSL support. The available protocols
-are ``ssl2.3``, ``ssl3``, ``tls1``, ``tls1.1``, ``tls1.2``. (The actually
-available set of protocols may vary depending on your OpenSSL installation.)
+重定向 `stdin` 的替代方法是指定一个文件名（比如 `@/path/to/file` ），其内容被用作来自 `stdin` 的文件。
 
-.. code-block:: bash
+它的优点是 `Content-Type` 首部根据文件扩展名自动设置为适当的值。例如，以下请求使用 `Content-Type: application/xml` 发送该 XML 文件的逐字内容：
 
-    # Specify the vulnerable SSL v3 protocol to talk to an outdated server:
-    $ http --ssl=ssl3 https://vulnerable.example.org
+``` bash
+$ http PUT httpbin.org/put @/data/file.xml
+```
 
+# 终端输出
 
-SNI (Server Name Indication)
-----------------------------
+HTTPie 默认做了几件事，以使其终端输出易于阅读。
 
-If you use HTTPie with `Python version`_ lower than 2.7.9
-(can be verified with ``http --debug``) and need to talk to servers that
-use SNI (Server Name Indication) you need to install some additional
-dependencies:
+## 颜色和格式
 
-.. code-block:: bash
+语法突出显示应用于 HTTP 首部和正文（有意义的地方）。如果您不喜欢默认选项，可以通过 `--style` 选项选择首选颜色方案（有关可能的值，请参阅 `$ http --help`）。
 
-    $ pip install --upgrade requests[security]
+此外，应用以下格式：
 
+* HTTP 首部按名称排序。
+* JSON 数据是缩进的，按键排序，unicode 转义转换为它们代表的字符。
 
-You can use the following command to test SNI support:
+其中一个选项可用于控制输出处理：
 
-.. code-block:: bash
+| - | - |
+|:--------
+| `--pretty=all` | 应用颜色和格式。终端输出的默认值。
+| `--pretty=colors` | 应用颜色。
+| `--pretty=format` | 应用格式。
+| `--pretty=none` | 禁用输出处理。重定向输出的默认值。
 
-    $ http https://sni.velox.ch
+## 二进制数据
 
+终端输出禁止二进制数据，这样可以安全地对发送回二进制数据的 URL 执行请求。二进制数据在重定向时也被抑制，但是被美化输出。一旦我们知道响应主体是二进制的，连接就会关闭
 
-Output options
-==============
+``` bash
+$ http example.org/Movie.mov
+```
 
-By default, HTTPie only outputs the final response and the whole response
-message is printed (headers as well as the body). You can control what should
-be printed via several options:
+你几乎可以立即看到这样的东西：
 
-=================   =====================================================
-``--headers, -h``   Only the response headers are printed.
-``--body, -b``      Only the response body is printed.
-``--verbose, -v``   Print the whole HTTP exchange (request and response).
-                    This option also enables ``--all`` (see below).
-``--print, -p``     Selects parts of the HTTP exchange.
-=================   =====================================================
+``` bash
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Encoding: gzip
+Content-Type: video/quicktime
+Transfer-Encoding: chunked
 
-``--verbose`` can often be useful for debugging the request and generating
-documentation examples:
++-----------------------------------------+
+| NOTE: binary data not shown in terminal |
++-----------------------------------------+
+```
 
-.. code-block:: bash
-
-    $ http --verbose PUT httpbin.org/put hello=world
-    PUT /put HTTP/1.1
-    Accept: application/json, */*
-    Accept-Encoding: gzip, deflate
-    Content-Type: application/json
-    Host: httpbin.org
-    User-Agent: HTTPie/0.2.7dev
-
-    {
-        "hello": "world"
-    }
-
-
-    HTTP/1.1 200 OK
-    Connection: keep-alive
-    Content-Length: 477
-    Content-Type: application/json
-    Date: Sun, 05 Aug 2012 00:25:23 GMT
-    Server: gunicorn/0.13.4
-
-    {
-        […]
-    }
-
-
-What parts of the HTTP exchange should be printed
--------------------------------------------------
-
-All the other `output options`_ are under the hood just shortcuts for
-the more powerful ``--print, -p``. It accepts a string of characters each
-of which represents a specific part of the HTTP exchange:
-
-==========  ==================
-Character   Stands for
-==========  ==================
-``H``       request headers
-``B``       request body
-``h``       response headers
-``b``       response body
-==========  ==================
-
-Print request and response headers:
-
-.. code-block:: bash
-
-    $ http --print=Hh PUT httpbin.org/put hello=world
-
-
-Viewing intermediary requests/responses
----------------------------------------
-
-To see all the HTTP communication, i.e. the final request/response as
-well as any possible  intermediary requests/responses, use the ``--all``
-option. The intermediary HTTP communication include followed redirects
-(with ``--follow``), the first unauthorized request when HTTP digest
-authentication is used (``--auth=digest``), etc.
-
-.. code-block:: bash
-
-    # Include all responses that lead to the final one:
-    $ http --all --follow httpbin.org/redirect/3
-
-
-The intermediary requests/response are by default formatted according to
-``--print, -p`` (and its shortcuts described above). If you'd like to change
-that, use the ``--history-print, -P`` option. It takes the same
-arguments as ``--print, -p`` but applies to the intermediary requests only.
-
-
-.. code-block:: bash
-
-    # Print the intermediary requests/responses differently than the final one:
-    $ http -A digest -a foo:bar --all -p Hh -P H httpbin.org/digest-auth/auth/foo/bar
-
-
-Conditional body download
--------------------------
-
-As an optimization, the response body is downloaded from the server
-only if it's part of the output. This is similar to performing a ``HEAD``
-request, except that it applies to any HTTP method you use.
-
-Let's say that there is an API that returns the whole resource when it is
-updated, but you are only interested in the response headers to see the
-status code after an update:
-
-.. code-block:: bash
-
-    $ http --headers PATCH example.org/Really-Huge-Resource name='New Name'
-
-
-Since we are only printing the HTTP headers here, the connection to the server
-is closed as soon as all the response headers have been received.
-Therefore, bandwidth and time isn't wasted downloading the body
-which you don't care about. The response headers are downloaded always,
-even if they are not part of the output
-
-
-Redirected Input
-================
-
-The universal method for passing request data is through redirected ``stdin``
-(standard input)—piping. Such data is buffered and then with no further
-processing used as the request body. There are multiple useful ways to use
-piping:
-
-Redirect from a file:
-
-.. code-block:: bash
-
-    $ http PUT example.com/person/1 X-API-Token:123 < person.json
-
-
-Or the output of another program:
-
-.. code-block:: bash
-
-    $ grep '401 Unauthorized' /var/log/httpd/error_log | http POST example.org/intruders
-
-
-You can use ``echo`` for simple data:
-
-.. code-block:: bash
-
-    $ echo '{"name": "John"}' | http PATCH example.com/person/1 X-API-Token:123
-
-
-You can even pipe web services together using HTTPie:
-
-.. code-block:: bash
-
-    $ http GET https://api.github.com/repos/jakubroztocil/httpie | http POST httpbin.org/post
-
-
-You can use ``cat`` to enter multiline data on the terminal:
-
-.. code-block:: bash
-
-    $ cat | http POST example.com
-    <paste>
-    ^D
-
-
-.. code-block:: bash
-
-    $ cat | http POST example.com/todos Content-Type:text/plain
-    - buy milk
-    - call parents
-    ^D
-
-
-On OS X, you can send the contents of the clipboard with ``pbpaste``:
-
-.. code-block:: bash
-
-    $ pbpaste | http PUT example.com
-
-
-Passing data through ``stdin`` cannot be combined with data fields specified
-on the command line:
-
-
-.. code-block:: bash
-
-    $ echo 'data' | http POST example.org more=data   # This is invalid
-
-
-To prevent HTTPie from reading ``stdin`` data you can use the
-``--ignore-stdin`` option.
-
-
-Request data from a filename
-----------------------------
-
-An alternative to redirected ``stdin`` is specifying a filename (as
-``@/path/to/file``) whose content is used as if it came from ``stdin``.
-
-It has the advantage that the ``Content-Type``
-header is automatically set to the appropriate value based on the
-filename extension. For example, the following request sends the
-verbatim contents of that XML file with ``Content-Type: application/xml``:
-
-.. code-block:: bash
-
-    $ http PUT httpbin.org/put @/data/file.xml
-
-
-Terminal output
-===============
-
-HTTPie does several things by default in order to make its terminal output
-easy to read.
-
-
-Colors and formatting
----------------------
-
-Syntax highlighting is applied to HTTP headers and bodies (where it makes
-sense). You can choose your preferred color scheme via the ``--style`` option
-if you don't like the default one (see ``$ http --help`` for the possible
-values).
-
-Also, the following formatting is applied:
-
-* HTTP headers are sorted by name.
-* JSON data is indented, sorted by keys, and unicode escapes are converted
-  to the characters they represent.
-
-One of these options can be used to control output processing:
-
-====================   ========================================================
-``--pretty=all``       Apply both colors and formatting.
-                       Default for terminal output.
-``--pretty=colors``    Apply colors.
-``--pretty=format``    Apply formatting.
-``--pretty=none``      Disables output processing.
-                       Default for redirected output.
-====================   ========================================================
-
-Binary data
------------
-
-Binary data is suppressed for terminal output, which makes it safe to perform
-requests to URLs that send back binary data. Binary data is suppressed also in
-redirected, but prettified output. The connection is closed as soon as we know
-that the response body is binary,
-
-.. code-block:: bash
-
-    $ http example.org/Movie.mov
-
-
-You will nearly instantly see something like this:
-
-.. code-block:: http
-
-    HTTP/1.1 200 OK
-    Accept-Ranges: bytes
-    Content-Encoding: gzip
-    Content-Type: video/quicktime
-    Transfer-Encoding: chunked
-
-    +-----------------------------------------+
-    | NOTE: binary data not shown in terminal |
-    +-----------------------------------------+
-
-
-Redirected output
-=================
+# 重定向输出
 
 HTTPie uses a different set of defaults for redirected output than for
 `terminal output`_. The differences being:
@@ -1012,8 +850,7 @@ by adding the following to your ``~/.bash_profile``:
     }
 
 
-Download mode
-=============
+# 下载模式
 
 HTTPie features a download mode in which it acts similarly to ``wget``.
 
@@ -1036,8 +873,7 @@ is being saved to a file.
     Done. 251.30 kB in 2.73862s (91.76 kB/s)
 
 
-Downloaded file name
---------------------
+## 下载的文件名
 
 If not provided via ``--output, -o``, the output filename will be determined
 from ``Content-Disposition`` (if available), or from the URL and
@@ -1045,8 +881,7 @@ from ``Content-Disposition`` (if available), or from the URL and
 suffix to it.
 
 
-Piping while downloading
-------------------------
+## 下载时管道
 
 You can also redirect the response body to another program while the response
 headers and progress are still shown in the terminal:
@@ -1057,8 +892,7 @@ headers and progress are still shown in the terminal:
 
 
 
-Resuming downloads
-------------------
+## 恢复下载
 
 If ``--output, -o`` is specified, you can resume a partial download using the
 ``--continue, -c`` option. This only works with servers that support
@@ -1069,8 +903,7 @@ support that, the whole file will simply be downloaded:
 
     $ http -dco file.zip example.org/file
 
-Other notes
------------
+## 其他说明
 
 * The ``--download`` option only changes how the response body is treated.
 * You can still set custom headers, use sessions, ``--verbose, -v``, etc.
@@ -1080,8 +913,7 @@ Other notes
 * ``Accept-Encoding`` cannot be set with ``--download``.
 
 
-Streamed responses
-==================
+# 流式响应
 
 Responses are downloaded and printed in chunks which allows for streaming
 and large file downloads without using too much memory. However, when
@@ -1089,8 +921,7 @@ and large file downloads without using too much memory. However, when
 then processed at once.
 
 
-Disabling buffering
--------------------
+## 禁用缓冲
 
 You can use the ``--stream, -S`` flag to make two things happen:
 
@@ -1103,8 +934,7 @@ You can use the ``--stream, -S`` flag to make two things happen:
    to the Twitter streaming API.
 
 
-Examples use cases
-------------------
+## 示例用例
 
 Prettified streamed response:
 
@@ -1122,8 +952,7 @@ Streamed output by small chunks alá ``tail -f``:
     $ http --stream -f -a YOUR-TWITTER-NAME https://stream.twitter.com/1/statuses/filter.json track=Apple \
     | while read tweet; do echo "$tweet" | http POST example.org/tweets ; done
 
-Sessions
-========
+# Session
 
 By default, every request HTTPie makes is completely independent of any
 previous ones to the same host.
