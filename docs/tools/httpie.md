@@ -803,380 +803,195 @@ Transfer-Encoding: chunked
 
 # 重定向输出
 
-HTTPie uses a different set of defaults for redirected output than for
-`terminal output`_. The differences being:
+HTTPie 对重定向输出使用一组不同的默认值，而不是终端输出。差异是：
 
-* Formatting and colors aren't applied (unless ``--pretty`` is specified).
-* Only the response body is printed (unless one of the `output options`_ is set).
-* Also, binary data isn't suppressed.
+* 不应用格式和颜色（除非指定了 `--pretty`）。
+* 仅打印响应正文（除非设置了其中一个输出选项）。
+* 此外，不抑制二进制数据。
 
-The reason is to make piping HTTPie's output to another programs and
-downloading files work with no extra flags. Most of the time, only the raw
-response body is of an interest when the output is redirected.
+原因是将 HTTPie 的管道输出到另一个程序，下载文件没有额外的标志。大多数情况下，当重定向输出时，只有原始响应体才有意义。
 
-Download a file:
+下载文件：
 
-.. code-block:: bash
+``` bash
+$ http example.org/Movie.mov > Movie.mov
+```
 
-    $ http example.org/Movie.mov > Movie.mov
+下载 Octocat 的图像，使用 ImageMagick 调整大小，将其上传到其他地方：
 
+``` bash
+$ http octodex.github.com/images/original.jpg | convert - -resize 25% -  | http example.org/Octocats
+```
 
-Download an image of Octocat, resize it using ImageMagick, upload it elsewhere:
+强制着色和格式化，并在 `less` 的分页器中显示请求和响应：
 
-.. code-block:: bash
+``` bash
+$ http --pretty=all --verbose example.org | less -R
+```
 
-    $ http octodex.github.com/images/original.jpg | convert - -resize 25% -  | http example.org/Octocats
+`-R` 标志告诉 `less` 解释包含 HTTPie 输出的颜色转义序列。
 
+您可以通过将以下内容添加到 `~/.bash_profile` 来创建用于调用带有彩色和分页输出的 HTTPie 的快捷方式：
 
-Force colorizing and formatting, and show both the request and the response in
-``less`` pager:
-
-.. code-block:: bash
-
-    $ http --pretty=all --verbose example.org | less -R
-
-
-The ``-R`` flag tells ``less`` to interpret color escape sequences included
-HTTPie`s output.
-
-You can create a shortcut for invoking HTTPie with colorized and paged output
-by adding the following to your ``~/.bash_profile``:
-
-.. code-block:: bash
-
-    function httpless {
-        # `httpless example.org'
-        http --pretty=all --print=hb "$@" | less -R;
-    }
-
+``` bash
+function httpless {
+    # `httpless example.org'
+    http --pretty=all --print=hb "$@" | less -R;
+}
+```
 
 # 下载模式
 
-HTTPie features a download mode in which it acts similarly to ``wget``.
+HTTPie 具有下载模式，其中它的作用与 `wget` 类似。
 
-When enabled using the ``--download, -d`` flag, response headers are printed to
-the terminal (``stderr``), and a progress bar is shown while the response body
-is being saved to a file.
+使用 `--download, -d` 标志启用时，响应首部将打印到终端（`stderr`），并在响应正文保存到文件时显示进度条。
 
-.. code-block:: bash
+``` bash
+$ http --download https://github.com/jakubroztocil/httpie/archive/master.tar.gz
 
-    $ http --download https://github.com/jakubroztocil/httpie/archive/master.tar.gz
+HTTP/1.1 200 OK
+Content-Disposition: attachment; filename=httpie-master.tar.gz
+Content-Length: 257336
+Content-Type: application/x-gzip
 
-.. code-block:: http
-
-    HTTP/1.1 200 OK
-    Content-Disposition: attachment; filename=httpie-master.tar.gz
-    Content-Length: 257336
-    Content-Type: application/x-gzip
-
-    Downloading 251.30 kB to "httpie-master.tar.gz"
-    Done. 251.30 kB in 2.73862s (91.76 kB/s)
-
+Downloading 251.30 kB to "httpie-master.tar.gz"
+Done. 251.30 kB in 2.73862s (91.76 kB/s)
+```
 
 ## 下载的文件名
 
-If not provided via ``--output, -o``, the output filename will be determined
-from ``Content-Disposition`` (if available), or from the URL and
-``Content-Type``. If the guessed filename already exists, HTTPie adds a unique
-suffix to it.
-
+如果未通过 `--output，-o` 提供，则输出文件名将根据 `Content-Disposition`（如果可用）或 URL 和 `Content-Type` 确定。如果猜测的文件名已经存在，HTTPie 会为其添加一个唯一的后缀。
 
 ## 下载时管道
 
-You can also redirect the response body to another program while the response
-headers and progress are still shown in the terminal:
+您还可以将响应正文重定向到另一个程序，同时响应首部和进度仍显示在终端中：
 
-.. code-block:: bash
-
-    $ http -d https://github.com/jakubroztocil/httpie/archive/master.tar.gz |  tar zxf -
-
-
+``` bash
+$ http -d https://github.com/jakubroztocil/httpie/archive/master.tar.gz |  tar zxf -
+```
 
 ## 恢复下载
 
-If ``--output, -o`` is specified, you can resume a partial download using the
-``--continue, -c`` option. This only works with servers that support
-``Range`` requests and ``206 Partial Content`` responses. If the server doesn't
-support that, the whole file will simply be downloaded:
+如果指定了 `--output，-o`，则可以使用 `--continue，-c` 选项恢复部分下载。这仅适用于支持 `Range` 请求和 `206 Partial Content` 响应的服务器。如果服务器不支持，则只需下载整个文件：
 
-.. code-block:: bash
-
-    $ http -dco file.zip example.org/file
+``` bash
+$ http -dco file.zip example.org/file
+```
 
 ## 其他说明
 
-* The ``--download`` option only changes how the response body is treated.
-* You can still set custom headers, use sessions, ``--verbose, -v``, etc.
-* ``--download`` always implies ``--follow`` (redirects are followed).
-* HTTPie exits with status code ``1`` (error) if the body hasn't been fully
-  downloaded.
-* ``Accept-Encoding`` cannot be set with ``--download``.
-
+* `--download` 选项仅更改响应正文的处理方式。
+* 您仍然可以设置自定义首部，使用会话，`--verbose, -v` 等。
+* ``--download`` 总是暗示 ``--follow``（遵循重定向）。
+* 如果正文尚未完全下载，HTTPie 将退出状态码 `1`（错误）。
+* 无法使用 `--download` 设置 `Accept-Encoding`。
 
 # 流式响应
 
-Responses are downloaded and printed in chunks which allows for streaming
-and large file downloads without using too much memory. However, when
-`colors and formatting`_ is applied, the whole response is buffered and only
-then processed at once.
-
+响应下载并以块的形式打印，允许在不使用太多内存的情况下进行流式传输和大型文件下载。但是，当应用颜色和格式时，整个响应将被缓冲，然后立即处理。
 
 ## 禁用缓冲
 
-You can use the ``--stream, -S`` flag to make two things happen:
+您可以使用 `--stream, -S` 标志来实现两件事：
 
-1. The output is flushed in much smaller chunks without any buffering,
-   which makes HTTPie behave kind of like ``tail -f`` for URLs.
+1. 输出在更小的块中刷新而没有任何缓冲，这使得 HTTPie 的行为类似于 URL 的 `tail -f`。
 
-2. Streaming becomes enabled even when the output is prettified: It will be
-   applied to each line of the response and flushed immediately. This makes
-   it possible to have a nice output for long-lived requests, such as one
-   to the Twitter streaming API.
+2. 即使输出被美化，流也会启用：它将应用于响应的每一行并立即刷新。这样就可以为长期存在的请求提供一个很好的输出，例如一个 Twitter 流 API。
 
 
 ## 示例用例
 
-Prettified streamed response:
+Prettified 流媒体响应：
 
-.. code-block:: bash
+``` bash
+$ http --stream -f -a YOUR-TWITTER-NAME https://stream.twitter.com/1/statuses/filter.json track='Justin Bieber'
+```
 
-    $ http --stream -f -a YOUR-TWITTER-NAME https://stream.twitter.com/1/statuses/filter.json track='Justin Bieber'
+小块的流输出 ``tail -f``:
 
-
-Streamed output by small chunks alá ``tail -f``:
-
-.. code-block:: bash
-
-    # Send each new tweet (JSON object) mentioning "Apple" to another
-    # server as soon as it arrives from the Twitter streaming API:
-    $ http --stream -f -a YOUR-TWITTER-NAME https://stream.twitter.com/1/statuses/filter.json track=Apple \
-    | while read tweet; do echo "$tweet" | http POST example.org/tweets ; done
+``` bash
+# Send each new tweet (JSON object) mentioning "Apple" to another
+# server as soon as it arrives from the Twitter streaming API:
+$ http --stream -f -a YOUR-TWITTER-NAME https://stream.twitter.com/1/statuses/filter.json track=Apple \
+| while read tweet; do echo "$tweet" | http POST example.org/tweets ; done
+```
 
 # Session
 
-By default, every request HTTPie makes is completely independent of any
-previous ones to the same host.
+默认情况下，HTTPie 发出的每个请求都完全独立于同一主机的任何先前请求。
 
+但是，HTTPie 还可以通过 `--session=SESSION_NAME_OR_PATH` 选项支持持久会话。在会话中，自定义首部 -- 以 `Content-` 或 `If-` 开头的那些，授权和 cookie（由服务器手动指定或发送）除外，在对同一主机的请求之间保持不变。
 
-However, HTTPie also supports persistent
-sessions via the ``--session=SESSION_NAME_OR_PATH`` option. In a session,
-custom `HTTP headers`_ (except for the ones starting with ``Content-`` or ``If-``),
-`authentication`_, and `cookies`_
-(manually specified or sent by the server) persist between requests
-to the same host.
+``` bash
+# Create a new session
+$ http --session=/tmp/session.json example.org API-Token:123
 
+# Re-use an existing session — API-Token will be set:
+$ http --session=/tmp/session.json example.org
+```
 
-.. code-block:: bash
+所有会话数据（包括凭据，cookie 数据和自定义首部）都以纯文本格式存储。这意味着还可以在文本编辑器中手动创建和编辑会话文件 - 它们是常规 JSON。
 
-    # Create a new session
-    $ http --session=/tmp/session.json example.org API-Token:123
+## 命名会话
 
-    # Re-use an existing session — API-Token will be set:
-    $ http --session=/tmp/session.json example.org
+您可以为每个主机创建一个或多个命名会话。例如，这是为 `example.org` 创建名为 `user1` 的新会话的方法：
 
+``` bash
+$ http --session=user1 -a user1:password example.org X-Foo:Bar
+```
 
-All session data, including credentials, cookie data,
-and custom headers are stored in plain text.
-That means session files can also be created and edited manually in a text
-editor—they are regular JSON. It also means that they can be read by anyone
-who has access to the session file.
+从现在起，您可以通过其名称来引用会话。当您选择再次使用会话时，将自动设置以前使用的任何授权和 HTTP 首部：
 
+``` bash
+$ http --session=user1 example.org
+```
 
-Named sessions
---------------
+要创建或重用其他会话，只需指定其他名称：
 
+``` bash
+$ http --session=user2 -a user2:password example.org X-Bar:Foo
+```
 
-You can create one or more named session per host. For example, this is how
-you can create a new session named ``user1`` for ``example.org``:
+命名会话的数据存储在目录 `~/.httpie/sessions/<host>/<name>.json` 中的 JSON 文件中
+（在 windows 中是 ``%APPDATA%\httpie\sessions\<host>\<name>.json``）。
 
-.. code-block:: bash
+## 匿名会话
 
-    $ http --session=user1 -a user1:password example.org X-Foo:Bar
+您也可以直接指定会话文件的路径，而不是名称。这允许跨多个主机重用会话：
 
-From now on, you can refer to the session by its name. When you choose to
-use the session again, any previously specified authentication or HTTP headers
-will automatically be set:
+``` bash
+$ http --session=/tmp/session.json example.org
+$ http --session=/tmp/session.json admin.example.org
+$ http --session=~/.httpie/sessions/another.example.org/test.json example.org
+$ http --session-read-only=/tmp/session.json example.org
+```
 
-.. code-block:: bash
+## 只读会话
 
-    $ http --session=user1 example.org
+要在创建现有会话文件而不从 请求/响应 交换中更新它，请通过 `--session-read-only=SESSION_NAME_OR_PATH` 指定会话名称。
 
-To create or reuse a different session, simple specify a different name:
+# 配置
 
-.. code-block:: bash
+HTTPie 使用简单的 JSON 配置文件。
 
-    $ http --session=user2 -a user2:password example.org X-Bar:Foo
+## 配置文件位置
 
-Named sessions' data is stored in JSON files in the directory
-``~/.httpie/sessions/<host>/<name>.json``
-(``%APPDATA%\httpie\sessions\<host>\<name>.json`` on Windows).
+配置文件的默认位置是 ``~/.httpie/config.json`` (or ``%APPDATA%\httpie\config.json`` on Windows). 可以通过设置 `HTTPIE_CONFIG_DIR` 环境变量来更改 config 目录位置。要查看确切的位置，请运行 `http --debug`。
 
+## 可配置选项
 
-Anonymous sessions
-------------------
+JSON 文件包含具有以下键的对象：
 
-Instead of a name, you can also directly specify a path to a session file. This
-allows for sessions to be re-used across multiple hosts:
+### `default_options`
 
-.. code-block:: bash
+一个默认选项的 `Array`（默认为空），应该应用于 HTTPie 的每次调用。
 
-    $ http --session=/tmp/session.json example.org
-    $ http --session=/tmp/session.json admin.example.org
-    $ http --session=~/.httpie/sessions/another.example.org/test.json example.org
-    $ http --session-read-only=/tmp/session.json example.org
+例如，您可以使用此选项更改默认样式和输出选项：``"default_options": ["--style=fruity", "--body"]`` 另一个有用的默认选项可能是 ``"--session=default"`` 以使 HTTPie 始终使用会话（将自动使用一个名为 `default` 的默认值）。或者，您可以通过在列表中添加 `--form` 将隐式请求内容类型从 JSON 更改为表单。
 
+### `__meta__`
 
-Readonly session
-----------------
+HTTPie 在此自动存储其部分元数据。请不要改变。
 
-To use an existing session file without updating it from the request/response
-exchange once it is created, specify the session name via
-``--session-read-only=SESSION_NAME_OR_PATH`` instead.
+## 取消设置先前指定的选项
 
-
-Config
-======
-
-HTTPie uses a simple JSON config file.
-
-
-
-Config file location
---------------------
-
-
-The default location of the configuration file is ``~/.httpie/config.json``
-(or ``%APPDATA%\httpie\config.json`` on Windows). The config directory
-location can be changed by setting the ``HTTPIE_CONFIG_DIR``
-environment variable. To view the exact location run ``http --debug``.
-
-Configurable options
---------------------
-
-The JSON file contains an object with the following keys:
-
-
-``default_options``
-~~~~~~~~~~~~~~~~~~~
-
-
-An ``Array`` (by default empty) of default options that should be applied to
-every invocation of HTTPie.
-
-For instance, you can use this option to change the default style and output
-options: ``"default_options": ["--style=fruity", "--body"]`` Another useful
-default option could be ``"--session=default"`` to make HTTPie always
-use `sessions`_ (one named ``default`` will automatically be used).
-Or you could change the implicit request content type from JSON to form by
-adding ``--form`` to the list.
-
-
-``__meta__``
-~~~~~~~~~~~~
-
-HTTPie automatically stores some of its metadata here. Please do not change.
-
-
-
-Un-setting previously specified options
----------------------------------------
-
-Default options from the config file, or specified any other way,
-can be unset for a particular invocation via ``--no-OPTION`` arguments passed
-on the command line (e.g., ``--no-style`` or ``--no-session``).
-
-
-
-Scripting
-=========
-
-When using HTTPie from shell scripts, it can be handy to set the
-``--check-status`` flag. It instructs HTTPie to exit with an error if the
-HTTP status is one of ``3xx``, ``4xx``, or ``5xx``. The exit status will
-be ``3`` (unless ``--follow`` is set), ``4``, or ``5``,
-respectively.
-
-.. code-block:: bash
-
-    #!/bin/bash
-
-    if http --check-status --ignore-stdin --timeout=2.5 HEAD example.org/health &> /dev/null; then
-        echo 'OK!'
-    else
-        case $? in
-            2) echo 'Request timed out!' ;;
-            3) echo 'Unexpected HTTP 3xx Redirection!' ;;
-            4) echo 'HTTP 4xx Client Error!' ;;
-            5) echo 'HTTP 5xx Server Error!' ;;
-            6) echo 'Exceeded --max-redirects=<n> redirects!' ;;
-            *) echo 'Other Error!' ;;
-        esac
-    fi
-
-
-Best practices
---------------
-
-The default behaviour of automatically reading ``stdin`` is typically not
-desirable during non-interactive invocations. You most likely want
-use the ``--ignore-stdin`` option to disable it.
-
-It is a common gotcha that without this option HTTPie seemingly hangs.
-What happens is that when HTTPie is invoked for example from a cron job,
-``stdin`` is not connected to a terminal.
-Therefore, rules for `redirected input`_ apply, i.e., HTTPie starts to read it
-expecting that the request body will be passed through.
-And since there's no data nor ``EOF``, it will be stuck. So unless you're
-piping some data to HTTPie, this flag should be used in scripts.
-
-Also, it might be good to override the default ``30`` second ``--timeout`` to
-something that suits you.
-
-
-
-Meta
-====
-
-Interface design
-----------------
-
-The syntax of the command arguments closely corresponds to the actual HTTP
-requests sent over the wire. It has the advantage  that it's easy to remember
-and read. It is often possible to translate an HTTP request to an HTTPie
-argument list just by inlining the request elements. For example, compare this
-HTTP request:
-
-.. code-block:: http
-
-    POST /collection HTTP/1.1
-    X-API-Key: 123
-    User-Agent: Bacon/1.0
-    Content-Type: application/x-www-form-urlencoded
-
-    name=value&name2=value2
-
-
-with the HTTPie command that sends it:
-
-.. code-block:: bash
-
-    $ http -f POST example.org/collection \
-      X-API-Key:123 \
-      User-Agent:Bacon/1.0 \
-      name=value \
-      name2=value2
-
-
-Notice that both the order of elements and the syntax is very similar,
-and that only a small portion of the command is used to control HTTPie and
-doesn't directly correspond to any part of the request (here it's only ``-f``
-asking HTTPie to send a form request).
-
-The two modes, ``--pretty=all`` (default for terminal) and ``--pretty=none``
-(default for redirected output), allow for both user-friendly interactive use
-and usage from scripts, where HTTPie serves as a generic HTTP client.
-
-As HTTPie is still under heavy development, the existing command line
-syntax and some of the ``--OPTIONS`` may change slightly before
-HTTPie reaches its final version ``1.0``. All changes are recorded in the
-`change log`_.
+可以通过命令行上传递的 `--no-OPTION` 参数（例如，`--no-style` 或 `--no-session` ）为特定调用取消设置配置文件中的默认选项，或以任何其他方式指定。
