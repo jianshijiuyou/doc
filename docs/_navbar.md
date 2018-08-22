@@ -29,6 +29,7 @@
   * [SQLAlchemy 指南](python/sqlalchemy.md)
   * [Logging 指南](python/logging_basic.md)
   * [socket 指南](python/socket.md)
+  * [Pytest 笔记](python/pytest.md)
 
 * 爬虫
   * [爬虫常用库整理](爬虫/爬虫常用库整理.md)
