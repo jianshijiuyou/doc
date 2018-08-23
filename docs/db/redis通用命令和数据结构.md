@@ -412,3 +412,39 @@ print(redis.get('name'))
 ```
 
 推荐阅读 [https://cuiqingcai.com/5587.html](https://cuiqingcai.com/5587.html)
+
+# redis-cli
+
+单独下载 redis-cli
+
+``` bash
+sudo apt-get install redis-tools
+```
+
+使用
+
+``` bash
+Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]
+  -h <hostname>      Server hostname (default: 127.0.0.1).
+  -p <port>          Server port (default: 6379).
+  -a <password>      Password to use when connecting to the server.
+  -u <uri>           Server URI.
+```
+## 举个栗子
+
+``` bash
+$ redis-cli -u redis://:password@127.0.0.1:6379/0
+
+# or
+$ redis-cli -h 127.0.0.1 -p 6379 -a password
+
+# or
+$ redis-cli -h 127.0.0.1 -p 6379           
+111.230.231.89:6379> keys *
+(error) NOAUTH Authentication required.
+111.230.231.89:6379> auth password
+OK
+111.230.231.89:6379> keys *
+1) "aaa"
+2) "a"
+```
