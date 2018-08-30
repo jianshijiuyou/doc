@@ -275,3 +275,64 @@ inf
 > math.random(10,100)   -- [10, 100]
 32
 ```
+
+取整
+
+``` lua
+> math.floor(3.3)
+3
+> math.ceil(3.3)
+4
+> math.modf(3.3)
+3	0.3
+```
+
+无偏取整函数
+
+``` lua
+function round(x)
+  local f = math.floor(x)
+  if (x == f) or (x % 2.0 == 0.5) then
+    return f
+  else
+    return math.floor(x + 0.5)
+  end
+end
+
+> round(2.5)
+2
+> round(3.5)
+4
+> round(-2.5)
+-2
+> round(-1.5)
+-2
+```
+
+整数范围
+
+``` lua
+> math.maxinteger
+9223372036854775807
+> math.mininteger
+-9223372036854775808
+> math.maxinteger + 1
+-9223372036854775808
+> math.maxinteger + 1 == math.mininteger
+true
+```
+
+整数和浮点数转换
+
+``` lua
+> 123123213 + 0.0
+123123213.0
+> 2^10
+1024.0
+> 2^10 | 0
+1024
+> math.tointeger(2.0)
+2
+> math.tointeger(2.1)   -- 无法转化小数部分不是零的
+nil
+```
