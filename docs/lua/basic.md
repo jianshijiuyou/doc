@@ -784,3 +784,88 @@ number
 > table.unpack({10,20,30}, 2, 3)
 20	30
 ```
+
+# 输入输出
+
+``` lua
+f = io.open("test.txt", "r")
+txt = f:read("a") --> 全部读出
+print(txt)
+f:close()
+```
+
+# 补充知识
+
+局部变量
+
+Lua 中的变量默认都是全局变量，局部变量必须单独声明
+
+``` lua
+while i <= x do
+  local x = i * 2     --> 单独声明，否则为全局变量
+  print(x)
+  i = i + 1
+end
+```
+
+`if` 语句
+
+``` lua
+if op == "+" then
+  r = a + b
+elseif op == "-" then
+  r = a - b
+else
+  error("invalid operation")
+end
+```
+
+`while` 语句
+
+``` lua
+local i = 1
+while a[i] do
+  print(a[i])
+  i = i + 1
+end
+```
+
+`repeat` 语句
+
+``` lua
+local line
+repeat
+  line = io.read()
+until line ~= ""
+print(line)
+```
+
+数值型 `for`
+
+```
+for var = start, end, step do
+  something
+end
+```
+
+`step`（步长）可以省略，默认为 1
+
+``` lua
+for i = 1, 10, 2 do
+  print(i)
+end
+```
+
+`goto` 语句
+
+``` lua
+while xxxx do
+  ::redo::
+  if yyyy then
+    goto continue
+  elseif zzzz then
+    goto redo
+  some code
+  ::continue::
+end
+```
