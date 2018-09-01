@@ -664,3 +664,123 @@ d
 > table.remove(a)           --> 删除最后一个并返回
 5
 ```
+
+# 函数
+
+定义个求和函数
+
+``` lua
+function add(a)
+  local sum = 0
+  for i = 1, #a do
+    sum = sum + a[i]
+  end
+  return sum
+end
+
+a = {10, 20, 30}
+result = add(a)
+print(result)
+```
+
+Lua 会通过抛弃多余的参数和将不足的参数设置为 `nil` 来调整参数的个数
+
+``` lua
+> function f(a, b) print(a, b) end
+> f()
+nil	nil
+> f(3)
+3	nil
+> f(3, 4)
+3	4
+> f(3, 4, 5)
+3	4
+```
+
+函数可以返回多个结果
+
+``` lua
+> function f() return "one", "two" end
+> a, b = f()
+> a
+one
+> b
+two
+```
+
+`()` 会限制返回结果
+
+``` lua
+> f()
+one	two
+> (f())
+one
+```
+
+可变长参数
+
+``` lua
+> function f(...) return ... end
+> f(1, 2, 3)
+1	2	3
+> function f(...) return {...} end
+> f(1, 2, 3)
+table: 0x1c0e2d0
+> function f(...) local a, b, c = ...; print(a, b, c) end
+> f(1, 2, 3)
+1	2	3
+```
+
+判断可变参数中是否有 `nil`
+
+``` lua
+function nonils(...)
+  local arg = table.pack(...)
+  for i=1, arg.n do
+    if arg[i] == nil then
+      return false
+    end
+  end
+  return true
+end
+
+print(nonils(2, 3, nil))    --> false
+print(nonils(2, 3))         --> true
+print(nonils())             --> true
+print(nonils(nil))          --> false
+```
+
+使用 `select` 函数遍历
+
+``` lua
+> select(1, "a", "b", "b")
+a	b	b
+> select(2, "a", "b", "b")
+b	b
+> select(3, "a", "b", "b")
+b
+> select(1, "a", nil, "b")
+a	nil	b
+> select("#", "a", nil, "b")
+3
+> select("#", "a", nil, "b", nil)
+4
+```
+
+`table.unpack`
+
+``` lua
+> type(table.pack(1,2))
+table
+> type(table.unpack({1}))
+number
+> type(table.unpack({1, 2}))
+number
+> table.unpack({1, 2})
+1	2
+> table.unpack{1, 2, 3}
+1	2	3
+
+> table.unpack({10,20,30}, 2, 3)
+20	30
+```
