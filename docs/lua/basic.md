@@ -336,3 +336,199 @@ true
 > math.tointeger(2.1)   -- 无法转化小数部分不是零的
 nil
 ```
+# 字符串
+
+Lua 中字符串时不可变的
+
+改变字符串的某些部分会产生新的字符串
+
+``` lua
+> a = "one string"
+> b = string.gsub(a, "one", "another")
+> a
+one string
+> b
+another string
+```
+
+通过 `#` 获取字符串的长度 
+
+``` lua
+> a = "hello"
+> #a
+5
+> #"good bye"
+8
+> #"哈哈"   --> 一个中文占三个字节
+6
+```
+
+字符串拼接
+
+``` lua
+> "hello" .. "world"
+helloworld
+> "result is " .. 3
+result is 3
+```
+
+多行字符串
+
+``` lua
+page = [[
+  <html>
+    <head>
+    </head>
+    <body>
+    </body>
+  </html>
+]]
+```
+
+?> 第一个换行符会被忽略
+
+类型转换，`string` to `number`
+
+``` lua
+> tonumber("   -3  ")
+-3
+> tonumber("   10e4  ")
+100000.0
+> tonumber("20e")
+nil
+> tonumber("0x1.3p-4")
+0.07421875
+> tonumber("10010101", 2)
+149
+> tonumber("ffff", 16)
+65535
+```
+
+类型转换，`number` to `string`
+
+``` lua
+> tostring(10) == "10"
+true
+```
+
+字符串标准库
+
+``` lua
+> string.len("abcde")
+5
+> string.rep("a", 10)
+aaaaaaaaaa
+> string.reverse("abcde")
+edcba
+> string.upper("abcde")
+ABCDE
+> string.lower("ABCDE")
+abcde
+```
+
+子串
+
+``` lua
+> s = "[in brackets]"
+> string.sub(s, 2, -2)
+in brackets
+> string.sub(s, 1, 1)
+[
+> string.sub(s, -1, -1)
+]
+```
+
+`char` <==> `byte`
+
+``` lua
+> string.char(97, 98, 99)
+abc
+> string.byte("abc")
+97
+> string.byte("abc", 1)
+97
+> string.byte("abc", 2)
+98
+> string.byte("abc", 3)
+99
+> string.byte("abc", 1, 3)
+97	98	99
+> a, b, c = string.byte("abc", 1, 3)
+> a
+97
+> b
+98
+> c
+99
+```
+
+字符串格式化
+
+``` lua
+> string.format("x = %d y = %d", 10, 20)
+x = 10 y = 20
+> string.format("x = %x", 10)
+x = a
+> string.format("x = 0x%X", 100)
+x = 0x64
+> string.format("x = %f", 100)
+x = 100.000000
+> tag, title = "h1", "a title"
+> string.format("<%s>%s</%s>", tag, title, tag)
+<h1>a title</h1>
+```
+
+``` lua
+> string.format("%.2f", math.pi)
+3.14
+> string.format("%02d", 5)
+05
+> string.format("%03d", 5)
+005
+> string.format("%10d", 5)
+         5
+```
+
+调用标准库的快捷方式
+
+``` lua
+> s = "abc"
+> s:len()
+3
+> s:upper()
+ABC
+```
+
+字符串查找搜索
+
+``` lua
+> string.find("hello world", "wor")
+7	9
+> string.find("hello world", "war")
+nil
+```
+
+字符串替换
+
+``` lua
+> string.gsub("hello world", "l", ".")
+he..o wor.d	3
+> string.gsub("hello world", "ll", "..")
+he..o world	1
+> string.gsub("hello world", "a", ".")
+hello world	0
+```
+
+Unicode 编码
+
+``` lua
+> utf8.len("哈哈")
+2
+> utf8.len("哈哈asd")
+5
+> utf8.codepoint("哈")
+21704
+> utf8.char(21704)
+哈
+
+```
