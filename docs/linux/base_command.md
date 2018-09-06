@@ -9,24 +9,6 @@ node 请去官网下压缩包安装
 
 cnpm 淘宝镜像：[http://npm.taobao.org/](http://npm.taobao.org/)
 
-## 字体安装
-
-首先下载字体，然后复制到 `/usr/share/fonts/` 目录下
-
-然后依次执行以下命令
-
-``` bash
-sudo mkfontscale
-sudo mkfontdir
-sudo fc-cache -fv
-```
-
-安装 zsh 的 oh-my-zsh 的 agnoster-zsh-theme 主题后分支图标乱码问题
-
-需要设置终端字体为 `droid sans mono dotted for powerline regular`
-
-![](http://os6ycxx7w.bkt.clouddn.com/images/d0908542-62ca-4d21-be21-95574bccc6ab.png)
-
 ## 常用的 RPM 软件包命令
 
 | 说明      |     命令 |

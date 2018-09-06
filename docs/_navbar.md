@@ -67,3 +67,4 @@
   * [Docker 常用命令](tools/docker常用命令.md)  
   * [Git 常用命令](tools/git_command.md)  
   * [HTTPie 使用指南](tools/httpie.md)  
+  * [oh-my-zsh 配置指南](tools/zsh.md)  

@@ -181,7 +181,7 @@ def test_one(abc):
 import pytest
 
 @pytest.fixture(scope="module", params=['arg1', 'arg2', 'arg3'])
-def abc(request):
+def abc(request):   # request 自带的
     arg = request.param
     print(arg)
     return "return abc"
