@@ -321,3 +321,11 @@ sudo service mongod restart
 # robomongo
 
 [robomongo](https://robomongo.org/) 是 MongoDB 的一个 GUI 工具。
+
+# mongodb-org-shell
+
+单独安装 mongodb-org-shell
+
+``` bash
+sudo apt install mongodb-org-shell
+```

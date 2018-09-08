@@ -226,9 +226,9 @@ docker container stop f0a77b17adf3
 当 `-i` `-t` 参数一起使用时，则可以看到我们熟悉的 Linux 命令提示符。
 
 ```
-[root@localhost ~]# docker exec -i 3842 bash
+[root@localhost ~]# docker exec -i <name or id> bash
 # or
-[root@localhost ~]# docker exec -it 3842 bash
+[root@localhost ~]# docker exec -it <name or id> bash
 ```
 
 !> 如果从这个 stdin 中 exit，不会导致容器的停止。
