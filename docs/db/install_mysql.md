@@ -264,3 +264,13 @@ apt install mysql-workbench
 ```
 
 https://blog.csdn.net/lhs960124/article/details/80404849
+
+## SSH 连接
+
+如果要通过 SSH 连接 ubuntu 上的 mysql, 需要安装 SSH server
+
+https://blog.csdn.net/jackghq/article/details/54974141
+
+``` bash
+sudo apt install openssh-server
+```
