@@ -118,6 +118,77 @@ print(r.text)
 }
 ```
 
+## JSON
+
+请求发送 json 数据
+
+``` python
+>>> import json
+
+>>> url = 'http://httpbin.org/post'
+>>> payload = {'some': 'data'}
+
+>>> r = requests.post(url, data=json.dumps(payload))
+```
+
+结果
+
+``` json
+{
+    "args": { }, 
+    "data": "{\"some\": \"data\"}", 
+    "files": { }, 
+    "form": { }, 
+    "headers": {
+        "Accept": "*/*", 
+        "Accept-Encoding": "gzip, deflate", 
+        "Connection": "close", 
+        "Content-Length": "16", 
+        "Host": "httpbin.org", 
+        "User-Agent": "python-requests/2.19.1"
+    }, 
+    "json": {
+        "some": "data"
+    }, 
+    "origin": "125.70.30.147", 
+    "url": "http://httpbin.org/post"
+}
+```
+
+直接使用 json 参数
+
+``` python
+>>> url = 'http://httpbin.org/post'
+>>> payload = {'some': 'data'}
+
+>>> r = requests.post(url, json=payload)
+```
+
+结果
+
+``` json
+{
+    "args": { }, 
+    "data": "{\"some\": \"data\"}", 
+    "files": { }, 
+    "form": { }, 
+    "headers": {
+        "Accept": "*/*", 
+        "Accept-Encoding": "gzip, deflate", 
+        "Connection": "close", 
+        "Content-Length": "16", 
+        "Content-Type": "application/json", 
+        "Host": "httpbin.org", 
+        "User-Agent": "python-requests/2.19.1"
+    }, 
+    "json": {
+        "some": "data"
+    }, 
+    "origin": "221.237.92.7", 
+    "url": "http://httpbin.org/post"
+}
+```
+
 ## 响应
 
 ``` python
