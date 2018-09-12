@@ -438,6 +438,9 @@ $ redis-cli -u redis://:password@127.0.0.1:6379/0
 # or
 $ redis-cli -h 127.0.0.1 -p 6379 -a password
 
+#or
+# -n <db number>
+$ redis-cli -h 127.0.0.1 -p 6379 -n 1 -a password
 # or
 $ redis-cli -h 127.0.0.1 -p 6379           
 111.230.231.89:6379> keys *
