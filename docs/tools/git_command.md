@@ -121,3 +121,45 @@ Git 使用两种主要类型的标签：轻量标签（lightweight）与附注�
 | `git push origin --tags` | 推送所有标签
 
 !> `git push` 默认不会推送标签
+
+# commit message
+
+http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
+
+
+每次提交，Commit message 都包括三个部分：Header，Body 和 Footer。
+
+```
+<type>(<scope>): <subject>
+// 空一行
+<body>
+// 空一行
+<footer>
+```
+
+其中，Header 是必需的，Body 和 Footer 可以省略。
+
+不管是哪一个部分，任何一行都不得超过72个字符（或100个字符）。这是为了避免自动换行影响美观。
+
+## Header
+
+Header 部分只有一行，包括三个字段：type（必需）、scope（可选）和 subject（必需）。
+
+type 用于说明 commit 的类别，只允许使用下面 7 个标识。
+
+* feat：新功能（feature）
+* fix：修补bug
+* docs：文档（documentation）
+* style： 格式（不影响代码运行的变动）
+* refactor：重构（即不是新增功能，也不是修改bug的代码变动）
+* test：增加测试
+* chore：构建过程或辅助工具的变动
+
+
+scope 用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
+
+subject 是 commit 目的的简短描述，不超过 50 个字符。
+
+* 以动词开头，使用第一人称现在时，比如 change，而不是 changed 或 changes
+* 第一个字母小写
+* 结尾不加句号（.）
