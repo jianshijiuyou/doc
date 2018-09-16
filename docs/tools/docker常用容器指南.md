@@ -65,3 +65,23 @@ docker run --name test-mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3307:3306 -d mysql
 ``` bash
 mysql -h 127.0.0.1 -P 3307 -u root -p
 ```
+
+# zookeeper
+
+https://hub.docker.com/_/zookeeper/
+
+下载
+
+``` bash
+docker pull zookeeper
+```
+
+启动
+
+``` bash
+docker run --name test-zookeeper -p 2181:2181 --restart always -d zookeeper
+```
+
+默认会有三个端口 `EXPOSE 2181 2888 3888`,（ zookeeper 客户端端口，跟随端口，选举端口）
+
+?> zookeeper 容易崩溃，所以建议加上 `--restart always` 选项
