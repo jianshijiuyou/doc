@@ -274,3 +274,23 @@ https://blog.csdn.net/jackghq/article/details/54974141
 ``` bash
 sudo apt install openssh-server
 ```
+
+## 独立客户端
+
+下载
+
+https://dev.mysql.com/downloads/shell/
+
+连接方式
+
+https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-connection-using-parameters.html
+
+例子
+
+``` bash
+shell> mysqlsh --uri user@localhost:33065 --user otheruser
+
+shell> mysqlsh --mysqlx -u user -h localhost -P 33065
+
+shell> mysqlsh --mysql -u user -h localhost
+```
