@@ -33,3 +33,23 @@
 配置同步插件
 
 https://github.com/shanalikhan/code-settings-sync
+
+多括号颜色区分
+
+https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer
+
+css 颜色高亮
+
+https://github.com/sergiirocks/vscode-ext-color-highlight
+
+gitlens
+
+https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+
+One Dark Pro theme
+
+https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme
+
+vscode-icons
+
+https://marketplace.visualstudio.com/items?itemName=robertohuertasm.vscode-icons
