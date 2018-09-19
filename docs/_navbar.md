@@ -74,3 +74,4 @@
   * [oh-my-zsh 配置指南](tools/zsh.md)  
   * [PM2 使用指南](tools/pm2.md)  
   * [ZooKeeper 指南](tools/zookeeper.md)  
+  * [VS Code 指南](tools/vscode.md)  
