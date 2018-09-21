@@ -163,3 +163,78 @@ subject 是 commit 目的的简短描述，不超过 50 个字符。
 * 以动词开头，使用第一人称现在时，比如 change，而不是 changed 或 changes
 * 第一个字母小写
 * 结尾不加句号（.）
+
+# 配置 SSH
+
+https://segmentfault.com/a/1190000005349818
+
+https://ioliu.cn/2015/generating-ssh-key/
+
+在给 github 配置 ssh 时如果 `~/.ssh/id_rsa` 文件已经存在并且其中的邮箱并不是 github 邮箱账号，那就没有办法复用，需要创建新的秘钥文件。
+
+``` bash
+ssh-keygen -t rsa -C "jianshijiuyou@gmail.com"
+```
+
+出现如下提示：
+
+输入新路径，这里我输入的是 `/home/jianshijiuyou/.ssh/github`
+
+```
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/jianshijiuyou/.ssh/id_rsa):/home/jianshijiuyou/.ssh/github
+```
+
+回车输入密码(可以不输入)
+
+```
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/jianshijiuyou/.ssh/github.
+Your public key has been saved in /home/jianshijiuyou/.ssh/github.pub.
+The key fingerprint is:
+SHA256:CxLQryHf1yCJtbC6ouYEqPZAml1EO69U++JMn+0kjvM jianshijiuyou@gmail.com
+The key's randomart image is:
++---[RSA 2048]----+
+|  ...            |
+|   oo..          |
+|    =*.o         |
+|. ..+==..        |
+|o. ++++.So       |
+|=o.ooo.o...      |
+|++... o.+ .      |
+|+.+  +.= =       |
+|=o .  +oE.o      |
++----[SHA256]-----+
+```
+
+然后
+
+``` bash
+vim ~/.ssh/config
+```
+
+输入
+
+```
+Host github.com
+  User git
+  IdentityFile /home/jianshijiuyou/.ssh/github
+  IdentitiesOnly yes
+```
+
+然后将 `github.pub` 中的内容复制到 github 账户的 SSH key 配置中
+
+?> 进入 GitHub 账户设置，点击左边 `SSH Key` ，点击 `Add SSH key` ，粘贴刚刚复制的内容，然后保存。
+
+测试
+
+``` bash
+ssh -T git@GitHub.com
+```
+
+成功标识
+
+```
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+```
