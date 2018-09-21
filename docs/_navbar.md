@@ -53,6 +53,7 @@
   * [基础](lua/basic.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
+  * [Mysql 命令](db/mysql_command.md)
   * [Redis 概念&安装](db/redis安装与介绍.md)
   * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
   * [MongoDB 概念&安装](db/mongodb_install.md)

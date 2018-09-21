@@ -294,3 +294,9 @@ shell> mysqlsh --mysqlx -u user -h localhost -P 33065
 
 shell> mysqlsh --mysql -u user -h localhost
 ```
+
+# mycli
+
+MyCli 是一个 MySQL 命令行工具，支持自动补全和语法高亮。也可用于 MariaDB 和 Percona。推荐好用的图形界面也得推荐好用的命令行工具，这个工具也是免费开源的
+
+https://github.com/dbcli/mycli
