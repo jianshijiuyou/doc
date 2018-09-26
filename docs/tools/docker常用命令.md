@@ -293,6 +293,27 @@ docker diff [ID | name]
 docker inspect [container name]
 ```
 
+### 查看日志
+
+```
+docker logs [OPTIONS] CONTAINER
+```
+
+OPTIONS 说明：
+
+* `-f` : 跟踪日志输出
+* `--since` : 显示某个开始时间的所有日志
+* `-t` : 显示时间戳
+* `--tail` : 仅列出最新 N 条容器日志
+
+栗子
+
+```
+docker logs -f mynginx
+
+docker logs --since="2016-07-01" --tail=10 mynginx
+```
+
 ## 占用空间
 
 你可以通过以下命令来便捷的查看镜像、容器、数据卷所占用的空间。
