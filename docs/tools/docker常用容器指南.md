@@ -151,3 +151,53 @@ content-type: application/json; charset=UTF-8
     }
 }
 ```
+
+# Kibana
+
+https://www.elastic.co/guide/en/kibana/current/docker.html
+https://www.elastic.co/guide/cn/kibana/current/docker.html
+
+下载
+
+``` bash
+docker pull docker.elastic.co/kibana/kibana:6.4.1
+```
+
+配合 Elasticsearch 使用：
+
+首先创建网络
+
+``` bash
+docker network create -d bridge es-net
+```
+
+在启动 Elasticsearch 容器和 Kibana 容器时加入网络配置
+
+``` bash
+docker run --name test-es -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --network es-net -d docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+
+docker run --name test-kibana -p 5601:5601 -e "ELASTICSEARCH_URL=http://test-es:9200/" --network es-net -d docker.elastic.co/kibana/kibana:6.4.1
+```
+
+默认环境变量
+
+```
+server.name=kibana
+server.host="0"
+elasticsearch.url=http://elasticsearch:9200
+xpack.monitoring.ui.container.elasticsearch.enabled=true
+```
+
+在 docker 命令中配置环境变量时，所有参数均以大写加下划线表示
+
+```
+SERVER_NAME <=> server.name
+KIBANA_DEFAULTAPPID <=> kibana.defaultAppId
+XPACK_MONITORING_ENABLED <=> xpack.monitoring.enabled
+```
+
+更多配置项见
+
+https://www.elastic.co/guide/en/kibana/current/settings.html
+
+https://www.elastic.co/guide/en/kibana/current/settings-xpack-kb.html

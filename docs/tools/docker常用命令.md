@@ -314,6 +314,43 @@ docker logs -f mynginx
 docker logs --since="2016-07-01" --tail=10 mynginx
 ```
 
+### ps
+
+```
+docker ps [OPTIONS]
+```
+
+OPTIONS 说明：
+
+* `-a`: 显示所有的容器，包括未运行的。
+* `-f`: 根据条件过滤显示的内容。
+* `--format`: 指定返回值的模板文件。
+* `-l`: 显示最近创建的容器。
+* `-n`: 列出最近创建的n个容器。
+* `--no-trunc`: 不截断输出。
+* `-q`: 静默模式，只显示容器编号。
+* `-s`: 显示总的文件大小。
+
+#### Filtering
+
+过滤标志（ `-f` 或 `--filter` ）格式是 `key=value` 对。如果有多个过滤器，则传递多个标志（例如 `--filter "foo=bar" --filter "bif=baz"` ）
+
+常用过滤器有：
+
+| Filter | Description |
+|:---------------------------------
+| id	    | Container’s ID
+| name	    | Container’s name
+| label	    | 表示键或键值对的任意字符串。表示为 `<key>` 或 `<key>=<value>`
+| exited	| 表示容器退出代码的整数。仅适用于 `--all` 。
+| status	| One of `created`, `restarting`, `running`, `removing`, `paused`, `exited`, or `dead`
+| volume	| 过滤运行已安装给定卷或绑定装载的容器。
+| network	| 过滤运行连接到给定网络的容器。
+| publish or expose	| 过滤发布或公开给定端口的容器。 表示为 `<port>[/<proto>]` or `<startport-endport>/[<proto>]`
+| health	| 根据容器的健康状况筛选容器. One of `starting`, `healthy`, `unhealthy` or `none`.
+
+更多过滤器和示例见 [filtering](https://docs.docker.com/engine/reference/commandline/ps/#filtering)
+
 ## 占用空间
 
 你可以通过以下命令来便捷的查看镜像、容器、数据卷所占用的空间。

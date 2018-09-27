@@ -41,6 +41,10 @@ https://github.com/zsh-users/zsh-syntax-highlighting
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ```
 
+# 终端历史命令联想
+
+https://github.com/zsh-users/zsh-autosuggestions
+
 # 其他
 
 去除终端中开头那些没用的用户名，计算机名
