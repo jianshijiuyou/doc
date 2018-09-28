@@ -77,3 +77,4 @@
   * [PM2 使用指南](tools/pm2.md)  
   * [ZooKeeper 指南](tools/zookeeper.md)  
   * [VS Code 指南](tools/vscode.md)  
+  * [elasticsearch 入门](tools/elasticsearch_getting_started.md)  
