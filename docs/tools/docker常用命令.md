@@ -351,6 +351,20 @@ OPTIONS 说明：
 
 更多过滤器和示例见 [filtering](https://docs.docker.com/engine/reference/commandline/ps/#filtering)
 
+### 使用的资源
+
+`docker stats`
+
+?> 默认情况下，`stats` 命令会每隔 1 秒钟刷新一次输出的内容直到你按下 `ctrl + c`。
+
+如果不想持续的监控容器使用资源的情况，可以通过 `--no-stream` 选项只输出当前的状态：
+
+`ocker stats --no-stream`
+
+如果我们只想查看个别容器的资源使用情况，可以为 `docker stats` 命令显式的指定目标容器的名称或者是 ID：
+
+`docker stats --no-stream <name1> <name2> ...`
+
 ## 占用空间
 
 你可以通过以下命令来便捷的查看镜像、容器、数据卷所占用的空间。
