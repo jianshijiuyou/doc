@@ -60,6 +60,7 @@
 * ES
   * [入门](es/elasticsearch_getting_started.md)  
   * [文档 API](es/docs.md)
+  * [搜索 API](es/search.md)
 * Algorithm
   * [初级排序算法总结](algorithm/algorithm_2.md)
   * [归并排序](algorithm/algorithm_3.md)
