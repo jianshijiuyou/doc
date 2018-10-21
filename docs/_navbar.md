@@ -57,8 +57,9 @@
   * [Redis 概念&安装](db/redis安装与介绍.md)
   * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
   * [MongoDB 概念&安装](db/mongodb_install.md)
-* Elasticsearch
-  * [elasticsearch 入门](es/elasticsearch_getting_started.md)  
+* ES
+  * [入门](es/elasticsearch_getting_started.md)  
+  * [文档 API](es/docs.md)
 * Algorithm
   * [初级排序算法总结](algorithm/algorithm_2.md)
   * [归并排序](algorithm/algorithm_3.md)
