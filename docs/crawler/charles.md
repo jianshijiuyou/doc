@@ -5,25 +5,25 @@
 
 1、
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180625125550.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180625125550.png)
 
 2、
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180625125633.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180625125633.png)
 
 3、
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180625125718.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180625125718.png)
 
 4、
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180625125826.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180625125826.png)
 
 # 开启 HTTPS 抓取
 
 默认不开启，需要手动设置
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180704130444.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180704130444.png)
 
 # 手机安装证书问题
 

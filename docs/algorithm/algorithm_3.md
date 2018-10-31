@@ -1,6 +1,6 @@
 ﻿### 归并排序
 要将一个数组排序，可以先（递归地）将它分成两半分别排序，然后将结果归并起来。你将会看到，归并排序最吸引人的性质是它能够保证将<font color="red">任意长度为 N 的数组排序所需时间和 NlogN 成正比</font>；它的主要缺点则是它所<font color="red">需要的额外空间和 N 成正比</font>。  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/mergesort-overview.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/mergesort-overview.png)  
 >归并排序示意图
 
 ### 原地归并的抽象方法
@@ -40,7 +40,7 @@ public static void merge(Comparable[] a,int lo,int mid,int hi)
  3. **右半边的当前元素小于左半边的当前元素（取右半边的元素）**
  4. **右半边的当前元素大于左半边的当前元素（取左半边的元素）**
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/merge.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/merge.png)  
 > 原地归并的抽象方法的轨迹
 
 ### 自顶向下的归并排序
@@ -67,15 +67,15 @@ public class Merge {
 }
 ```
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/mergesortTD.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/mergesortTD.png)  
 > 自顶向下的归并排序中归并结果的轨迹
 
 要理解归并排序就要仔细研究该方法调用的动态情况。  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/algorithm_3_1.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/algorithm_3_1.png)  
 > 自顶向下的归并排序的调用轨迹
 
 命题：<font color="red">对于长度为 N 的任意数组，自顶向下的归并排序需要 1/2NlgN 至 NlgN 次比较。</font>
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/algorithm_3_2.png)   
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/algorithm_3_2.png)   
 > N=16 时归并排序中子数组的依赖树
 
 命题：<font color="red">对于长度为 N 的任意数组，自顶向下的归并排序最多需要访问数组 6NlgN 次。</font>  
@@ -83,7 +83,7 @@ public class Merge {
 ### 提高性能
 #### 对小规模数组使用插入排序  
 递归会使小规模问题中的方法的调用过于频繁，所以改进它们的处理方法就能改进整个算法，使用插入排序处理小规模的子数组（比如长度小于 15）一般可以将归并排序的运行时间缩短 10% ～ 15%。  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/mergesortTD-bars.png)     
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/mergesortTD-bars.png)     
 > 改进了小规模子数组排序方法后的自顶向下的归并排序的可视轨迹
 
 #### 测试数组是否已经有序
@@ -96,7 +96,7 @@ public class Merge {
 
 最后一次归并的第二个子数组可能比第一个子数组要小（但这对 merge() 方法不是问题），如果不是的话所有的归并中两个数组大小都应该一样，而在下一轮中子数组的大小会翻倍。  
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/algorithm_3_3.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/algorithm_3_3.png)  
 > 自底向上的归并排序的可视轨迹
 
 ``` java
@@ -121,7 +121,7 @@ public class MergeBU {
 
 自底向上的归并排序会多次遍历整个数组，根据子数组大小进行两两归并。子数组的大小 sz 的初始值为 1，每次加倍。最后一个子数组的大小只有在数组大小是 sz 的偶数倍的时候才会等于 sz（否则会比 sz 小）。  
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_3/mergesortBU.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_3/mergesortBU.png)  
 > 自底向上的归并排序的归并结果
 
 命题：<font color="red">对于长度为 N 的任意数组，自底向上的归并排序需要 1/2NlgN 至 NlgN 次比较，最多访问数组 6NlgN 次。</font>

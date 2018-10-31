@@ -10,14 +10,14 @@
 <font color="red">定义：符号表是一种存储键值对的数据结构，支持两种操作：插入 （put），即将一组新的键值对存入表中；查找 （get），即根据给定的键得到相应的值。</font>
 
 ### 典型的符号表应用
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/symbol-table-applications.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/symbol-table-applications.png)
 
 ### 一般符号表的 API
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/symbol-table-api2.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/symbol-table-api2.png)
 
 ### 有序符号表的 API
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/ordered-symbol-table-api.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/ordered-symbol-table-api.png)
 
 
 ### 无序链表中的顺序查找
@@ -66,7 +66,7 @@ public class SequentialSearchST<Key, Value> {
 ```
 
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/sequential-search.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/sequential-search.png)
 > 使用基于链表的符号表的索引用例的轨迹
 
 <font color="red">在含有 N 对键值的基于（无序）链表的符号表中，未命中的查找和插入操作都需要 N 次比较。命中的查找在最坏情况下需要 N 次比较。向一个空表中插入 N 个不同的键需要 ～(N^2)/2 次比较</font>。
@@ -81,7 +81,7 @@ public class SequentialSearchST<Key, Value> {
 
 对于 put() 方法，只要给定的键存在于表中，rank() 方法就能够精确地告诉我们到哪里去更新它的值，以及当键不在表中时将键存储到表中的何处。将所有更大的键向后移动一格来腾出位置（从后向前移动）并将给定的键值对分别插入到各自数组中的合适位置。
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/binary-search.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/binary-search.png)
 > 使用基于有序数组的符号表实现的索引用例的轨迹
 
 ``` java
@@ -179,7 +179,7 @@ public int rank(Key key) {
 
 首先将 key 和中间键比较，如果相等则返回其索引；如果小于中间键则在左半部份查找；大于则走有伴部分查找。
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/rank.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/rank.png)
 > 在有序数组中使用二分法查找排名的轨迹
 
 
@@ -187,14 +187,14 @@ public int rank(Key key) {
 
 简单的符号表实现的成本总结
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/srh835hk7edgfj6ggdfsswt.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/srh835hk7edgfj6ggdfsswt.png)
 > 
 > 表中给出的是总成本中的最高级项（对于二分查找是数组的访问次数，对于其他则是比较次数），即运行时间的增长数量级。
 
 
 ### 符号表的各种实现的优缺点
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm7/jlkdsgf6sdfg9sdf678dfgh.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm7/jlkdsgf6sdfg9sdf678dfgh.png)
 
 ### 说明
 本文内容是对『算法』第四版 的摘要总结！  

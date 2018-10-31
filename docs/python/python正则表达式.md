@@ -3,7 +3,7 @@
 
 # 正则表达式基础
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/719c211a-6ae1-4584-ba18-9fd0198aa71b.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/719c211a-6ae1-4584-ba18-9fd0198aa71b.png)
 
 ## 贪婪模式
 

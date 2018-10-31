@@ -114,7 +114,7 @@ for student in results:
 
 ## 条件查询
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180627232537.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180627232537.png)
 
 查询年龄大于 30 的学生
 
@@ -124,7 +124,7 @@ results = collection.find({'age': {'$gt': 30}})
 
 更加复杂的查询方式
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180627233413.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180627233413.png)
 
 # 计数
 

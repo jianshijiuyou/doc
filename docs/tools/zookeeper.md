@@ -112,7 +112,7 @@ Quitting...
 
 一共有四种状态
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180915163142.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180915163142.png)
 
 # 命令
 

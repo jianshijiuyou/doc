@@ -1,14 +1,14 @@
 ﻿
 ### 各种排序算法的性能特点
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm6/sort-characteristics.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm6/sort-characteristics.png)
 
 ### 稳定性
 
 <font color="red">如果一个排序算法能够保留数组中重复元素的相对位置则可以被称为是稳定的。</font>  
 
 什么意思？看张图就明白了  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm6/stability.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm6/stability.png)
 
 就是说，如果一组数据先按照时间排序了，然后再按照地理位置排序，排序后相同地理位置的时间依然是有序的，说明该排序算法是稳定的，反之则是不稳定的。
 > 相同地理位置可以理解为<font color="red">重复元素</font>，相同地理位置的时间依然是有序可以理解为<font color="red">保留数组中重复元素的相对位置</font>。

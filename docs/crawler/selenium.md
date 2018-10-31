@@ -230,7 +230,7 @@ print(button)
 
 ```
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180628170614.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180628170614.png)
 
 # 前进后退
 

@@ -9,16 +9,16 @@
 **通过插入一列元素然后一个个地删除其中最小的元素，就能实现排序，堆排序的重要排序算法就来自于基于堆的优先队列的实现**。
 
 ### 优先队列的基本 API
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/pq-api.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/pq-api.png)
 
 ### 实现方式
 优先队列可以使用有序或无序的数组或链表来实现。在队列较小时，大量使用两种主要操作之一时，或是所操作元素的顺序已知时，它们十分有用。
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/priority_queues_1.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/priority_queues_1.png)
 
 在一个优先队列上执行一系列操作
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/pq-array.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/pq-array.png)
 
 ### 堆的定义
 
@@ -38,7 +38,7 @@
 
 **二叉堆是一组能够用堆有序的完全二叉树排序的元素，并在数组中按照层级存储（不使用数组的第一个位置）**
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/heap.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/heap.png)
 
 （下文将二叉堆简称堆）在一个堆中，位置 k 的结点的父结点的位置为 k/2 （向下取整），它的两个子结点的位置分别为 2k 和 2k+1。这样不使用指针也可以通过计算数组的索引在树中上下移动（可以这样计算的前提是不使用数组的第一个位置）。
 
@@ -46,7 +46,7 @@
 
 因为 **一棵大小为 N 的完全二叉树的高度为 lgN（向下取整）。**
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/heap-representations.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/heap-representations.png)
 
 ### 堆的算法
 
@@ -81,7 +81,7 @@ private void swim(int k) {
 }
 ```
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/swim.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/swim.png)
 
 #### 由上至下的堆有序化（下沉）
 
@@ -99,7 +99,7 @@ private void sink(int k) {
 }
 ```
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/sink.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/sink.png)
 
 
 #### 插入元素
@@ -110,12 +110,12 @@ private void sink(int k) {
 
 从数组顶端删去最大的元素并将数组的最后一个元素放到顶端，减小堆的大小并让这个元素下沉到合适的位置
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/heap-ops.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/heap-ops.png)
 > 插入元素 和 删除最大元素 示意图
 
 #### 算法实现
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/priority_queues_2.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/priority_queues_2.png)
 
 <font color="red">**对于一个含有 N 个元素的基于堆的优先队列，插入元素操作只需要不超过（lgN+1）次比较，删除最大元素的操作需要不超过 2lgN 次比较。**</font>
 
@@ -133,14 +133,14 @@ private void sink(int k) {
 
 <font color="red">**用下沉操作由 N 个元素构造堆只需少于 2N 次比较以及少于 N 次交换**</font>
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/heapsort.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/heapsort.png)
 >  堆排序的轨迹
 
 #### 下沉排序
 
 堆有序后，将堆中最大元素删除，放入堆缩小后数组中空出的位置。这个过程和选择排序有些类似，但所需的比较要少得多，因为堆提供了一种从未排序部分找出最大元素的有效方法。
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm/priority_queues/heapsort-trace.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm/priority_queues/heapsort-trace.png)
 >  堆排序：堆的构造（左） 和下沉排序（右）
 
 ### 最后

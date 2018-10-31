@@ -258,7 +258,7 @@ severity:logger name:message
 
 记录器和处理器中的日志事件信息流程如下图所示。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/c3d88410-9d19-4c99-b9c8-752281662401.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/c3d88410-9d19-4c99-b9c8-752281662401.png)
 
 ## 记录器
 

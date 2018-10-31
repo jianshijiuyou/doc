@@ -151,7 +151,7 @@ OK
 
 ## 散列 hash
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/4b99e03b-d969-4aa6-a8cf-5bb7454dc185.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/4b99e03b-d969-4aa6-a8cf-5bb7454dc185.png)
 > 图片来自慕课网
 
 | 命令 | 行为
@@ -381,7 +381,7 @@ AOF 文件会越来越大，使用 `bgrewriteaof` 命令可以重写 AOF 文件�
 
 如果 Redis 服务器在启动时指定了一个包含上述配置的配置文件，那么 Redis 服务器将根据该选项给定的 IP 地址和端口号来连接主服务器。对于一个正在运行的 Redis 服务器，用户可以通过发送 `slaveof no one` 命令来让服务器终止复制操作：也可以通过发送 `slaveof host port` 命令来让服务器开始复制一个新的主服务器。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180611163918572.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180611163918572.png)
 
 !> 从服务器在进行同步时，会清空自己的所有数据
 
@@ -391,11 +391,11 @@ AOF 文件会越来越大，使用 `bgrewriteaof` 命令可以重写 AOF 文件�
 
 当多个从服务器尝试连接同一个主服务器的时候，会出现两种情况。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180611164904277.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180611164904277.png)
 
 还可以配置如下的 Redis 主从链：
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180611165211503.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180611165211503.png)
 
 # redis-py 使用
 

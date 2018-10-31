@@ -32,7 +32,7 @@ drwxr-xr-x 32 jianxin jianxin 4096 7月   4 13:55 ../
 
 证书说明
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180704140316.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180704140316.png)
 
 # 设置代理
 
@@ -46,8 +46,8 @@ mitmproxy
 
 配置好后打开 app 请求网络，电脑端即可看到数据。
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180704144815.png)
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180704144945.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180704144815.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180704144945.png)
 
 # 命令
 

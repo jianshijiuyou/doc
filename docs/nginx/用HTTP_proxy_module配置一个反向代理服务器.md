@@ -4,13 +4,13 @@
 
 由于 Nginx 具有“强悍”的高并发高负载能力，因此一般会作为前端的服务器直接向客户端提供静态文件服务。但也有一些复杂、多变的业务不适合放到 Nginx 服务器上，这时会用 Apache、Tomcat 等服务器来处理。于是，Nginx 通常会被配置为既是静态 Web 服务器也是反向代理服务器，不适合 Nginx 处理的请求就会直接转发到上游服务器中处理。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/7defee24-a29e-4f77-be9a-a8f1286e448f.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/7defee24-a29e-4f77-be9a-a8f1286e448f.png)
 
 与 Squid 等其他反向代理服务器相比，Nginx 的反向代理功能有自己的特点。
 
 当客户端发来 HTTP 请求时，Nginx 并不会立刻转发到上游服务器，而是先把用户的请求（包括HTTP包体）完整地接收到 Nginx 所在服务器的硬盘或者内存中，然后再向上游服务器发起连接，把缓存的客户端请求转发到上游服务器。而 Squid 等代理服务器则采用一边接收客户端请求，一边转发到上游服务器的方式。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/6f0872e7-20c0-4096-924d-c3eb00ef2183.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/6f0872e7-20c0-4096-924d-c3eb00ef2183.png)
 
 Nginx 的这种工作方式有什么优缺点呢？很明显，缺点是延长了一个请求的处理时间，并增加了用于缓存请求内容的内存和磁盘空间。而优点则是降低了上游服务器的负载，尽量把压力放在 Nginx 服务器上。
 

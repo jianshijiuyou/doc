@@ -7,7 +7,7 @@
 那么重点来了，快速排序的关键就在如何切分（partition）数组了。
 
 大致过程看这张图：  
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_4/quicksort-overview.png)  
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_4/quicksort-overview.png)  
 > 快速排序示意图
 
 ``` java
@@ -30,7 +30,7 @@ public class Quick {
 
 快速排序递归地将子数组 a[lo .. hi] 排序，先用 partition() 方法将 a[j] 放到一个合适位置，然后再用递归调用将其他位置的元素排序。  
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_4/quicksort.png)    
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_4/quicksort.png)    
 
 上述过程使得数组满足三个条件：
  - 对于某个 j，a[j] 已经排定
@@ -44,7 +44,7 @@ public class Quick {
 ### 切分
 一般策略是先随意地取 a[lo] 作为切分元素，即那个将会被排定的元素，然后我们从数组的左侧向又扫描直到找到一个大于等于它的元素，再从数组的右端开始向左侧扫描直到一个小于等于它的元素。这两个元素显然是没有排定的，因此交换它们的位置。如此继续，就可以保证左指针 i 的左侧元素都不大于切分元素，右指针 j 的右侧元素都不小于切分元素。当两个指针相遇时，只需要将切分元素 a[lo] 和左子数组最右侧的元素 (a[j]) 交换然后返回 j 即可。  
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_4/partitioning-overview.png)    
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_4/partitioning-overview.png)    
 > 切分示意图
 
 ``` java
@@ -78,7 +78,7 @@ private static int partition(Comparable[] a, int lo, int hi) {
 
 这段代码按照 a[lo] 的值 v 进行切分。当指针 i 和 j 相遇时主循环退出。 在循环中，a[i] 小于 v 时我们增大 i，a[j] 大于 v 时我们减小 j，然后交换 a[i] 和 a[j] 来保证 i 左侧的元素都不大于 v，j 右侧的元素都不小于 v。当指针相遇时交换 a[lo] 和 a[j]，切分结束（这样切分值就留在 a[j] 中了）。  
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_4/partitioning.png)   
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_4/partitioning.png)   
 > 切分轨迹（每次交换前后的数组内容）
 
 ### 注意事项

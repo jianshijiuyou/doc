@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
 ```
 
 选择排序的轨迹（每次交换后的数组内容）  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_2/selection.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_2/selection.png)  
 >图片来自 [algs4.cs.princeton.edu](http://algs4.cs.princeton.edu)
 
 ## 插入排序
@@ -60,7 +60,7 @@ fun main(args: Array<String>) {
 >对于 0 到 a.size-1 之间的每一个 i，将 a[i] 与 a[0] 到 a[i-1] 中比它小的所有元素一次有序地交换。在索引 i 由左向右变化的过程中，它左侧的元素总是有序的，所以当 i 到达数组的右端时排序就完成了。
 
 插入排序的轨迹（每次交换后的数组内容）  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_2/insertion.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_2/insertion.png)  
 >图片来自 [algs4.cs.princeton.edu](http://algs4.cs.princeton.edu)
 
 插入排序非常适合部分有序的数组，那“部分有序”是如何定义的？  
@@ -70,7 +70,7 @@ fun main(args: Array<String>) {
  - 数组中只有几个元素的位置不正确。
 
 插入排序和选择排序的轨迹比对图
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_2/bars.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_2/bars.png)  
 >图片来自 [algs4.cs.princeton.edu](http://algs4.cs.princeton.edu)
 
 
@@ -83,7 +83,7 @@ fun main(args: Array<String>) {
 使数组中任意间隔为 h 的元素都是有序的。这样的数组被称为 h 有序数组。换句话说，一个 h 有序的数组就是 h 个互相独立的有序数组编织在一起组成的一个数组。
 
 在进行排序时，如果 h 很大，我们就能将元素移动到很远的地方，为实现更小的 h 有序创造方便。用这种方式，对于任意以 1 结尾的 h 序列，我们都能将数组排序。  
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_2/h-sorted.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_2/h-sorted.png)  
 >一个 h 有序数组（即一个由 h 个有序子数组组成的数组）  
 >*图片来自 [algs4.cs.princeton.edu](http://algs4.cs.princeton.edu)*
 
@@ -117,11 +117,11 @@ fun main(args: Array<String>) {
     a.forEach { print("$it ") }
 }
 ```
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_2/shell.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_2/shell.png)  
 >希尔排序的详细轨迹  
 >*图片来自 [algs4.cs.princeton.edu](http://algs4.cs.princeton.edu)*  
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm_2/shell-bars.png)  
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm_2/shell-bars.png)  
 >希尔排序的可视轨迹
 >*图片来自 [algs4.cs.princeton.edu](http://algs4.cs.princeton.edu)*  
 

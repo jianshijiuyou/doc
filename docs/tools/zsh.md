@@ -21,7 +21,7 @@ sudo fc-cache -fv
 
 需要设置终端字体为 `droid sans mono dotted for powerline regular`
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/d0908542-62ca-4d21-be21-95574bccc6ab.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/d0908542-62ca-4d21-be21-95574bccc6ab.png)
 
 字体安装成功的标志
 

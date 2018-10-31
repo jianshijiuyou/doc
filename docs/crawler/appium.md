@@ -103,15 +103,15 @@ phone.set_text('18888888888')
 
 1、
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180704233627.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180704233627.png)
 
 2、
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180704233846.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180704233846.png)
 
 3、
 
-![](http://os6ycxx7w.bkt.clouddn.com/20180704234520.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/20180704234520.png)
 
 # API
 

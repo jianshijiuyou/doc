@@ -4,7 +4,7 @@
  * 输入模式：正常的文本录入。
  * 末行模式：保存或退出文档，以及设置编辑环境。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/40c910f5-1fe3-4740-aac6-6177383b7307.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/40c910f5-1fe3-4740-aac6-6177383b7307.png)
 
 
 

@@ -8,7 +8,7 @@
  - 处理碰撞冲突（不同键的索引值相同的情况），常见的方法有：拉链法和线性探测法。
 
 
-> ![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm10/hashing-crux.png)
+> ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm10/hashing-crux.png)
 > 散列表的核心问题
 
 
@@ -36,7 +36,7 @@
 
 如果 M 不是素数，可能无法利用键中包含的所有信息，导致无法均匀地 散列 散列值。
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm10/modular-hashing.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm10/modular-hashing.png)
 
 #### 浮点数
 
@@ -76,7 +76,7 @@ for (int i = 0; i < s.length(); i++)
  - 根据散列值查到对应的链表
  - 沿着链表查找对应的键
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm10/separate-chaining.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm10/separate-chaining.png)
 
 **在一张含有 M 条链接和 N 个键的散列表中，（键能均匀的散列的前提下）任意一条链表中的键的数量均在 N/M 的常数因子范围内的概率无限趋向于 1。**
 
@@ -92,7 +92,7 @@ for (int i = 0; i < s.length(); i++)
  - 继续查找，该位置的键和被查找的键不同
 
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm10/linear-probing.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm10/linear-probing.png)
 
 
 #### 删除操作
@@ -103,7 +103,7 @@ for (int i = 0; i < s.length(); i++)
 
 线性探测的平均成本取决于元素在插入数组后聚集成的一组连续的条目，也叫做 箭簇。
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm10/d49bcae0-4c37-4141-9a67-c073df0e54d8.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm10/d49bcae0-4c37-4141-9a67-c073df0e54d8.png)
 
 显然，短小的箭簇才能保证较高的效率。
 
@@ -111,7 +111,7 @@ for (int i = 0; i < s.length(); i++)
 
 ### 各种符号表实现的渐进性能的总结
 
-![](http://os6ycxx7w.bkt.clouddn.com/github/blog/algorithm10/e76eaa6e-c56d-4cbc-a205-53527bbc5bfe.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/github/blog/algorithm10/e76eaa6e-c56d-4cbc-a205-53527bbc5bfe.png)
 
 
 ### 说明

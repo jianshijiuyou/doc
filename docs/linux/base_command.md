@@ -265,7 +265,7 @@ curl -v www.baidu.com > /dev/null
 
 ps 命令用于查看系统中的进程状态。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/fdf2a8dc-f42c-43cc-9a04-1cf01c4b0ec1.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/fdf2a8dc-f42c-43cc-9a04-1cf01c4b0ec1.png)
 
 Linux 系统中时刻运行着许多进程，如果能够合理地管理它们，则可以优化系统的性能。在 Linux 系统中，有 5 种常见的进程状态，分别为运行、中断、不可中断、僵死与停止，其各自含义如下所示。
  * **R（运行）**：进程正在运行或在运行队列中等待。
@@ -324,7 +324,7 @@ alias rm='rm -i'
 
 kill 命令用于终止某个指定 PID 的服务进程，格式为 `kill -signal %jobnumber`。
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/3bcf2325-48b7-43ee-8ab3-c212157bd788.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/3bcf2325-48b7-43ee-8ab3-c212157bd788.png)
 
 
 ### killall
@@ -677,7 +677,7 @@ tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 |-P	|使用绝对路径来压缩
 |-C	|指定解压到的目录
 
-![](http://os6ycxx7w.bkt.clouddn.com/images/20180628205407.png)
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180628205407.png)
 
 ## 搜索
 
