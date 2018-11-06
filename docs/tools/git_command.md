@@ -3,7 +3,7 @@
 
 # 常用 Git 命令
 | 命令 | 说明
-|:-----------
+|:-----|:------
 | `git clone <URL>` | 获取远程仓库的文件到本地
 | `git init` | 在本地初始化仓库
 | `git remote add <origin> <URL>` | 添加远程仓库
@@ -19,7 +19,8 @@
 | `git checkout <branch name>` | 切换分支
 | `git checkout -b <branch name>` | 创建分支同时切换到该分支上
 | `git branch -d <branch name>` | 删除分支，<br>执行完后再执行 `git push origin -d <branch name>`, <br>可以把服务器端的分支也删除了
-| `git merge <branch name>` | 把当前分支和指定分支合并 <br> 一般在 master 分支上操作，合并其他分支
+| `git branch -a (--all)` | 列出远程跟踪分支和本地分支。
+| `git merge <branch name>` | 把指定分支合并到当前分支上 <br> 一般在 master 分支上操作，合并其他分支
 | `git merge --abort` | 取消合并
 | `git rebase master` | 把当前分支所有的 commit 提交到 master 分支上 <br> 一般执行还需要执行 `git checkout master` 和 `git merge branch1` <br> **一般不会在 master 分支上执行 `rebase`**
 | `git config --global core.editor vim` | 将默认 commit 的编辑器修改为 vim |
@@ -112,7 +113,7 @@ Git 使用两种主要类型的标签：轻量标签（lightweight）与附注�
 
 
 | 命令 | 说明 |
-|:-------------
+|:-------|:------
 | `git tag` | 列出标签
 | `git tag -l 'v1.8.5*'` | 列出指定标签
 | `git tag -a v1.4 -m 'my version 1.4'` | 使用 `-a` **创建附注标签** <br> 用 `-m` 附带说明信息
