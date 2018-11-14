@@ -1,7 +1,7 @@
 # 通用命令
 
 | 命令 | 行为
-|:----------
+|:------|:----
 | `keys <pattern>` | 根据模式返回指定的 key。 <br> `keys *` <br> `keys ha*` <br> 时间复杂度 O(n)
 | `dbsize` | 返回 key 的总数
 | `exists <key>` | 判断 key 是否存在
@@ -18,7 +18,7 @@
 # Redis 提供的 5 种数据结构
 
 | 结构类型 | 结构存储的值 | 结构的读写能力 |
-|:--------------------------------------
+|:-------|:--------------|:-----------------
 | STRING | 可以是字符串、整数或者浮点数 | 对整个字符串或者字符串的其中一部分执行操作：对整数和浮点数执行自增（increment）或者自减（decrement）操作
 | LIST | 一个链表，链表上的每个节点都包含了一个字符串 | 从链表的两端推入或者弹出元素：根据偏移量对链表进行修剪（trim）：读取单个或者多个元素：根据值查找或者移出元素
 | SET | 包含字符串的无序收集器（unordered collection），并且被包含的每个字符串都是独一无二、各不相同的 | 添加、获取、移除单个元素：检查一个元素是否存在于集合中：计算交集、并集、差集：从集合中随机获取元素
@@ -30,7 +30,7 @@
 再 Redis 中，字符串可以存储：字符串、整数、浮点数。
 
 | 命令 | 行为
-|:----------
+|:-----|:-----
 | `get <key>` | 获取存储在给定键中的值
 | `set <key> <val>` | 设置存储在给定键中的值
 | `setnx <key> <val>` | key 不存在才设置值
@@ -67,7 +67,7 @@ OK
 ## 列表 list
 
 | 命令 | 行为
-|:----------
+|:-----|:-----
 | `rpush <key> <val1> <val2> ...` | 将给定值推入列表的右端
 | `linsert <key> before/after <val> <newval>` | 在 list 指定的值前面（后面）插入 newval
 | `lrange <key> <start> <end>` | 获取列表在给定范围上的所有值，包括 end
@@ -107,7 +107,7 @@ OK
 ## 集合 set
 
 | 命令 | 行为
-|:----------
+|:-----|:-----
 | `sadd <key> <val>` | 将给定元素添加到集合
 | `smembers <key>` | 返回集合包含的所有元素
 | `scard <key>` | 计算集合中的元素总数
@@ -155,7 +155,7 @@ OK
 > 图片来自慕课网
 
 | 命令 | 行为
-|:----------
+|:----|:------
 | `hset <key> <field> <val>` | 在散列中关联给定的键值对
 | `hget <key> <field>` | 获取指定散列键的值
 | `hgetall <key>` | 获取散列中所有的键值对
@@ -199,7 +199,7 @@ OK
 有序集合也是存储键值对的，有序集合中的键被称为成员（member），每个成员都是各不相同的。有序集合的值被称为分值（score），分值必须为浮点数。有序集合是 Redis 里面唯一一个既可以根据成员访问元素，又可以根据分值以及分值的排序顺序来访问元素的结构
 
 | 命令 | 行为
-|:----------
+|:-----|:-----
 | `zadd <key> <score> <val> ...` | 将一个带有给定分值的成员添加到有序集合里面 
 | `zrange <key> <start_score> <end_score> [withscores]` | 根据元素在有序排列中所处的位置．从有序集合里面获取多个元素 
 | `zrangebyscore <key> <min_score> <max_score> [withscores]` | 获取有序集合在给定分值范围内的所有元素
@@ -244,7 +244,7 @@ OK
 # 发布与订阅
 
 | 命令 | 行为
-|:----------
+|:----|:------
 | `subscribe <channel> [channel ...]` | 订阅给定的一个或多个频道
 | `unsubscribe [channel] [channel ...]` | 退订给定的一个或多个频道，如果没有给出频道，则退订所有频道
 | `publish <channel> <message>` | 向给定频道发送消息
@@ -318,7 +318,7 @@ ok，结果符合预期
 ## 快照持久化
 
 | 配置选项 | 说明
-|:-------------
+|:--------|:-----
 | save | 例：`save 60 1000` <br><br> 从 Redis 最近一次创建快照之后开始算起，当「`60` 秒之内有 `1000` 次写入」这个条件被满足时，Redis 就会自动触发 `bgsave` 命令。<br><br> `save` 选项可配置多组，例：`save 900 1 60 1000`
 | stop-writes-on-bgsave-error | 例：`stop-writes-on-bgsave-error on`
 | rdbcompression | 例：`rdbcompression yes`
@@ -354,7 +354,7 @@ ok，结果符合预期
 ## AOF(append-only file) 持久化
 
 | 配置选项 | 说明
-|:-------------
+|:---------|:----
 | appendonly | 例：`appendonly yes` <br><br> 开启或关闭「AOF 持久化」
 | appendfsync | 例：`appendfsync` [ `always` &#124; `everysec` &#124; `no` ] <br><br> `always`: 每个 Redis 写命令都要同步写入硬盘。这种做法会严重降低 Redis 的速度<br><br> `everysec`: 每秒执行一次同步，显示地将多个写命令同步到硬盘（推荐）<br><br> `no`: 让操作系统决定何时进行同步
 | no-appendfsync-on-rewrite | 例：`no-appendfsync-on-rewrite no`
