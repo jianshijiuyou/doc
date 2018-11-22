@@ -279,7 +279,7 @@ Linux 系统中时刻运行着许多进程，如果能够合理地管理它们�
 > 或者 `ps -ef`
 
 |USER|	PID|	%CPU|	%MEM|	VSZ|	RSS|	TTY|	STAT	|START|	TIME|	COMMAND
-|:----
+|:----|:----|:-------|:------|:-----|:------|:-------|:----------|:---|:-------|:---------------------------
 |进程的所有者	|进程ID号|	运算器占用率|	内存占用率|	虚拟内存使用量（单位是KB）|	占用的固定内存量（单位是KB）|	所在终端	|进程状态|	被启动的时间|	实际使用CPU的时间	|命令名称与参数
 |root|	1|	0.0|	0.4|	53684| 	7628|	?|	Ss|	07 :22|	0:02|	/usr/lib/systemd/systemd
 |root|	2|	0.0|	0.0|	0|	0|	?|	S|	07:22|	0:00|	[kthreadd]
@@ -321,6 +321,8 @@ alias rm='rm -i'
 
 
 ### kill
+
+http://linux.vbird.org/linux_basic/0440processcontrol.php#process_2
 
 kill 命令用于终止某个指定 PID 的服务进程，格式为 `kill -signal %jobnumber`。
 
@@ -641,7 +643,7 @@ anaconda-ks.cfg: ASCII text
 ## 打包压缩
 
 | 命令 | 说明
-|:-----------
+|:-----|:------
 | xz | 使用 LZMA 算法的高性能解压缩工具
 | gzip | 流行的 GNU gzip 解压缩程序 <br> 压缩：`gzip filename` <br> 解压缩：`gzip -d filename.gz`
 | bzip2 | 免费无专利 <br> 压缩：`bzip2 filename` <br> 解压缩：`bzip2 -d filename.bz2`
@@ -651,7 +653,7 @@ anaconda-ks.cfg: ASCII text
 | tar | 文件打包、归档 <br> 压缩：`tar -czvf 压缩包名称.tar.gz 要打包的目录` <br> 解压缩：`tar -xzvf 压缩包名称.tar.gz`
 
 | 文件后缀 | 说明 |
-|:---------
+|:-----|:----
 | .bz2 | bzip2
 | .gz | gzip
 | .xz | xz 
@@ -665,7 +667,7 @@ anaconda-ks.cfg: ASCII text
 tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 
 |参数	|作用
-|:-----
+|:---|:--
 |-c	|创建压缩文件
 |-x	|解开压缩文件
 |-t	|查看压缩包内有哪些文件
@@ -686,7 +688,7 @@ tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 grep 命令用于在文本中执行关键词搜索，并显示匹配的结果，格式为“grep [选项] [文件]”。
 
 |参数|	作用
-|:-----------
+|:-----|:------
 |-b|	将可执行文件（binary）当作文本文件（text）来搜索
 |-c	|仅显示找到的行数
 |-i	|忽略大小写
@@ -742,7 +744,7 @@ grep login$ /etc/passwd
 find 命令用于按照指定条件来查找文件，格式为“find [查找路径] 寻找条件 操作”。
 
 |参数	|作用
-|:-----
+|:--|:---
 |-name	|匹配名称
 |-perm|	匹配权限（mode为完全匹配，-mode为包含即可）
 |-user |	匹配所有者
