@@ -32,6 +32,7 @@
   * [socket 指南](python/socket.md)
   * [Pytest 笔记](python/pytest.md)
   * [kazoo 笔记](python/kazoo.md)
+  * [pathlib 笔记](python/pathlib.md)
 
 * Crawler
   * [爬虫常用库整理](crawler/爬虫常用库整理.md)
