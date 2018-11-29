@@ -15,6 +15,8 @@
   * [用HTTP核心模块配置一个静态Web服务器](nginx/用HTTP核心模块配置一个静态Web服务器.md)
   * [用HTTP proxy module配置一个反向代理服务器](nginx/用HTTP_proxy_module配置一个反向代理服务器.md)
   * [杂项](nginx/杂项.md)
+* Go
+  * [基础](go/base.md)
 * Python
   * [Linux 上 Python 环境搭建](python/install_python.md)  
   * [Python 杂谈（时间，字符串格式化等...）](python/python杂谈.md)
