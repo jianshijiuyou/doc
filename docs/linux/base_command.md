@@ -340,6 +340,42 @@ killall 命令用于终止某个指定名称的服务所对应的全部进程，
 [root@linuxprobe ~]#
 ```
 
+### iproute2
+
+iproute2 工具集用于替代 net-tools（2001 年就停止维护了） 工具集
+
+https://my.oschina.net/lionel45/blog/109779
+
+https://linux.cn/article-4326-1.html
+
+| 用途 |	net-tools（被淘汰）	| iproute2
+|:--------|:-------------------|:----------
+| 地址和链路配置|	ifconfig	|ip addr, ip link
+| 路由表|	route	|ip route
+| 邻居	|arp	|ip neigh
+| VLAN	|vconfig	|ip link
+| 隧道	|iptunnel	|ip tunnel
+| 组播	|ipmaddr	|ip maddr
+| 统计	|netstat	|ss
+
+常用组合
+
+| 命令 |	说明
+|:--------|:-------------------
+| `ip addr` | 等价 `ifconfig`	
+| `ss -s` | 查看当前服务器的网络连接统计
+| `ss -l` | 查看所有打开的网络端口
+| `ss -pl` | 查看所有打开的网络端口, 列出具体的程序名称
+| `ss -a` | 查看所有的 socket 连接
+| `ss -ta` | 查看 TCP sockets，使用-ta选项
+| `ss -tan` | 屏蔽 DNS 解析，使用 -n
+| `ss -ua` | 查看UDP sockets，使用-ua选项
+| `ss -wa` | 查看RAW sockets，使用-wa选项
+| `ss -xa` | 查看UNIX sockets，使用-xa选项
+| `ss -ltnp` | 等价 `netstat -ltnp`
+
+![](http://pikachu666.oss-cn-hongkong.aliyuncs.com/images/7ee77852-3680-4b20-a907-408965d00b82.png)
+
 ## 系统状态检测命令
 
 ### ifconfig
