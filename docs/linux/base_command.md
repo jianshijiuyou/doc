@@ -85,14 +85,6 @@ cnpm 淘宝镜像：[http://npm.taobao.org/](http://npm.taobao.org/)
 
 ## 常用系统工作命令
 
-### 代码行数查看
-
-例子
-
-```
-find ./src -name "*.py" |xargs cat|grep -v ^$|wc -l
-```
-
 ### echo
 
 echo 命令用于在终端输出字符串或变量提取后的值，格式为 “echo [字符串 | $变量]”。
@@ -171,6 +163,213 @@ poweroff 命令用于关闭系统，其格式为 poweroff。
 `ln -s 文件 链接名` 软连接
 
 !> 一定要用绝对路径，否则链接无法使用
+
+### ps
+
+ps 命令用于查看系统中的进程状态。
+
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/fdf2a8dc-f42c-43cc-9a04-1cf01c4b0ec1.png)
+
+Linux 系统中时刻运行着许多进程，如果能够合理地管理它们，则可以优化系统的性能。在 Linux 系统中，有 5 种常见的进程状态，分别为运行、中断、不可中断、僵死与停止，其各自含义如下所示。
+ * **R（运行）**：进程正在运行或在运行队列中等待。
+ * **S（中断）**：进程处于休眠中，当某个条件形成后或者接收到信号时，则脱离该   状态。
+ * **D（不可中断）**：进程不响应系统异步信号，即便用kill命令也不能将其中断。
+ * **Z（僵死）**：进程已经终止，但进程描述符依然存在, 直到父进程调用wait4()系统函数后将进程释放。
+ * **T（停止）**：进程收到停止信号后停止运行。
+
+当执行 `ps aux` 命令后通常会看到如下进程状态
+
+> 或者 `ps -ef`
+
+|USER|	PID|	%CPU|	%MEM|	VSZ|	RSS|	TTY|	STAT	|START|	TIME|	COMMAND
+|:----|:----|:-------|:------|:-----|:------|:-------|:----------|:---|:-------|:---------------------------
+|进程的所有者	|进程ID号|	运算器占用率|	内存占用率|	虚拟内存使用量（单位是KB）|	占用的固定内存量（单位是KB）|	所在终端	|进程状态|	被启动的时间|	实际使用CPU的时间	|命令名称与参数
+|root|	1|	0.0|	0.4|	53684| 	7628|	?|	Ss|	07 :22|	0:02|	/usr/lib/systemd/systemd
+|root|	2|	0.0|	0.0|	0|	0|	?|	S|	07:22|	0:00|	[kthreadd]
+|root|	3|	0.0|	0.0|	0|	0|	?|	S|	07:22|	0:00|	[ksoftirqd/0]
+|root|	5|	0.0|	0.0|	0|	0|	?|	S<|	07:22|	0:00|	[kworker/0:0H]
+|root|	7|	0.0|	0.0|	0|	0|	?|	S	|07:22|	0:00|	[migration/0]
+
+### top 
+top 命令用于动态地监视进程活动与系统负载等信息，其格式为 top。
+
+top 命令执行结果的前 5 行为系统整体的统计信息，其所代表的含义如下。
+ * 第 1 行：系统时间、运行时间、登录终端数、系统负载（三个数值分别为 1 分钟、5分钟、15 分钟内的平均值，数值越小意味着负载越低）。
+ * 第 2 行：进程总数、运行中的进程数、睡眠中的进程数、停止的进程数、僵死的进程数。
+ * 第 3 行：用户占用资源百分比、系统内核占用资源百分比、改变过优先级的进程资源百分比、空闲的资源百分比等。
+ * 第 4 行：物理内存总量、内存使用量、内存空闲量、作为内核缓存的内存量。
+ * 第 5 行：虚拟内存总量、虚拟内存使用量、虚拟内存空闲量、已被提前加载的内存量。
+
+
+### pidof
+pidof 命令用于查询某个指定服务进程的 PID 值，格式为“pidof [参数] [服务名称]”。
+
+```
+[root@linuxprobe ~]# pidof sshd
+2156
+```
+
+### which
+
+显示出某个命令的实际位置
+
+```
+[root@localhost ~]# which vim
+/bin/vim
+[root@localhost ~]# which rm
+alias rm='rm -i'
+	/bin/rm
+[root@localhost ~]# 
+```
+
+
+### kill
+
+http://linux.vbird.org/linux_basic/0440processcontrol.php#process_2
+
+kill 命令用于终止某个指定 PID 的服务进程，格式为 `kill -signal %jobnumber`。
+
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/3bcf2325-48b7-43ee-8ab3-c212157bd788.png)
+
+
+### killall
+killall 命令用于终止某个指定名称的服务所对应的全部进程，格式为：“killall [参数] [进程名称]”。
+
+```
+[root@linuxprobe ~]# pidof httpd
+13581 13580 13579 13578 13577 13576
+[root@linuxprobe ~]# killall httpd
+[root@linuxprobe ~]# pidof httpd
+[root@linuxprobe ~]#
+```
+
+## 系统状态检测命令
+
+### 系统版本内核CPU
+uname 命令用于查看系统内核与系统版本等信息，格式为“uname [-a]”。
+
+或者 `cat /proc/version`
+
+```
+[jiuyou@localhost ~]$ uname -a 
+Linux localhost.localdomain 3.10.0-693.el7.x86_64 #1 SMP Tue Aug 22 21:09:27 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+```
+
+顺带一提，如果要查看当前系统版本的详细信息，则需要查看 redhat-release 文件（或 os-release 文件）
+```
+[jiuyou@localhost ~]$ cat /etc/redhat-release 
+CentOS Linux release 7.4.1708 (Core) 
+```
+
+或
+
+```
+[root@6eaaa85720e0 /]# cat /etc/os-release 
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:7"
+HOME_URL="https://www.centos.org/"
+BUG_REPORT_URL="https://bugs.centos.org/"
+
+CENTOS_MANTISBT_PROJECT="CentOS-7"
+CENTOS_MANTISBT_PROJECT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT="centos"
+REDHAT_SUPPORT_PRODUCT_VERSION="7"
+
+```
+
+查看 CPU 信息
+
+```
+cat /proc/cpuinfo
+```
+
+### 磁盘 
+
+#### df
+
+查看各分区使用情况：
+
+```
+df -h
+```
+
+#### du
+
+查看当前目录下 **文件** 及 **文件夹** 大小：
+
+```
+du -sh *
+
+# 当前文件夹大小
+du -sh
+```
+
+查看当前目录下所有 **文件夹（包括隐藏文件夹）** 大小：
+
+```
+du -h -d 1
+```
+`-d` or `--max-depth=N` 指定文件夹深度
+
+
+### uptime
+uptime 用于查看系统的负载信息，格式为 uptime。
+
+它可以显示当前系统时间、系统已运行时间、启用终端数量以及平均负载值等信息。平均负载值指的是系统在最近 1 分钟、5 分钟、15 分钟内的压力情况（下面加粗的信息部分）；负载值越低越好，尽量不要长期超过 1，在生产环境中不要超过 5。
+
+```
+[jiuyou@localhost ~]$ uptime
+ 23:49:15 up  3:33,  2 users,  load average: 0.16, 0.11, 0.07
+```
+
+### free 
+free 用于显示当前系统中内存的使用量信息，格式为“free [-h]”。
+
+查看内存及用量：
+
+```
+free -m  # M 为单位
+
+free -g # G 为单位
+```
+
+执行 `free -h`
+
+|-|内存总量	|已用量|	可用量	|进程共享的内存量	|磁盘缓存的内存量|	缓存的内存量
+|:---|:----|:----|:---|:----|:-----|:---------------
+|	|total	|used	|free|	shared	|buffers	|cached
+|Mem|	1.8GB|	1.3GB	|542MB	|9.8MB	|1.6MB|	413MB
+|-/+ buffers/cache|	|	869MB|	957MB	|		
+|Swap|	2.0GB|	0|	2.0GB		|	
+
+### who
+
+who 用于查看当前登入主机的用户终端信息，格式为“who [参数]”。
+
+### last
+
+last 命令用于查看所有系统的登录记录，格式为“last [参数]”。
+
+### history
+history 命令用于显示历史执行过的命令，格式为“history [-c]”。
+
+执行 history 命令能显示出当前用户在本地计算机中执行过的最近 1000 条命令记录。如果觉得 1000 不够用，还可以自定义/etc/profile 文件中的 HISTSIZE 变量值。
+
+-c 参数会清空所有的命令历史记录。
+
+历史命令会被保存到用户家目录中的 .bash_history 文件中。
+
+### sosreport
+
+sosreport 命令用于收集系统配置及架构信息并输出诊断文档，格式为 sosreport。
+
+## 网络相关
 
 ### wget 
 wget 命令用于在终端中下载网络文件，格式为“wget [参数] 下载地址”。
@@ -259,87 +458,6 @@ curl -v www.baidu.com > /dev/null
 | `-p` | 查看进程信息。（查看 root 用户的进程要 root 权限） <br/>例：`sudo netstat -ltpn` |
 | `-ep` | 同时查看进程名和用户名。 <br/>例：`sudo netstat -ltep` |
 
-
-
-### ps
-
-ps 命令用于查看系统中的进程状态。
-
-![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/fdf2a8dc-f42c-43cc-9a04-1cf01c4b0ec1.png)
-
-Linux 系统中时刻运行着许多进程，如果能够合理地管理它们，则可以优化系统的性能。在 Linux 系统中，有 5 种常见的进程状态，分别为运行、中断、不可中断、僵死与停止，其各自含义如下所示。
- * **R（运行）**：进程正在运行或在运行队列中等待。
- * **S（中断）**：进程处于休眠中，当某个条件形成后或者接收到信号时，则脱离该   状态。
- * **D（不可中断）**：进程不响应系统异步信号，即便用kill命令也不能将其中断。
- * **Z（僵死）**：进程已经终止，但进程描述符依然存在, 直到父进程调用wait4()系统函数后将进程释放。
- * **T（停止）**：进程收到停止信号后停止运行。
-
-当执行 `ps aux` 命令后通常会看到如下进程状态
-
-> 或者 `ps -ef`
-
-|USER|	PID|	%CPU|	%MEM|	VSZ|	RSS|	TTY|	STAT	|START|	TIME|	COMMAND
-|:----|:----|:-------|:------|:-----|:------|:-------|:----------|:---|:-------|:---------------------------
-|进程的所有者	|进程ID号|	运算器占用率|	内存占用率|	虚拟内存使用量（单位是KB）|	占用的固定内存量（单位是KB）|	所在终端	|进程状态|	被启动的时间|	实际使用CPU的时间	|命令名称与参数
-|root|	1|	0.0|	0.4|	53684| 	7628|	?|	Ss|	07 :22|	0:02|	/usr/lib/systemd/systemd
-|root|	2|	0.0|	0.0|	0|	0|	?|	S|	07:22|	0:00|	[kthreadd]
-|root|	3|	0.0|	0.0|	0|	0|	?|	S|	07:22|	0:00|	[ksoftirqd/0]
-|root|	5|	0.0|	0.0|	0|	0|	?|	S<|	07:22|	0:00|	[kworker/0:0H]
-|root|	7|	0.0|	0.0|	0|	0|	?|	S	|07:22|	0:00|	[migration/0]
-
-### top 
-top 命令用于动态地监视进程活动与系统负载等信息，其格式为 top。
-
-top 命令执行结果的前 5 行为系统整体的统计信息，其所代表的含义如下。
- * 第 1 行：系统时间、运行时间、登录终端数、系统负载（三个数值分别为 1 分钟、5分钟、15 分钟内的平均值，数值越小意味着负载越低）。
- * 第 2 行：进程总数、运行中的进程数、睡眠中的进程数、停止的进程数、僵死的进程数。
- * 第 3 行：用户占用资源百分比、系统内核占用资源百分比、改变过优先级的进程资源百分比、空闲的资源百分比等。
- * 第 4 行：物理内存总量、内存使用量、内存空闲量、作为内核缓存的内存量。
- * 第 5 行：虚拟内存总量、虚拟内存使用量、虚拟内存空闲量、已被提前加载的内存量。
-
-
-### pidof
-pidof 命令用于查询某个指定服务进程的 PID 值，格式为“pidof [参数] [服务名称]”。
-
-```
-[root@linuxprobe ~]# pidof sshd
-2156
-```
-
-### which
-
-显示出某个命令的实际位置
-
-```
-[root@localhost ~]# which vim
-/bin/vim
-[root@localhost ~]# which rm
-alias rm='rm -i'
-	/bin/rm
-[root@localhost ~]# 
-```
-
-
-### kill
-
-http://linux.vbird.org/linux_basic/0440processcontrol.php#process_2
-
-kill 命令用于终止某个指定 PID 的服务进程，格式为 `kill -signal %jobnumber`。
-
-![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/3bcf2325-48b7-43ee-8ab3-c212157bd788.png)
-
-
-### killall
-killall 命令用于终止某个指定名称的服务所对应的全部进程，格式为：“killall [参数] [进程名称]”。
-
-```
-[root@linuxprobe ~]# pidof httpd
-13581 13580 13579 13578 13577 13576
-[root@linuxprobe ~]# killall httpd
-[root@linuxprobe ~]# pidof httpd
-[root@linuxprobe ~]#
-```
-
 ### iproute2
 
 iproute2 工具集用于替代 net-tools（2001 年就停止维护了） 工具集
@@ -376,121 +494,67 @@ https://linux.cn/article-4326-1.html
 
 ![](http://pikachu666.oss-cn-hongkong.aliyuncs.com/images/7ee77852-3680-4b20-a907-408965d00b82.png)
 
-## 系统状态检测命令
+ip 配置
+
+http://linux.vbird.org/linux_server/0140networkcommand.php#ip_cmd
+
+```
+$ sudo ip addr add 10.0.0.1/24 dev eth1
+$ sudo ip link set up eth1
+```
+
+网络相关配置文件案
+
+http://cn.linux.vbird.org/linux_server/0130internet_connect_1.php#note_files
 
 ### ifconfig
 
 ifconfig 命令用于获取网卡配置与网络状态等信息，格式为“ifconfig [网络设备] [参数]”。
 
-### 系统版本内核CPU
-uname 命令用于查看系统内核与系统版本等信息，格式为“uname [-a]”。
+### nmap
 
-或者 `cat /proc/version`
+一个强大的网络检测工具
 
-```
-[jiuyou@localhost ~]$ uname -a 
-Linux localhost.localdomain 3.10.0-693.el7.x86_64 #1 SMP Tue Aug 22 21:09:27 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
-```
+https://blog.gtwang.org/linux/nmap-command-examples-tutorials/
 
-顺带一提，如果要查看当前系统版本的详细信息，则需要查看 redhat-release 文件（或 os-release 文件）
-```
-[jiuyou@localhost ~]$ cat /etc/redhat-release 
-CentOS Linux release 7.4.1708 (Core) 
-```
-
-或
+安装
 
 ```
-[root@6eaaa85720e0 /]# cat /etc/os-release 
-NAME="CentOS Linux"
-VERSION="7 (Core)"
-ID="centos"
-ID_LIKE="rhel fedora"
-VERSION_ID="7"
-PRETTY_NAME="CentOS Linux 7 (Core)"
-ANSI_COLOR="0;31"
-CPE_NAME="cpe:/o:centos:centos:7"
-HOME_URL="https://www.centos.org/"
-BUG_REPORT_URL="https://bugs.centos.org/"
-
-CENTOS_MANTISBT_PROJECT="CentOS-7"
-CENTOS_MANTISBT_PROJECT_VERSION="7"
-REDHAT_SUPPORT_PRODUCT="centos"
-REDHAT_SUPPORT_PRODUCT_VERSION="7"
-
+sudo yum install nmap
+# or
+sudo apt install nmap
 ```
 
-查看 CPU 信息
+基本用法，检查目标端口
 
 ```
-cat /proc/cpuinfo
+nmap www.baidu.com
+# or
+nmap 127.0.0.1
+
+# 详细信息
+nmap -v 127.0.0.1
+
+# 多主机扫描
+nmap www.hinet.net tw.yahoo.com www.google.com.tw
+
+# 扫描整个子网
+nmap 192.168.1.*
+# or
+nmap 192.168.1.133/24
+
+# 扫描子网内的某几台主机
+nmap 192.168.0.123,124,125
+
+# 扫描子网内的某一段
+nmap 192.168.0.123-140
 ```
 
-### 内存磁盘 
-
-查看内存及用量：
+检测各种服务的版本信息
 
 ```
-free -m  # M 为单位
-
-free -g # G 为单位
+nmap -A 127.0.0.1
 ```
-
-查看各分区使用情况：
-
-```
-df -h
-```
-
-查看当前目录文件及文件夹大小：
-
-```
-du -sh *
-```
-
-
-### uptime
-uptime 用于查看系统的负载信息，格式为 uptime。
-
-它可以显示当前系统时间、系统已运行时间、启用终端数量以及平均负载值等信息。平均负载值指的是系统在最近 1 分钟、5 分钟、15 分钟内的压力情况（下面加粗的信息部分）；负载值越低越好，尽量不要长期超过 1，在生产环境中不要超过 5。
-
-```
-[jiuyou@localhost ~]$ uptime
- 23:49:15 up  3:33,  2 users,  load average: 0.16, 0.11, 0.07
-```
-
-### free 
-free 用于显示当前系统中内存的使用量信息，格式为“free [-h]”。
-
-执行 `free -h`
-
-|-|内存总量	|已用量|	可用量	|进程共享的内存量	|磁盘缓存的内存量|	缓存的内存量
-|:----
-|	|total	|used	|free|	shared	|buffers	|cached
-|Mem|	1.8GB|	1.3GB	|542MB	|9.8MB	|1.6MB|	413MB
-|-/+ buffers/cache|	|	869MB|	957MB	|		
-|Swap|	2.0GB|	0|	2.0GB		|	
-
-### who
-
-who 用于查看当前登入主机的用户终端信息，格式为“who [参数]”。
-
-### last
-
-last 命令用于查看所有系统的登录记录，格式为“last [参数]”。
-
-### history
-history 命令用于显示历史执行过的命令，格式为“history [-c]”。
-
-执行 history 命令能显示出当前用户在本地计算机中执行过的最近 1000 条命令记录。如果觉得 1000 不够用，还可以自定义/etc/profile 文件中的 HISTSIZE 变量值。
-
--c 参数会清空所有的命令历史记录。
-
-历史命令会被保存到用户家目录中的 .bash_history 文件中。
-
-### sosreport
-
-sosreport 命令用于收集系统配置及架构信息并输出诊断文档，格式为 sosreport。
 
 ## 工作目录切换命令
 
@@ -821,4 +885,14 @@ find 命令用于按照指定条件来查找文件，格式为“find [查找路
 /usr/sbin/userhelper
 /usr/sbin/usernetctl
 ...
+```
+
+## 其他
+
+### 代码行数查看
+
+例子
+
+```
+find ./src -name "*.py" |xargs cat|grep -v ^$|wc -l
 ```
