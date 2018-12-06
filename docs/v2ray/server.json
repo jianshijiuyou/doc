@@ -1,0 +1,63 @@
+{
+    "log": {
+        "access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log",
+        "loglevel": "warning"
+    },
+    "inbound": {
+        "port": 10086,
+        "listen": "127.0.0.1",
+        "protocol": "vmess",
+        "settings": {
+            "clients": [
+                {
+                    "id": "",
+                    "alterId": 64
+                }
+            ]
+        },
+        "streamSettings": {
+            "network": "ws",
+            "wsSettings": {
+                "path": "/ray",
+                "headers": {
+                    "Host": ""
+                }
+            }
+        }
+    },
+    "inboundDetour": [
+        {
+            "streamSettings": {
+                "network": "kcp",
+                "kcpSettings": {
+                    "uplinkCapacity": 15,
+                    "downlinkCapacity": 100,
+                    "readBufferSize": 2,
+                    "mtu": 1350,
+                    "header": {
+                        "type": "wechat-video"
+                    },
+                    "tti": 50,
+                    "congestion": false,
+                    "writeBufferSize": 2
+                }
+            },
+            "settings": {
+                "udp": true,
+                "clients": [
+                    {
+                        "alterId": 64,
+                        "id": ""
+                    }
+                ]
+            },
+            "protocol": "vmess",
+            "port": 8080
+        }
+    ],
+    "outbound": {
+        "protocol": "freedom",
+        "settings": {}
+    }
+}

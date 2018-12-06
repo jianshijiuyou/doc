@@ -1,0 +1,175 @@
+{
+    "inbounds": [
+        {
+            "port": 1080,
+            "listen": "127.0.0.1",
+            "protocol": "socks",
+            "settings": {
+                "auth": "noauth",
+                "timeout": 300,
+                "udp": true
+            },
+            "tag": "socks"
+        },
+        {
+            "port": 1087,
+            "listen": "127.0.0.1",
+            "protocol": "http",
+            "settings": {
+                "timeout": 300
+            },
+            "tag": "http"
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "vmess",
+            "settings": {
+                "vnext": [
+                    {
+                        "users": [
+                            {
+                                "id": "",
+                                "alterId": 64
+                            }
+                        ],
+                        "address": "",
+                        "port": 8080
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "kcp",
+                "kcpSettings": {
+                    "uplinkCapacity": 15,
+                    "downlinkCapacity": 100,
+                    "readBufferSize": 2,
+                    "mtu": 1350,
+                    "header": {
+                        "type": "wechat-video"
+                    },
+                    "tti": 50,
+                    "congestion": false,
+                    "writeBufferSize": 2
+                }
+            },
+            "tag": "kcp"
+        },
+        {
+            "protocol": "vmess",
+            "mux": {
+                "enabled": true
+            },
+            "settings": {
+                "vnext": [
+                    {
+                        "users": [
+                            {
+                                "id": "",
+                                "alterId": 64
+                            }
+                        ],
+                        "address": "",
+                        "port": 443
+                    }
+                ]
+            },
+            "streamSettings": {
+                "wsSettings": {
+                    "headers": {
+                        "Host": ""
+                    },
+                    "path": "/ray"
+                },
+                "network": "ws",
+                "security": "tls"
+            },
+            "tag": "nginx"
+        },
+        {
+            "protocol": "freedom",
+            "settings": {},
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "adblock"
+        }
+    ],
+    "dns": {
+        "servers": [
+            "8.8.8.8",
+            "8.8.4.4"
+        ]
+    },
+    "routing": {
+        "domainStrategy": "IPIfNonMatch",
+        "rules": [
+            {
+                "domain": [
+                    "tanx.com",
+                    "googeadsserving.cn",
+                    "ipinyou.com"
+                ],
+                "type": "field",
+                "outboundTag": "adblock"
+            },
+            {
+                "type": "field",
+                "domain": [
+                    "geosite:cn",
+                    "geekbang",
+                    "domain:163.com",
+                    "domain:oschina.net",
+                    "weixin",
+                    "domain:zsxq.com"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "192.168.0.0/16",
+                    "10.0.0.0/8",
+                    "172.16.0.0/12",
+                    "127.0.0.0/8",
+                    "geoip:cn"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "domain": [
+                    "google",
+                    "github",
+                    "facebook",
+                    "youtube",
+                    "twitter",
+                    "instagram",
+                    "gmail",
+                    "domain:twimg.com",
+                    "domain:t.co",
+                    "domain:cloudfront.net"
+                ],
+                "outboundTag": "nginx"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "8.8.8.8/32",
+                    "8.8.4.4/32",
+                    "91.108.56.0/22",
+                    "91.108.4.0/22",
+                    "109.239.140.0/24",
+                    "149.154.164.0/22",
+                    "91.108.56.0/23",
+                    "67.198.55.0/24",
+                    "149.154.168.0/22",
+                    "149.154.172.0/22"
+                ],
+                "outboundTag": "nginx"
+            }
+        ]
+    }
+}
