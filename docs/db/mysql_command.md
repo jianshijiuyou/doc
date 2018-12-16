@@ -8,6 +8,7 @@
 | `use {database name} ;` | 选择数据库
 | `show tables;` | 查看当前数据库的所有表
 | `show create database {database name};` | 查看数据库的定义
+| `show processlist;` | 查看所有客户端的连接情况
 
 # 数据定义语句
 
@@ -46,3 +47,11 @@ Time: 0.172s
 ``` sql
 show variables\G
 ```
+
+# 知识点
+
+## 关于连接
+
+客户端如果太长时间没动静，连接器就会自动将它断开。这个时间是由参数 `wait_timeout` 控制的，默认值是 8 小时。
+
+如果在连接被断开之后，客户端再次发送请求的话，就会收到一个错误提醒： Lost connection to MySQL server during query。这时候如果你要继续，就需要重连，然后再执行请求了。
