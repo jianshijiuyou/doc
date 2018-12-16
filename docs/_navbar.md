@@ -17,7 +17,7 @@
   * [杂项](nginx/杂项.md)
 * Go
   * [程序结构](go/base.md)
-  * [数据类型](go/数据类型.md)
+  * [基础数据类型](go/基础数据类型.md)
 * Python
   * [Linux 上 Python 环境搭建](python/install_python.md)  
   * [Python 杂谈（时间，字符串格式化等...）](python/python杂谈.md)
