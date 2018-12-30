@@ -19,6 +19,7 @@
   * [程序结构](go/base.md)
   * [基础数据类型](go/基础数据类型.md)
   * [复合数据类型](go/复合数据类型.md)
+  * [函数](go/函数.md)
 * Python
   * [Linux 上 Python 环境搭建](python/install_python.md)  
   * [Python 杂谈（时间，字符串格式化等...）](python/python杂谈.md)
