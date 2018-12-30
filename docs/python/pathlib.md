@@ -559,7 +559,366 @@ b'/etc'
 
 # 具体路径(Concrete paths)
 
+具体路径是纯路径类的子类。除了后者提供的操作之外，它们还提供了对路径对象进行系统调用的方法。有三种方法可以实例化具体路径：
+
+``` python
+>>> Path('setup.py')
+PosixPath('setup.py')
+```
+
+``` python
+>>> PosixPath('/etc')
+PosixPath('/etc')
+```
+
+``` python
+>>> WindowsPath('c:/Program Files/')
+WindowsPath('c:/Program Files')
+```
+
+您只能实例化与您的系统对应的类风格（允许对不兼容的路径风格进行系统调用可能导致应用程序中的错误或失败）：
+
+``` python
+>>> import os
+>>> os.name
+'posix'
+>>> Path('setup.py')
+PosixPath('setup.py')
+>>> PosixPath('setup.py')
+PosixPath('setup.py')
+>>> WindowsPath('setup.py')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "pathlib.py", line 798, in __new__
+    % (cls.__name__,))
+NotImplementedError: cannot instantiate 'WindowsPath' on your system
+```
+
 ## 方法
+
+除纯路径方法外，具体路径还提供以下方法。如果系统调用失败，许多这些方法都会引发OSError（例如，因为路径不存在）：
+
+* `classmethod Path.cwd()`
+
+    返回表示当前目录的新路径对象（由os.getcwd（）返回）：
+
+    ``` python
+    >>> Path.cwd()
+    PosixPath('/home/antoine/pathlib')
+    ```
+
+* `classmethod Path.home()`
+
+    返回一个表示用户主目录的新路径对象
+
+    ``` python
+    >>> Path.home()
+    PosixPath('/home/antoine')
+    ```
+
+* `Path.stat()`
+
+    返回有关此路径的信息
+
+    ``` python
+    >>> p = Path('setup.py')
+    >>> p.stat().st_size
+    956
+    >>> p.stat().st_mtime
+    1327883547.852554
+    ```
+
+* `Path.chmod(mode)`
+
+    更改文件模式和权限，例如os.chmod（）：
+
+    ``` python
+    >>> p = Path('setup.py')
+    >>> p.stat().st_mode
+    33277
+    >>> p.chmod(0o444)
+    >>> p.stat().st_mode
+    33060
+    ```
+
+* `Path.exists()`
+
+    路径是指向现有文件 or 目录：
+
+    ``` python
+    >>> Path('.').exists()
+    True
+    >>> Path('setup.py').exists()
+    True
+    >>> Path('/etc').exists()
+    True
+    >>> Path('nonexistentfile').exists()
+    False
+    ```
+
+* `Path.expanduser()`
+
+    Return a new path with expanded ~ and ~user constructs, as returned by os.path.expanduser():
+
+    ``` python
+    >>> p = PosixPath('~/films/Monty Python')
+    >>> p.expanduser()
+    PosixPath('/home/eric/films/Monty Python')
+    ```
+
+* `Path.glob(pattern)`
+
+    Glob此路径表示的目录中的给定模式，产生所有匹配的文件（任何类型）：
+
+    ``` python
+    >>> sorted(Path('.').glob('*.py'))
+    [PosixPath('pathlib.py'), PosixPath('setup.py'), PosixPath('test_pathlib.py')]
+    >>> sorted(Path('.').glob('*/*.py'))
+    [PosixPath('docs/conf.py')]
+    ```
+
+    “**”模式表示“此目录和所有子目录，递归”。换句话说，它启用递归通配：
+
+    ``` python
+    >>> sorted(Path('.').glob('**/*.py'))
+    [PosixPath('build/lib/pathlib.py'),
+    PosixPath('docs/conf.py'),
+    PosixPath('pathlib.py'),
+    PosixPath('setup.py'),
+    PosixPath('test_pathlib.py')]
+    ```
+
+* `Path.group()`
+
+    返回拥有该文件的组的名称。如果在系统数据库中找不到文件的gid，则引发KeyError。
+
+* `Path.is_dir()`
+
+    如果路径指向目录（或指向目录的符号链接），则返回True，如果指向另一种文件，则返回False。
+
+    如果路径不存在或符号链接损坏，也会返回False;传播其他错误（例如权限错误）。
+
+* `Path.is_file()`
+
+    如果路径指向常规文件（或指向常规文件的符号链接），则返回True;如果指向另一种文件，则返回False。
+
+    如果路径不存在或符号链接损坏，也会返回False;传播其他错误（例如权限错误）。
+
+* `Path.is_mount()`
+
+    如果路径是装入点，则返回True：文件系统中已装入其他文件系统的点。
+
+* `Path.is_symlink()`
+
+    如果路径指向符号链接，则返回True，否则返回False。
+
+* `Path.is_socket()`
+
+    如果路径指向Unix套接字（或指向Unix套接字的符号链接），则返回True，如果指向另一种文件，则返回False。
+
+* `Path.is_fifo()`
+
+    如果路径指向FIFO（或指向FIFO的符号链接），则返回True;如果指向另一种文件，则返回False。
+
+* `Path.is_block_device()`
+
+    如果路径指向块设备（或指向块设备的符号链接），则返回True，如果指向另一种文件，则返回False。
+
+* `Path.is_char_device()`
+
+    如果路径指向字符设备（或指向字符设备的符号链接），则返回True，如果指向另一种文件，则返回False。
+
+* `Path.iterdir()`
+
+    当路径指向目录时，产生目录内容的路径对象：
+
+    ``` python
+    >>> p = Path('docs')
+    >>> for child in p.iterdir(): child
+    ...
+    PosixPath('docs/conf.py')
+    PosixPath('docs/_templates')
+    PosixPath('docs/make.bat')
+    PosixPath('docs/index.rst')
+    PosixPath('docs/_build')
+    PosixPath('docs/_static')
+    PosixPath('docs/Makefile')
+    ```
+
+* `Path.lchmod(mode)`
+
+    与Path.chmod（）类似，但是，如果路径指向符号链接，则更改符号链接的模式而不是其目标。
+
+* `Path.lstat()`
+
+    与Path.stat（）类似，但是，如果路径指向符号链接，则返回符号链接的信息而不是其目标。
+
+* `Path.mkdir(mode=0o777, parents=False, exist_ok=False)`
+
+    在此给定路径上创建一个新目录。如果给出了mode，则将其与进程'umask值组合以确定文件模式和访问标志。如果路径已存在，则引发FileExistsError。
+
+* `Path.open(mode='r', buffering=-1, encoding=None, errors=None, newline=None)`
+
+    打开路径指向的文件，就像内置的open（）函数一样：
+
+    ``` python
+    >>> p = Path('setup.py')
+    >>> with p.open() as f:
+    ...     f.readline()
+    ...
+    '#!/usr/bin/env python3\n'
+    ```
+
+* `Path.owner()`
+
+    返回拥有该文件的用户的名称。如果在系统数据库中找不到文件的uid，则引发KeyError。
+
+* `Path.read_bytes()`
+
+    将指向文件的二进制内容作为字节对象返回：
+
+    ``` python
+    >>> p = Path('my_binary_file')
+    >>> p.write_bytes(b'Binary file contents')
+    20
+    >>> p.read_bytes()
+    b'Binary file contents'
+    ```
+
+* `Path.read_text(encoding=None, errors=None)`
+
+    将指向文件的已解码内容作为字符串返回：
+
+    ``` python
+    >>> p = Path('my_text_file')
+    >>> p.write_text('Text file contents')
+    18
+    >>> p.read_text()
+    'Text file contents'
+    ```
+
+    该文件已打开然后关闭。可选参数与open（）中的含义相同。
+
+* `Path.rename(target)`
+
+    将此文件或目录重命名为给定目标。在Unix上，如果target存在并且是一个文件，如果用户有权限，它将被静默替换。 target可以是字符串或其他路径对象：
+
+    ``` python
+    >>> p = Path('foo')
+    >>> p.open('w').write('some text')
+    9
+    >>> target = Path('bar')
+    >>> p.rename(target)
+    >>> target.open().read()
+    'some text'
+    ```
+
+* `Path.replace(target)`
+
+    将此文件或目录重命名为给定目标。如果目标指向现有文件或目录，则将无条件地替换它。
+
+* `Path.resolve(strict=False)`
+
+    使路径绝对，解析任何符号链接。返回一个新的路径对象：
+
+    ``` python
+    >>> p = Path()
+    >>> p
+    PosixPath('.')
+    >>> p.resolve()
+    PosixPath('/home/antoine/pathlib')
+    ```
+
+    “..”组件也被删除（这是唯一的方法）：
+
+    ``` python
+    >>> p = Path('docs/../setup.py')
+    >>> p.resolve()
+    PosixPath('/home/antoine/pathlib/setup.py')
+    ```
+
+    如果路径不存在且strict为True，则引发FileNotFoundError。如果strict为False，则尽可能地解析路径，并附加任何余数而不检查它是否存在。如果在解析路径上遇到无限循环，则引发RuntimeError。
+
+* `Path.rglob(pattern)`
+
+    这就像在给定模式前面添加“**”一样调用Path.glob（）：
+    
+    ``` python
+    >>> sorted(Path().rglob("*.py"))
+    [PosixPath('build/lib/pathlib.py'),
+    PosixPath('docs/conf.py'),
+    PosixPath('pathlib.py'),
+    PosixPath('setup.py'),
+    PosixPath('test_pathlib.py')]
+    ```
+
+* `Path.rmdir()`
+
+    删除此目录。该目录必须为空。
+
+* `Path.samefile(other_path)`
+
+    返回此路径是否指向与other_path相同的文件，other_path可以是Path对象，也可以是字符串。语义类似于os.path.samefile（）和os.path.samestat（）。
+
+    如果由于某种原因无法访问任何文件，则可能引发OSError。
+
+    ``` python
+    >>> p = Path('spam')
+    >>> q = Path('eggs')
+    >>> p.samefile(q)
+    False
+    >>> p.samefile('spam')
+    True
+    ```
+
+* `Path.symlink_to(target, target_is_directory=False)`
+
+    使此路径成为目标的符号链接。在Windows下，如果链接的目标是目录，则target_is_directory必须为true（默认为False）。在POSIX下，将忽略target_is_directory的值。
+
+    ``` python
+    >>> p = Path('mylink')
+    >>> p.symlink_to('setup.py')
+    >>> p.resolve()
+    PosixPath('/home/antoine/pathlib/setup.py')
+    >>> p.stat().st_size
+    956
+    >>> p.lstat().st_size
+    8
+    ```
+
+* `Path.touch(mode=0o666, exist_ok=True)`
+
+    在此给定路径创建文件。如果给出了mode，则将其与进程'umask值组合以确定文件模式和访问标志。如果文件已存在，则如果exist_ok为true（并且其修改时间更新为当前时间），则函数成功，否则引发FileExistsError。
+
+* `Path.unlink()`
+
+    删除此文件或符号链接。如果路径指向目录，请改用Path.rmdir（）。
+
+* `Path.write_bytes(data)`
+
+    打开以字节模式指向的文件，向其写入数据，然后关闭文件：
+
+    ``` python
+    >>> p = Path('my_binary_file')
+    >>> p.write_bytes(b'Binary file contents')
+    20
+    >>> p.read_bytes()
+    b'Binary file contents'
+    ```
+
+    将覆盖现有的同名文件。
+
+* `Path.write_text(data, encoding=None, errors=None)`
+
+    打开文本模式指向的文件，向其写入数据，然后关闭文件：
+
+    ``` python
+    >>> p = Path('my_text_file')
+    >>> p.write_text('Text file contents')
+    18
+    >>> p.read_text()
+    'Text file contents'
+    ```
 
 # 对应 os 模块中的工具
 
