@@ -201,3 +201,33 @@ XPACK_MONITORING_ENABLED <=> xpack.monitoring.enabled
 https://www.elastic.co/guide/en/kibana/current/settings.html
 
 https://www.elastic.co/guide/en/kibana/current/settings-xpack-kb.html
+
+# Rabbit MQ
+
+https://hub.docker.com/_/rabbitmq/
+
+```
+docker pull rabbitmq
+```
+
+启动，运行守护进程
+
+关于RabbitMQ的一个重要注意事项是它根据所谓的“节点名称”存储数据，默认为主机名。这对于在 Docker 中的使用意味着我们应该为每个守护进程明确指定 `-h / -hostname`，这样我们就不会获得随机主机名并且可以跟踪我们的数据：
+
+```
+docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 rabbitmq:3
+```
+
+这将启动一个侦听默认端口 `5672` 的 RabbitMQ 容器。如果你给它一分钟，然后做 `docker logs some-rabbit`，你会在输出中看到一个类似于的块：
+
+```
+ node           : rabbit@my-rabbit
+ home dir       : /var/lib/rabbitmq
+ config file(s) : /etc/rabbitmq/rabbitmq.conf
+ cookie hash    : RCxPSNwPOaHSsvGe2TKjig==
+ log(s)         : <stdout>
+ database dir   : /var/lib/rabbitmq/mnesia/rabbit@my-rabbit
+```
+
+如果您希望更改 `guest/guest` 的默认用户名和密码，可以使用 `RABBITMQ_DEFAULT_USER` 和 `RABBITMQ_DEFAULT_PASS` 环境变量：
+扩
