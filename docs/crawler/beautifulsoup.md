@@ -3,7 +3,7 @@
 Beautiful Soup 支持 Python 标准库中的 HTML 解析器，还支持一些第三方的解析器，如果我们不安装它，则 Python 会使用  Python 默认的解析器，lxml 解析器更加强大，速度更快，推荐安装。
 
 |解析器	|使用方法	|优势	|劣势|
-|:-----------------------------
+|:-----|:---------|:------|:---------------
 |Python标准库	| `BeautifulSoup(markup, 'html.parser')`|	Python的内置标准库，执行速度适中，文档容错能力强 |Python 2.7.3 or 3.2.2 前的版本中文档容错能力差
 |lxml HTML 解析器	|`BeautifulSoup(markup, 'lxml')`	|速度快，文档容错能力强|需要安装 C 语言库
 |lxml XML 解析器|	`BeautifulSoup(markup, 'xml')`	|速度快，唯一支持XML的解析器|需要安装 C 语言库

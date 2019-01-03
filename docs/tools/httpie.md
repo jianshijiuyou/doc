@@ -202,7 +202,7 @@ $ alias https='http --default-scheme=https'
 ``:``, ``=``, ``:=``, ``==``, ``@``, ``=@``, 和 ``:=@``. 带有 `@` 的文件路径作为值。
 
 | Item 类型 | 描述 |
-|:------------------------
+|:---------|:--------|:-------
 | HTTP 首部 `Name:Value`　| 任意 HTTP 首部，例如 `X-API-Token:123`。
 | URL 参数 `name==value` | 将给定的 name/value 对作为查询字符串参数附加到 URL。使用 `==` 分隔符。
 | 数据字段 `field=value`, `field=@file.txt` | 请求将数据字段序列化为 JSON 对象（默认），或者进行表单编码（ `--form, -f` ）。
@@ -257,7 +257,7 @@ Host: example.org
 如果您的命令包含一些数据请求项，则默认情况下将它们序列化为 JSON 对象。HTTPie 还会自动设置以下首部，这两个首部都可以被覆盖：
 
 | - | -
-|:--------
+|:---|:-----
 | ``Content-Type``  |   ``application/json``
 | ``Accept``         | ``application/json, */*``
 
@@ -423,7 +423,7 @@ User-Agent: HTTPie/0.9.9
 当前支持的身份验证方案是 Basic 和 Digest 。有两个控制身份验证的标志：
 
 | - | - |
-|:-----------
+|:---|:--------
 | `--auth, -a` | 传递 `username:password` 对作为参数。或者，如果您只指定<br>用户名（`-a username`），则会在发送请求之前提示您<br>输入密码。要发送空密码，请传递 `username:`。还支持<br> `username:password@hostname` URL 语法。<br>（但通过 `-a` 传递的凭证具有更高的优先级）
 | `--auth-type, -A` | 指定身份验证机制。可能的值是 `basic` 和 `digest`。<br>默认值为 `basic`，因此通常可以省略。
 
@@ -609,7 +609,7 @@ $ http https://sni.velox.ch
 认情况下，HTTPie 仅输出最终响应，并打印整个响应消息（ headers 以及 body）。您可以通过以下几个选项控制应该打印的内容：
 
 | - | - |
-|:---------
+|:----|:-----
 | `--headers, -h` | 仅打印响应首部。|
 | `--body, -b` | 仅打印响应正文。|
 | `--verbose, -v` | 打印整个 HTTP 交换（请求和响应）。<br>此选项还启用 `--all`（见下文）。|
@@ -648,7 +648,7 @@ Server: gunicorn/0.13.4
 所有其他输出选项都只是 `--print, -p` 的快捷方式。它接受一个字符串，每个字符代表 HTTP 交换的特定部分：
 
 | 字符  | 代表 |
-|:--------------------------
+|:------|:--------------------
 |``H``   |    request headers
 |``B``     |  request body
 |``h``    |   response headers
@@ -773,7 +773,7 @@ HTTPie 默认做了几件事，以使其终端输出易于阅读。
 其中一个选项可用于控制输出处理：
 
 | - | - |
-|:--------
+|:----|:----
 | `--pretty=all` | 应用颜色和格式。终端输出的默认值。
 | `--pretty=colors` | 应用颜色。
 | `--pretty=format` | 应用格式。

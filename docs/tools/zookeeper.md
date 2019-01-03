@@ -117,7 +117,7 @@ Quitting...
 # 命令
 
 | 命令 | 说明 | 
-|:-------------
+|:-----|:--------
 | `ls /` | 列出根目录下的所有节点
 | `create /workers "data"` | 创建节点和数据
 | `create -e /workers "data"` | -e 临时节点

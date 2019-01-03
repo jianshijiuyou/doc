@@ -13,7 +13,7 @@ npm install pm2 -g && pm2 update
 # 基本用法
 
 | 命令 | 说明 |
-|:-----------
+|:-----|:------
 | `pm2 start app.js` | 启动并添加一个进程到 pm2 的进程管理列表。 <br> 默认进程名是文件名（不带后缀）<br> `--name` 或 `-n` 指定进程名。<br> 例: `pm2 start main.py -n www` 
 | `pm2 ls` | 显示列表
 | `pm2 delete app` | 删除进程

@@ -271,7 +271,7 @@ pipenv [OPTIONS] COMMAND [ARGS]...
 ```
 
 | OPTIONS | 解释
-|:----------------
+|:--------|:--------
 | `--where` | 查看项目位置
 | `--venv` | 查看 virtualenv 位置
 | `--py` | 查看 Python 解释器位置
@@ -284,7 +284,7 @@ pipenv [OPTIONS] COMMAND [ARGS]...
 ## COMMAND
 
 | COMMAND | 解释
-|:----------------
+|:--------|:--------
 | `check` | 检查软件包的完整性
 | `graph` | 查看依赖树
 | `install` | `pipenv install [OPTIONS] [PACKAGE_NAME] [MORE_PACKAGES]...` <br><br> `-d`: 安装到 `[dev-packages]` <br><br> `-r <requirements>`: 安装 requirements 文件中的所有包
