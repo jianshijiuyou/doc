@@ -4,30 +4,41 @@
         "error": "/var/log/v2ray/error.log",
         "loglevel": "warning"
     },
-    "inbound": {
-        "port": 10086,
-        "listen": "127.0.0.1",
-        "protocol": "vmess",
-        "settings": {
-            "clients": [
-                {
-                    "id": "",
-                    "alterId": 64
-                }
-            ]
-        },
-        "streamSettings": {
-            "network": "ws",
-            "wsSettings": {
-                "path": "/ray",
-                "headers": {
-                    "Host": ""
+    "inbounds": [
+        {
+            "port": 10086,
+            "listen": "127.0.0.1",
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                        "alterId": 64
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/ray",
+                    "headers": {
+                        "Host": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    }
                 }
             }
-        }
-    },
-    "inboundDetour": [
+        },
         {
+            "port": 8080,
+            "protocol": "vmess",
+            "settings": {
+                "udp": true,
+                "clients": [
+                    {
+                        "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                        "alterId": 64
+                    }
+                ]
+            },
             "streamSettings": {
                 "network": "kcp",
                 "kcpSettings": {
@@ -42,18 +53,7 @@
                     "congestion": false,
                     "writeBufferSize": 2
                 }
-            },
-            "settings": {
-                "udp": true,
-                "clients": [
-                    {
-                        "alterId": 64,
-                        "id": ""
-                    }
-                ]
-            },
-            "protocol": "vmess",
-            "port": 8080
+            }
         }
     ],
     "outbound": {
