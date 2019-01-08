@@ -488,3 +488,17 @@ SQLAlchemy 默认是将相关字段设置为 `None`，而不是级联删除，�
 [sqlalchemy-repr](https://github.com/manicmaniac/sqlalchemy-repr)
 
 自动生成一个 SQLAlchemy 模型的漂亮 `repr`。
+
+
+# 其他
+
+## 打印 sql 语句
+
+https://docs.sqlalchemy.org/en/latest/core/engines.html#dbengine-logging
+
+``` python
+import logging
+
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+```
