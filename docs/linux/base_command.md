@@ -817,15 +817,22 @@ tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 
 ### grep
 
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/c3b369f6-4852-489c-996e-dc8da1044349.png)
+
+进阶
+
+![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/930281ba-1a38-11e9-ab14-d663bd873d93.png)
+
 grep 命令用于在文本中执行关键词搜索，并显示匹配的结果，格式为“grep [选项] [文件]”。
 
 |参数|	作用
 |:-----|:------
-|-b|	将可执行文件（binary）当作文本文件（text）来搜索
+|-a|	将可执行文件（binary）当作文本文件（text）来搜索
 |-c	|仅显示找到的行数
 |-i	|忽略大小写
 |-n	|显示行号
 |-v	|反向选择—仅列出没有“关键词”的行
+| -E | 使用增强的正则表达式 `grep -E pattern filename`
 
 一些例子
 
@@ -869,6 +876,14 @@ grep -n ^a /etc/passwd
 grep login$ /etc/passwd
 ```
 
+### egrep
+
+在 grep 中使用正则
+
+```
+grep -E 'pattern' filename
+egrep --color=auto 'pattern' filename
+```
 
 
 ### find
