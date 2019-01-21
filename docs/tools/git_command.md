@@ -239,3 +239,48 @@ ssh -T git@GitHub.com
 ```
 Hi username! You've successfully authenticated, but GitHub does not provide shell access.
 ```
+
+## 如果是要用 SSH 免密登录服务器
+
+客户端
+
+```
+ ~/.ssh  ssh-keygen -t rsa -C "root"   # 登录名
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/jianshijiuyou/.ssh/id_rsa): bwg # 随便起个名字，不要和现有的冲突
+Enter passphrase (empty for no passphrase):   # 直接回车
+Enter same passphrase again:  # 直接回车
+Your identification has been saved in bwg.
+Your public key has been saved in bwg.pub.
+The key fingerprint is:
+SHA256:lwEXruFndkpPvc7uGCE8mqw3xJ/pX38D5oE8BM4clYw root
+The key's randomart image is:
++---[RSA 2048]----+
+|        . *o.    |
+|         E o     |
+|        = =      |
+|       . B + .   |
+|       .S & = .  |
+|       .oO @ = . |
+|       .+..o* =  |
+|       .o +  B o.|
+|      .. o..oo= +|
++----[SHA256]-----+
+ ~/.ssh  ls
+bwg  bwg.pub
+ ~/.ssh  scp -P 28957 bwg.pub root@xx.xxxx.com:~/.ssh # 将公钥拷贝到服务器
+```
+
+服务器
+
+```
+cat ~/.ssh/bwg.pub >> ~/.ssh/authorized_keys
+```
+
+客户端
+
+```
+ssh root@xx.xxxx.com -p 28957
+```
+
+(完)
