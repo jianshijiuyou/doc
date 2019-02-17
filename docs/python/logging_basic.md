@@ -1,5 +1,22 @@
 > [Logging HOWTO](https://docs.python.org/3/howto/logging.html)
 
+# 概念
+
+## AVOT
+
+`Actor/Verb/Object/Target`
+
+举例说明: `xxx` 关注了 `yyy`，`xxx` 是 `Actor`，关注 是 `Verb`，`yyy` 是 `Target`，这里没有 `Object`，再举一个例子，`xxx` 将 `uuu` 添加到了 `yyy` 中，这里的 `Verb` 是 添加，`Object` 是 `uuu`，`Actor/Object/Target` 就是模型，当然我们不用把模型的全部字段都放进去，放个 `type/id/name` 就够了。按照这样的规则规定好日志内容之后就简单了，在每个需要记录日志的地方进行埋点，这个就是比较麻烦的地方，如果业务比较复杂的化，埋点很多，写的时候一定要一次性写对 `Object` 和 `Target`，不要写了一次之后复制粘贴，很容易搞错，一个个写。还有一点就是 `Actor/Object/Target` 的 `id` 都转成字符串存储，因为用户的 `id` 是 `uuid`，日志 `object` 直接 `to_json()`，django logger 直接用，用户 `id` 会变成字符串，其他 `model` 的 `id` 还是 `int`，类型如果不一致再存到 ES 里面数据会有冲突。
+
+最终的日志格式示例：
+
+```
+{"target": {"type": "xxxx", "title": "xxxxxx", "id": "791", "owner": "xxx"}, "object": {}, "actor": {"agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36", "accept_language": "en-US,en;q=0.8", "username": "xxx", "host": "www.example.com", "referer": "www.example.com"}, "verb": "点赞", "time": 1507000406.305043}
+{"target": {"type": "xxx", "id": "fcc3837f-1a61-4d2c-bdbf-0961085547a3", "owner": "ddd"}, "object": {}, "actor": {"agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36", "accept_language": "zh-CN,zh;q=0.8", "username": "", "host": "www.example.com", "referer": "www.example.com"}, "verb": "注册", "time": 1507000688.429523}
+```
+
+[出处](https://breakwire.me/es-and-kibana.html)
+
 # 基础日志教程
 
 日志记录是一种跟踪某些软件运行时发生的事件的方法。该软件的开发人员将日志记录调用添加到其代码中，以指示已发生某些事件。事件由描述性消息描述，该消息可以可选地包含可变数据（即每次事件发生时可能不同的数据）。事件也具有开发人员对事件的重要性；重要性也可以称为水平或严重程度。

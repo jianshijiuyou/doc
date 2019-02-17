@@ -64,10 +64,10 @@
   * [Redis 概念&安装](db/redis安装与介绍.md)
   * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
   * [MongoDB 概念&安装](db/mongodb_install.md)
-* ES
-  * [入门](es/elasticsearch_getting_started.md)  
-  * [文档 API](es/docs.md)
-  * [搜索 API](es/search.md)
+* ELK
+  * [ES 入门](es/elasticsearch_getting_started.md)  
+  * [ES 文档 API](elk/docs.md)
+  * [ES 搜索 API](elk/search.md)
 * Algorithm
   * [初级排序算法总结](algorithm/algorithm_2.md)
   * [归并排序](algorithm/algorithm_3.md)

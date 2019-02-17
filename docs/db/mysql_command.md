@@ -4,6 +4,7 @@
 |:--------|:------------
 | `show engines;` | 查看当前数据库支持的引擎和默认的数据库引擎
 | `show variables like "%character%";` | 查看当前字符编码
+| `show full columns from [table_name];` | 查看字段的字符编码
 | `show variables like 'transaction_isolation';` | 查看当前事务隔离级别
 | `show databases;` | 查看所有数据库
 | `use {database name} ;` | 选择数据库
