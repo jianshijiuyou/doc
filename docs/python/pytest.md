@@ -310,3 +310,7 @@ def test_one(test_input, expected):
 `pytest -s`
 
 通过 `-s` 选项可以在测试的时候同时看到输出到终端的日志
+
+# 代码覆盖率报告
+
+https://pytest-cov.readthedocs.io/en/latest/reporting.html
