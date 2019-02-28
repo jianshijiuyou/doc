@@ -588,6 +588,50 @@ nmap 192.168.0.123-140
 nmap -A 127.0.0.1
 ```
 
+### sftp
+
+sftp 是一个交互式文件传输程式。它类似于 ftp, 但它进行加密传输，比FTP有更高的安全性。
+
+登录
+
+``` bash
+# 登录服务器, 默认端口号为22
+sftp user@host
+# 指定端口
+sftp -P 22806 user@host
+```
+
+下载
+
+``` bash
+# 下载文件到指定目录
+sftp> get /path/index.html  /data/
+# 下载文件到当前目录
+sftp> get /path/index.html
+```
+
+上传
+
+``` bash
+# 将本地的 download.png 文件上传到用户目录下
+sftp> put /home/jianshijiuyou/Downloads/download.png
+# 上传到指定目录
+sftp> put /home/jianshijiuyou/Downloads/download.png /tmp/
+# 上传到指定目录，同时修改文件名
+sftp> put /home/jianshijiuyou/Downloads/download.png /tmp/test.png
+```
+
+其他
+
+``` bash
+# 查看服务器当前目录
+sftp> pwd
+# 查看客户端当前目录
+sftp> lpwd
+# 改变路径可以用 cd ，改变本机路径可以用 lcd
+# ls rm rmdir mkdir 这些命令都可以使用。同理调用本机都是加 l , 即 lls lrm.
+```
+
 ## 工作目录切换命令
 
 ### pwd
@@ -812,6 +856,22 @@ tar 命令常用参数解释，格式为“tar [选项] [文件]”。
 |-C	|指定解压到的目录
 
 ![](https://pikachu666.oss-cn-hongkong.aliyuncs.com/images/20180628205407.png)
+
+### zip
+
+加密压缩文件
+
+```
+zip -P <password> des.zip src.txt
+```
+
+加密压缩文件夹
+
+```
+zip -r -P <password> des.zip src_path
+```
+
+!> -P (大写的 P)
 
 ## 搜索
 
