@@ -118,9 +118,11 @@ Quitting...
 
 | 命令 | 说明 | 
 |:-----|:--------
+| `zkCli.sh -server 127.0.0.1:2181` | 连接服务器
 | `ls /` | 列出根目录下的所有节点
 | `create /workers "data"` | 创建节点和数据
 | `create -e /workers "data"` | -e 临时节点
+| `set /workers "data"` | 修改节点数据 <br/> 可以不加 `""` 放个 JSON 字典，但是不能有换行符 <br /> `set /workers {"name":"jack","pwd":"123"}`
 | `get /workers` | 获取节点的元数据和数据
 | `delete /workers` | 删除节点
 | `stat /master true` | 查看节点属性，`true` 代表监视节点变化
