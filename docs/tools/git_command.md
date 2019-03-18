@@ -18,6 +18,7 @@
 | `git branch <branch name>` | 创建分支
 | `git checkout <branch name>` | 切换分支
 | `git checkout -b <branch name>` | 创建分支同时切换到该分支上
+| `git checkout .` | 放弃当前所有没有提交的更改
 | `git branch -d <branch name>` | 删除分支，<br>执行完后再执行 `git push origin -d <branch name>`, <br>可以把服务器端的分支也删除了
 | `git branch -a (--all)` | 列出远程跟踪分支和本地分支。
 | `git merge <branch name>` | 把指定分支合并到当前分支上 <br> 一般在 master 分支上操作，合并其他分支
