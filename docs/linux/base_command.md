@@ -81,7 +81,26 @@ cnpm 淘宝镜像：[http://npm.taobao.org/](http://npm.taobao.org/)
 |chkconfig foo	|systemctl is-enabled foo.service	|查看特定服务是否为开机自动启动
 |chkconfig --list	|systemctl list-unit-files --type=service	|查看各个级别下服务的启动与禁用情况
 
+## 后台运行命令
 
+在命令后面加 `&` 即可让该命令在后台运行
+
+``` bash
+/opt/robo3t/bin/robo3t &
+```
+
+查看后台运行的命令
+
+``` bash
+> jobs -l
+[1]  + 18967 running    /opt/robo3t/bin/robo3t
+```
+
+结束该进程
+
+``` bash
+kill -9 18967
+```
 
 ## 常用系统工作命令
 
