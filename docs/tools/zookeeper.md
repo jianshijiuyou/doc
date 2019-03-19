@@ -127,3 +127,7 @@ Quitting...
 | `delete /workers` | 删除节点
 | `stat /master true` | 查看节点属性，`true` 代表监视节点变化
 | `quit` | 退出客户端
+
+# 可视化工具
+
+https://github.com/DeemOpen/zkui
