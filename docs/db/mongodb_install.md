@@ -335,3 +335,11 @@ sudo apt install mongodb-clients
 ``` bash
 mongo --version
 ```
+
+连接
+
+``` bash
+mongo 192.168.0.1:27017/database
+
+>db.auth( <username>, <password> )
+```
