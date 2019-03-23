@@ -66,7 +66,7 @@
   * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
   * [MongoDB 概念&安装](db/mongodb_install.md)
 * ELK
-  * [ES 入门](es/elasticsearch_getting_started.md)  
+  * [ES 入门](elk/elasticsearch_getting_started.md)  
   * [ES 文档 API](elk/docs.md)
   * [ES 搜索 API](elk/search.md)
 * Algorithm
