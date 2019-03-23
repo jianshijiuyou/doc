@@ -7,6 +7,7 @@
   * [存储结构与磁盘划分](linux/存储结构与磁盘划分.md)  
   * [系统服务和防火墙](linux/系统服务和防火墙.md)  
   * [Sentry 安装与使用](linux/sentryguide.md)  
+  * [基于 UNIX 系统的文本操作简介](linux/基于UNIX系统的文本操作简介.md)  
   * [杂项](linux/杂项.md)  
 * Nginx
   * [安装](nginx/安装.md)
