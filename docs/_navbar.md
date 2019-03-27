@@ -7,6 +7,7 @@
   * [存储结构与磁盘划分](linux/存储结构与磁盘划分.md)  
   * [系统服务和防火墙](linux/系统服务和防火墙.md)  
   * [Sentry 安装与使用](linux/sentryguide.md)  
+  * [基于 UNIX 系统的文本操作简介](linux/基于UNIX系统的文本操作简介.md)  
   * [杂项](linux/杂项.md)  
 * Nginx
   * [安装](nginx/安装.md)
@@ -65,7 +66,7 @@
   * [Redis 通用命令和数据结构](db/redis通用命令和数据结构.md)
   * [MongoDB 概念&安装](db/mongodb_install.md)
 * ELK
-  * [ES 入门](es/elasticsearch_getting_started.md)  
+  * [ES 入门](elk/elasticsearch_getting_started.md)  
   * [ES 文档 API](elk/docs.md)
   * [ES 搜索 API](elk/search.md)
 * Algorithm
