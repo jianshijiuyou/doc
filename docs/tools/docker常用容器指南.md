@@ -231,3 +231,37 @@ docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 rabbitmq:3
 
 如果您希望更改 `guest/guest` 的默认用户名和密码，可以使用 `RABBITMQ_DEFAULT_USER` 和 `RABBITMQ_DEFAULT_PASS` 环境变量：
 扩
+
+# HBase
+
+https://hub.docker.com/r/harisekhon/hbase
+
+``` bash
+git clone https://github.com/HariSekhon/Dockerfiles.git
+cd Dockerfiles\hbase
+docker-compose up
+```
+
+管理地址
+
+* http://localhost:16010/master-status for the Master Server
+* http://localhost:9095/thrift.jsp for the thrift UI
+* http://localhost:8085/rest.jsp for the REST server UI
+* http://localhost:16010/zk.jsp for the embedded Zookeeper
+
+python 客户端测试
+
+``` python
+>>> import happybase
+>>> connection = happybase.Connection('127.0.0.1', 9090)
+>>> connection.create_table('table-name', { 'family': dict() } )
+>>> connection.tables()
+['table-name']
+>>> table = connection.table('table-name')
+>>> table.put('row-key', {'family:qual1': 'value1', 'family:qual2': 'value2'})
+>>> for k, data in table.scan():
+...   print(k, data)
+...
+row-key {'family:qual1': 'value1', 'family:qual2': 'value2'}
+>>>
+```
