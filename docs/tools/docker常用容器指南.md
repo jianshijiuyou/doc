@@ -230,7 +230,12 @@ docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 rabbitmq:3
 ```
 
 如果您希望更改 `guest/guest` 的默认用户名和密码，可以使用 `RABBITMQ_DEFAULT_USER` 和 `RABBITMQ_DEFAULT_PASS` 环境变量：
-扩
+
+``` bash
+$ docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
+```
+
+然后，您可以在浏览器中访问 `http://localhost:8080` 或 `http://host-ip:8080` 并使用 `user/password` 访问管理控制台
 
 # HBase
 
@@ -248,6 +253,12 @@ docker-compose up
 * http://localhost:9095/thrift.jsp for the thrift UI
 * http://localhost:8085/rest.jsp for the REST server UI
 * http://localhost:16010/zk.jsp for the embedded Zookeeper
+
+进入 hbase shell
+
+``` bash
+docker exec -it [container id] /hbase/bin/hbase shell
+```
 
 python 客户端测试
 
