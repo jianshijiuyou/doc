@@ -243,8 +243,15 @@ https://hub.docker.com/r/harisekhon/hbase
 
 ``` bash
 git clone https://github.com/HariSekhon/Dockerfiles.git
-cd Dockerfiles\hbase
+cd Dockerfiles/hbase
 docker-compose up
+```
+
+或者
+
+``` bash
+docker run -d -p 2181:2181 -p 8080:8080 -p 8085:8085 -p 9090:9090 -p 9095:9095 -p 16000:16000 -p 16010:16010 -p 16201:16201 -p 16301:16301 --name hbase1.2 harisekhon/hbase:1.3
+
 ```
 
 管理地址
