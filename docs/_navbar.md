@@ -58,7 +58,9 @@
   * [Scrapy 通用爬虫](crawler/scrapy_commn.md)
   * [Scrapy 爬取微博](crawler/scrapy_weibo.md)
 * Lua
-  * [基础](lua/basic.md)
+  * [语言基础](lua/basic.md)
+  * [编程实操](lua/编程实操.md)
+  * [语言特性](lua/语言特性.md)
 * DB
   * [Mysql 安装](db/install_mysql.md)
   * [Mysql 命令](db/mysql_command.md)
