@@ -283,3 +283,90 @@ python 客户端测试
 row-key {'family:qual1': 'value1', 'family:qual2': 'value2'}
 >>>
 ```
+
+# gocron
+
+gocron 地址 https://github.com/ouqiang/gocron
+
+首先启动 Mysql 容器
+
+``` bash
+docker run --name mysql5 -e MYSQL_ROOT_PASSWORD=123456 -p 127.0.0.1:3306:3306 -d mysql:5 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+```
+
+创建数据库
+
+``` bash
+docker exec -it [mysql 容器 id] bash
+mysql -p123456
+create database gocron character set utf8;
+```
+
+启动 gocron 容器
+
+``` bash
+docker run --name gocron --link mysql5:db -p 127.0.0.1:5920:5920 -d ouqg/gocron
+```
+
+nginx 端口映射(不需要 https 访问可以不做)
+
+```
+server {
+    listen 7777 ssl;
+
+    ssl on;
+    ssl_certificate /etc/xxx/xxx.crt;
+    ssl_certificate_key /etc/xxx/xxx.key;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 5m;
+    ssl_session_tickets off;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    server_name gocron.xxx.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:5920;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $http_host;
+    }
+}
+```
+
+然后重新读取配置
+
+``` bash
+nginx -t
+nginx -s reload
+```
+
+ok, 访问 `https://gocron.xxx.com:7777` 进行配置，配置数据库时主机填 `db` 而不是 `127.0.0.1`, 因为上面用 docker 启动容器时配置了 mysql 别名的（`--link mysql5:db`）。
+
+?> [crontab 时间表达式](https://github.com/ouqiang/gocron/wiki/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1)
+
+配置任务节点
+
+因为任务节点和业务相关，所以需要具体场景具体配置。
+
+在你需要执行定时任务的服务器上配置节点。
+
+去 [releases](https://github.com/ouqiang/gocron/releases) 下载你需要的 gocron node 版本
+
+``` bash
+wget https://github.com/ouqiang/gocron/releases/download/v1.5/gocron-node-v1.5-linux-amd64.tar.gz
+tar -xzvf gocron-node-v1.5-linux-amd64.tar.gz
+```
+
+然后用 pm2 启动节点
+
+``` bash
+➜  ~ cat gocron-node.sh      
+#!/bin/bash
+/opt/gocron-node-linux-amd64/gocron-node -allow-root -s 172.17.0.1:5921
+➜  ~ pm2 start gocron-node.sh
+```
+
+然后再在 gocron web 中配置节点信息。
