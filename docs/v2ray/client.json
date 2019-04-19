@@ -29,11 +29,32 @@
                     {
                         "users": [
                             {
-                                "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                                "id": "---------------------------",
                                 "alterId": 64
                             }
                         ],
-                        "address": "xxxxxxxxxxxxxxxxxxxxx",
+                        "address": "---------------------------",
+                        "port": 9304
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp"
+            },
+            "tag": "dsm"
+        },
+        {
+            "protocol": "vmess",
+            "settings": {
+                "vnext": [
+                    {
+                        "users": [
+                            {
+                                "id": "---------------------------",
+                                "alterId": 64
+                            }
+                        ],
+                        "address": "---------------------------",
                         "port": 8080
                     }
                 ]
@@ -65,11 +86,11 @@
                     {
                         "users": [
                             {
-                                "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                                "id": "---------------------------",
                                 "alterId": 64
                             }
                         ],
-                        "address": "xxxxxxxxxxxxxxxxxxxx",
+                        "address": "---------------------------",
                         "port": 443
                     }
                 ]
@@ -77,7 +98,7 @@
             "streamSettings": {
                 "wsSettings": {
                     "headers": {
-                        "Host": "xxxxxxxxxxxxxxxxxxxxx"
+                        "Host": "---------------------------"
                     },
                     "path": "/ray"
                 },
@@ -107,6 +128,13 @@
     "routing": {
         "domainStrategy": "IPIfNonMatch",
         "rules": [
+            {
+                "type": "field",
+                "ip": [
+                    "192.168.50.213"
+                ],
+                "outboundTag": "dsm"
+            },
             {
                 "domain": [
                     "tanx.com",
