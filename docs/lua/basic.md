@@ -871,3 +871,7 @@ while xxxx do
   ::continue::
 end
 ```
+
+Lua 在条件测试的时候将除 `false` 和 `nil` 以外的值都视为真
+
+?> Lua 将 `0` 和 “空字符串” 都视为真
