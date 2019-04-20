@@ -30,6 +30,16 @@ npm install pm2 -g && pm2 update
 | `pm2 logs app` | 指定进程 log
 | `pm2 flush` | 清空所有进程 log
 
+# 查看端口号
+
+根据 `pm2 ls` 中显示的 `pid` 查看服务对应的端口号
+
+``` bash
+ss -altunp|grep [pid]
+# or
+ps aux|grep [pid]
+```
+
 # Ecosystem 配置文件
 
 `pm2 init` 生成配置文件模板 `ecosystem.config.js`
