@@ -24,16 +24,52 @@
     "outbounds": [
         {
             "protocol": "vmess",
+            "mux": {
+                "enabled": true
+            },
             "settings": {
                 "vnext": [
                     {
                         "users": [
                             {
-                                "id": "---------------------------",
+                                "id": "-----------------------",
                                 "alterId": 64
                             }
                         ],
-                        "address": "---------------------------",
+                        "address": "-----------------------",
+                        "port": 443
+                    }
+                ]
+            },
+            "streamSettings": {
+                "wsSettings": {
+                    "headers": {
+                        "Host": "-----------------------"
+                    },
+                    "path": "/ray"
+                },
+                "network": "ws",
+                "security": "tls"
+            },
+            "tag": "nginx"
+        },
+        {
+            "protocol": "freedom",
+            "settings": {},
+            "tag": "direct"
+        },
+        {
+            "protocol": "vmess",
+            "settings": {
+                "vnext": [
+                    {
+                        "users": [
+                            {
+                                "id": "-----------------------",
+                                "alterId": 64
+                            }
+                        ],
+                        "address": "-----------------------",
                         "port": 9304
                     }
                 ]
@@ -50,11 +86,11 @@
                     {
                         "users": [
                             {
-                                "id": "---------------------------",
+                                "id": "-----------------------",
                                 "alterId": 64
                             }
                         ],
-                        "address": "---------------------------",
+                        "address": "-----------------------",
                         "port": 8080
                     }
                 ]
@@ -75,42 +111,6 @@
                 }
             },
             "tag": "kcp"
-        },
-        {
-            "protocol": "vmess",
-            "mux": {
-                "enabled": true
-            },
-            "settings": {
-                "vnext": [
-                    {
-                        "users": [
-                            {
-                                "id": "---------------------------",
-                                "alterId": 64
-                            }
-                        ],
-                        "address": "---------------------------",
-                        "port": 443
-                    }
-                ]
-            },
-            "streamSettings": {
-                "wsSettings": {
-                    "headers": {
-                        "Host": "---------------------------"
-                    },
-                    "path": "/ray"
-                },
-                "network": "ws",
-                "security": "tls"
-            },
-            "tag": "nginx"
-        },
-        {
-            "protocol": "freedom",
-            "settings": {},
-            "tag": "direct"
         },
         {
             "protocol": "blackhole",
@@ -164,11 +164,12 @@
             {
                 "type": "field",
                 "ip": [
+                    "geoip:private",
+                    "geoip:cn",
                     "192.168.0.0/16",
                     "10.0.0.0/8",
                     "172.16.0.0/12",
-                    "127.0.0.0/8",
-                    "geoip:cn"
+                    "127.0.0.0/8"
                 ],
                 "outboundTag": "direct"
             },
@@ -184,7 +185,8 @@
                     "gmail",
                     "domain:twimg.com",
                     "domain:t.co",
-                    "domain:cloudfront.net"
+                    "domain:cloudfront.net",
+                    "domain:v2ray.com"
                 ],
                 "outboundTag": "nginx"
             },
