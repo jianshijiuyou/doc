@@ -8,6 +8,7 @@
   * [系统服务和防火墙](linux/系统服务和防火墙.md)  
   * [Sentry 安装与使用](linux/sentryguide.md)  
   * [基于 UNIX 系统的文本操作简介](linux/基于UNIX系统的文本操作简介.md)  
+  * [保护您的 Linux 服务器](linux/如何通过7个简单步骤保护您的Linux服务器.md)  
   * [杂项](linux/杂项.md)  
 * Nginx
   * [安装](nginx/安装.md)
