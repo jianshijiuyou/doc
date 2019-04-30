@@ -370,3 +370,39 @@ tar -xzvf gocron-node-v1.5-linux-amd64.tar.gz
 ```
 
 然后再在 gocron web 中配置节点信息。
+
+# minio
+
+``` bash
+docker run -p 9307:9000 -d --name minio -v /volume1/bucket/minio:/data -v /volume1/docker/minio/config:/root/.minio minio/minio server /data
+```
+
+启动后会在 `/volume1/bucket/minio` 文件夹下产生一个 `.minio.sys` 文件夹，`/volume1/bucket/minio/.minio.sys/config/config.json` 文件中就放着访问密钥，然后打开 `127.0.0.1:9307` 输入密钥即可访问。
+
+配置证书 https://docs.min.io/docs/how-to-secure-access-to-minio-server-with-tls.html
+
+
+## 配置共享链接永久访问
+
+https://docs.min.io/docs/minio-client-complete-guide#policy
+
+启动 mc 命令
+
+``` bash
+docker run -it --entrypoint=/bin/sh minio/mc
+```
+
+连接 bucket
+
+``` bash
+export MC_HOST_<alias>=https://<Access Key>:<Secret Key>@<YOUR-S3-ENDPOINT>
+# Example:
+export MC_HOST_myalias=https://Q3AM3UQ867SPQQA43P2F:zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG@play.min.io:9000
+mc --insecure ls myalias
+```
+
+设置策略
+
+``` bash
+mc --insecure policy download minio/pikachu
+```
