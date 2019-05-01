@@ -23,7 +23,7 @@ npm install pm2 -g && pm2 update
 | `pm2 reload app` | 重新加载
 | `pm2 init` | 生成配置文件模板 `ecosystem.config.js`
 | `pm2 save` | 保存进程列表
-| `pm2 resurrect` | 恢复进程列表
+| `pm2 resurrect` | 恢复进程列表 （从 save 保存的文件中恢复并启动进程）
 | `pm2 startup` | 生成一条服务器再重启后自动启动 pm2 和它维护的进程的命令,这条命令需要手动执行。<br>当执行了 `pm2 save` 后，再执行 `pm2 startup` 生成的命令，就可以在服务器重启后自动重启 pm2 维护的进程。<br>**要取消这个操作可以删除 pm2 save 生成的 dump 文件**
 | `pm2 monit` | 打开监控
 | `pm2 logs` | 所有 log
