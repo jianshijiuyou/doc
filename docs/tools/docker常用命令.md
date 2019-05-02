@@ -10,6 +10,21 @@
 | `docker pull` | 下载镜像到本地
 | `docker push` | 将自己的镜像推送到 Docker Hub <br>例：`docker push username/ubuntu:17.10`
 
+### 举个栗子
+
+如何将自己的镜像推送到官方的 docker hub
+
+``` bash
+# login
+sudo docker login
+# 修改本地镜像为规范的镜像命名,
+# 比如 portal:v1 是之前的名称
+# 现在需要修改为 dockerid/image:tag
+sudo docker tag portal:v1 jianshijiuyou/portal:v1
+# push
+sudo docker push jianshijiuyou/portal:v1
+# finish
+```
 
 ## 镜像管理
 
