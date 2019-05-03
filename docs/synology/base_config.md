@@ -34,3 +34,34 @@ sudo -u username /volume1/@appstore/Node.js_v8/usr/local/bin/pm2 resurrect
 ```
 
 ?> username 请替换为平时使用时候的用户名
+
+# 安装 ipkg 包管理
+
+http://rescene.wikidot.com/synology-ipkg
+
+以下方式仅适用 x86_64 架构
+
+``` bash
+wget http://ipkg.nslu2-linux.org/feeds/optware/syno-i686/cross/unstable/syno-i686-bootstrap_1.2-7_i686.xsh
+
+chmod +x syno-i686-bootstrap_1.2-7_i686.xsh
+
+sudo sh syno-i686-bootstrap_1.2-7_i686.xsh
+
+# 此时已经安装完成， update
+ipkg update
+# 开始下载你想下载的吧
+ipkg install programname
+```
+
+?> 如果不行重启下试试
+
+此时你常用的用户应该还使用不了 ipkg, 请配入环境变量
+
+``` bash
+> tail ~/.zshrc
+...
+export PATH=$PATH:/opt/bin
+
+> source ~/.zshrc
+```
