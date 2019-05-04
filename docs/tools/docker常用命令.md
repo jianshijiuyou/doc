@@ -560,3 +560,55 @@ docker run -it --rm --name centos1 --network [net name] centos sh
 ```
 ping centos2
 ```
+
+## docker-compose
+
+docker-compose 实际上就是整合了一堆 docker API 让你可以方便的同时管理多个镜像容器，组合它们提供服务。
+
+也就是说 `docker-compose` 能做是事情，你也可以通过手动一个个镜像一个个容器启动来完成。
+
+https://yeasy.gitbooks.io/docker_practice/content/compose/
+
+具体使用方式请看上面这个链接，下面只是记录一些注意事项
+
+还是用上面那个链接里的栗子
+
+https://yeasy.gitbooks.io/docker_practice/content/compose/usage.html
+
+如果里这个栗子是在一个 `test` 文件夹中创建的，最后执行 `docker-compose up`。
+
+那么会首先 build 出来一个 `test_web` 的镜像，然后会创建两个容器 `test_web_1` 和 `test_redis_1`。
+
+`docker-compose up` 默认在前台执行，要后台执行请 `docker-compose up -d`。
+
+如果报错
+
+```
+ERROR: Couldn't connect to Docker daemon at http+docker://localunixsocket - is it running?
+
+If it's at a non-standard location, specify the URL with the DOCKER_HOST environment variable.
+```
+
+可能是需要使用 `sudo docker-compose up -d`
+
+启动常用命令
+
+``` bash
+docker-compose stop     # 停止
+docker-compose start    # 启动
+docker-compose restart  # 重启
+```
+
+重复使用 `docker-compose up` 不会重复创建多余的镜像或者容器
+
+但是如果你修改 `app.py` 文件，就需要重新构建镜像了
+
+重新构建镜像请用 `docker-compose build`，然后再使用 `docker-compose up` 就可以了。
+
+可以使用 `-p` 来指定项目名称
+
+``` bash
+docker-compose -p myproject up
+```
+
+这样会重新创建一个名为 `myproject_web` 的镜像，并创建两个名为 `myproject_web_1` 和 `myproject_redis_1` 的容器
