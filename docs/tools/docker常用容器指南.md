@@ -406,3 +406,14 @@ mc --insecure ls myalias
 ``` bash
 mc --insecure policy download minio/pikachu
 ```
+
+# Metabase
+
+https://www.metabase.com/docs/v0.32.7/operations-guide/running-metabase-on-docker.html
+
+``` bash
+docker run -d -p 9311:3000 \
+ --link mysql5:mysql \
+ -e "JAVA_TIMEZONE=Asia/Shanghai" \
+ --name metabase metabase/metabase
+```
